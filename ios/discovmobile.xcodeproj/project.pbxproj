@@ -12,6 +12,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		3DE4DAD41476765101945408 /* libPods-discovmobile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D43FF9D506E70904424FA7E9 /* libPods-discovmobile.a */; };
+		59207AF8249912140083B6F3 /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 59207AF7249912130083B6F3 /* AppCenter-Config.plist */; };
 		59DA9E412468156A00A82F17 /* Courgette-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 59DA9E402468156A00A82F17 /* Courgette-Regular.ttf */; };
 /* End PBXBuildFile section */
 
@@ -26,6 +27,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = discovmobile/main.m; sourceTree = "<group>"; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B47C5AFCB8BDE514B7D1AC6 /* Pods-discovmobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-discovmobile.debug.xcconfig"; path = "Target Support Files/Pods-discovmobile/Pods-discovmobile.debug.xcconfig"; sourceTree = "<group>"; };
+		59207AF7249912130083B6F3 /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "discovmobile/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		59C91279245B25840000AF97 /* discovmobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = discovmobile.entitlements; path = discovmobile/discovmobile.entitlements; sourceTree = "<group>"; };
 		59DA9E402468156A00A82F17 /* Courgette-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Courgette-Regular.ttf"; sourceTree = "<group>"; };
 		8AC623DBF3A3E2CB072F81F2 /* Pods-discovmobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-discovmobile.release.xcconfig"; path = "Target Support Files/Pods-discovmobile/Pods-discovmobile.release.xcconfig"; sourceTree = "<group>"; };
@@ -49,6 +51,7 @@
 		13B07FAE1A68108700A75B9A /* discovmobile */ = {
 			isa = PBXGroup;
 			children = (
+				59207AF7249912130083B6F3 /* AppCenter-Config.plist */,
 				59C91279245B25840000AF97 /* discovmobile.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -181,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				59DA9E412468156A00A82F17 /* Courgette-Regular.ttf in Resources */,
+				59207AF8249912140083B6F3 /* AppCenter-Config.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 			);
