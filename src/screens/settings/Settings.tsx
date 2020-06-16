@@ -4,9 +4,14 @@ import { ScrollScreen, Text, Panel, Bg, Button, SettingItem, TopBar, Modal, Moda
 import { ScreenProps } from '../../utils/ScreenProps';
 import notifications from '../../utils/notifications';
 import storeService from '../../state/store.service';
+import codePush from 'react-native-code-push';
  
 class Settings extends React.Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
+
+	state={
+		version: ''
+	}
 
 	notifId = 0
 	render() {
@@ -33,6 +38,8 @@ class Settings extends React.Component<ScreenProps> {
 						<SettingItem title="Log out" onPress={this._openConfirm} />
 					</Panel>
 					<Panel style={styles.panel}>
+						<SettingItem title={ `Version ${this.state.version}`}
+							border />
 						<SettingItem title="See component gallery"
 							onPress={ () => this.props.router.navigate('/componentGallery')} 
 							border />
@@ -114,6 +121,15 @@ class Settings extends React.Component<ScreenProps> {
 				]}
 			/>
 		);
+	}
+
+	componentDidMount(){
+		codePush.getUpdateMetadata().then( meta => {
+			this.setState({
+				version: `${meta.appVersion}.${meta.packageHash.slice(-6)} ${meta.isPending? '*' : ''}`
+			})
+			console.log( meta );
+		})
 	}
 };
 

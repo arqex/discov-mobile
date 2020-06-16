@@ -1,6 +1,7 @@
 
 import React, {Component} from 'react';
-import { StyleSheet, View, ActivityIndicator, BackHandler, StatusBar, Platform } from 'react-native';
+import { StyleSheet, View, BackHandler, StatusBar, Platform } from 'react-native';
+import codePush from "react-native-code-push";
 import { dataService } from './services/data.service';
 import { Navigator, router } from './react-urlstack';
 import createInterceptor from './routes/routeInterceptor';
@@ -16,7 +17,7 @@ import { Modal } from './components';
 
 globalThis.gql_debug = false;
 
-export default class Root extends Component {
+class Root extends Component {
   state = {
 		showingLoading: this.isLoading( dataService.getStore() ),
 		authenticated: false,
@@ -229,6 +230,8 @@ export default class Root extends Component {
 		;
 	}
 }
+
+export default codePush(Root);
 
 const styles = StyleSheet.create({
   container: {
