@@ -15,57 +15,67 @@ interface ScrollScreenProps {
 	loading?: boolean,
 	data?: Array<any>,
 	renderItem?: any,
-	keyExtractor?: (item:any) => string,
+	keyExtractor?: (item: any) => string,
 	ListEmptyComponent?: any
 }
 
 export default class ScrollScreen extends Component<ScrollScreenProps> {
-	deltaY = this.props.animatedScrollValue || new Animated.Value(0);
+	deltaY = this.props.animatedScrollValue || new Animated.Value(0);
 
 	headerTranslate: Animated.AnimatedInterpolation;
 	openOpacity: Animated.AnimatedInterpolation;
 	closedOpacity: Animated.AnimatedInterpolation;
-	
-	constructor( props ) {
+
+	constructor(props) {
 		super(props);
 
 		const maxScroll = headerOpenHeight - headerClosedHeight;
 
 		this.headerTranslate = this.deltaY.interpolate({
 			inputRange: [0, maxScroll],
-			outputRange: [0, maxScroll/2],
+			outputRange: [0, maxScroll / 2],
 			extrapolate: 'clamp'
-		}); 
+		});
 
-		this.closedOpacity = interpolations.interpolateTo1( this.deltaY )
+		this.closedOpacity = interpolations.interpolateTo1(this.deltaY)
 
-		this.openOpacity = interpolations.interpolateTo0( this.deltaY )
+		this.openOpacity = interpolations.interpolateTo0(this.deltaY)
 	}
 
 	scrollMapping = Animated.event([{
-		nativeEvent: {contentOffset: {y: this.deltaY}},
-	}], {useNativeDriver: true});
+		nativeEvent: { contentOffset: { y: this.deltaY } },
+	}], { useNativeDriver: true });
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={ styles.topBar }>
-					{ this.props.topBar }
-				</View>
-				{ this.renderContent() }
+				{this.renderTopBar()}
+				{this.renderContent()}
 			</View>
 		)
 	}
-	
+
 	_onScroll = e => {
 		// console.log( e.nativeEvent );
 	}
 
-	renderContent(){
-		if( this.props.loading ){
+	renderTopBar() {
+		if (this.props.loading) {
+			return this.renderScrollPadding();
+		}
+
+		return (
+			<View style={styles.topBar}>
+				{this.props.topBar}
+			</View>
+		);
+	}
+
+	renderContent() {
+		if (this.props.loading) {
 			return this.renderLoading();
 		}
-		if( this.props.data ){
+		if (this.props.data) {
 			return this.renderFlatList();
 		}
 		return this.renderScrollView();
@@ -73,28 +83,28 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 
 	renderLoading() {
 		return (
-			<View style={ styles.loading }>
+			<View style={styles.loading}>
 				<ActivityIndicator color={styleVars.colors.secondary}
 					animating />
 			</View>
 		);
 	}
 
-	renderFlatList(){
+	renderFlatList() {
 		return (
 			<Animated.FlatList
-				onScroll={ this.scrollMapping }
-				snapToOffsets={[headerOpenHeight - headerClosedHeight] }
-				snapToEnd={ false }
+				onScroll={this.scrollMapping}
+				snapToOffsets={[headerOpenHeight - headerClosedHeight]}
+				snapToEnd={false}
 				decelerationRate="fast"
 				nestedScrollEnabled={true}
 				scrollEventThrottle={1}
-				ListHeaderComponent={ this.renderScrollPadding() }
-				ListEmptyComponent={ this.props.ListEmptyComponent }
-				data={ this.props.data }
-				renderItem={ this.props.renderItem }
-				keyExtractor={ this.props.keyExtractor }
-				contentContainerStyle={{width: '100%'}}
+				ListHeaderComponent={this.renderScrollPadding()}
+				ListEmptyComponent={this.props.ListEmptyComponent}
+				data={this.props.data}
+				renderItem={this.props.renderItem}
+				keyExtractor={this.props.keyExtractor}
+				contentContainerStyle={{ width: '100%' }}
 			/>
 		);
 	}
@@ -102,22 +112,22 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 	renderScrollView() {
 		return (
 			<Animated.ScrollView
-				onScroll={ this.scrollMapping }
-				snapToOffsets={[headerOpenHeight - headerClosedHeight] }
-				snapToEnd={ false }
+				onScroll={this.scrollMapping}
+				snapToOffsets={[headerOpenHeight - headerClosedHeight]}
+				snapToEnd={false}
 				decelerationRate="fast"
 				nestedScrollEnabled={true}
 				scrollEventThrottle={1}>
-				{ this.renderScrollPadding() }
-				{ this.props.children }
+				{this.renderScrollPadding()}
+				{this.props.children}
 			</Animated.ScrollView>
 		)
 	}
 
 	renderScrollPadding() {
-		let headerStyles = [ styles.header, {
+		let headerStyles = [styles.header, {
 			opacity: this.openOpacity,
-			transform: [{translateY: this.headerTranslate}]
+			transform: [{ translateY: this.headerTranslate }]
 		}];
 
 		let preListBarStyles = [styles.preListBar, {
@@ -125,12 +135,12 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 		}];
 
 		return (
-			<View style={ styles.padding }>
-				<Animated.View style={ headerStyles }>
-					{ this.props.header }
+			<View style={styles.padding}>
+				<Animated.View style={headerStyles}>
+					{this.props.header}
 				</Animated.View>
-				<Animated.View style={ preListBarStyles }>
-					{ this.props.preListBar }
+				<Animated.View style={preListBarStyles}>
+					{this.props.preListBar}
 				</Animated.View>
 			</View>
 		);

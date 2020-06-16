@@ -12,8 +12,8 @@ export default class MyFollowers extends Component<ScreenProps> {
 	render() {
 		const followers = this.getFollowers();
 
-		if( followers && !followers.items.length ){
-			return <NoFollowers { ...this.props } />;
+		if (followers && !followers.items.length) {
+			return <NoFollowers {...this.props} />;
 		}
 
 		const header = (
@@ -22,12 +22,14 @@ export default class MyFollowers extends Component<ScreenProps> {
 
 
 		const topBar = (
-			<TopBar onBack={() => this.props.drawer.open()}
+			<TopBar
+				onBack={() => this.props.drawer.open()}
+				withSafeArea
 				title="My followers" />
 		);
 
-		
-		if( followers ){
+
+		if (followers) {
 			this.lastIndex = followers.items.length - 1;
 		}
 
@@ -36,7 +38,7 @@ export default class MyFollowers extends Component<ScreenProps> {
 				<ScrollScreen header={header}
 					topBar={topBar}
 					loading={!followers}
-					data={ followers && followers.items }
+					data={followers && followers.items}
 					renderItem={this._renderItem}
 					keyExtractor={item => item} />
 			</Bg>
@@ -46,7 +48,7 @@ export default class MyFollowers extends Component<ScreenProps> {
 	getFollowers() {
 		let followers = this.props.store.user.followers;
 
-		if( followers && followers.valid ){
+		if (followers && followers.valid) {
 			return followers;
 		}
 	}
@@ -60,10 +62,10 @@ export default class MyFollowers extends Component<ScreenProps> {
 	_renderItem = ({ item, index }) => {
 		return (
 			<PeopleListItem
-				peopleId={ item }
-				onPress={ this._goToAccount }
-				isFirstItem={ !index }
-				isLastItem={ index === this.lastIndex } />
+				peopleId={item}
+				onPress={this._goToAccount}
+				isFirstItem={!index}
+				isLastItem={index === this.lastIndex} />
 		);
 	}
 

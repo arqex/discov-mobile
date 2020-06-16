@@ -19,18 +19,20 @@ export default class MorePeople extends Component<ScreenProps> {
 
 	render() {
 		let data = this.getData();
-		if( data ){
+		if (data) {
 			this.lastIndex = data.length - 1;
 		}
+
+		console.log('Data', data)
 
 		return (
 			<Bg>
 				<ScrollScreen
-					topBar={ this.renderTopBar() }
-					header={ this.renderHeader() }
+					topBar={this.renderTopBar()}
+					header={this.renderHeader()}
 					animatedScrollValue={this.animatedScrollValue}
-					loading={ this.isLoading() }
-					data={ data }
+					loading={this.isLoading()}
+					data={data}
 					renderItem={this._renderItem}
 					keyExtractor={item => item} />
 			</Bg>
@@ -38,7 +40,7 @@ export default class MorePeople extends Component<ScreenProps> {
 	}
 
 	renderHeader() {
-		if( !this.state.searchMode ){
+		if (!this.state.searchMode) {
 			return (
 				<View style={styles.header}>
 					<Text type="header">
@@ -49,11 +51,9 @@ export default class MorePeople extends Component<ScreenProps> {
 		}
 
 		return (
-			<View style={ styles.header }>
+			<View style={styles.header}>
 				<Text type="header">Search for people</Text>
-				<Text type="paragraph" style={{textAlign: 'center'}}>
-					{ this.renderSearchSubtitle() }
-				</Text>
+				{this.renderSearchSubtitle()}
 			</View>
 		)
 	}
@@ -70,34 +70,54 @@ export default class MorePeople extends Component<ScreenProps> {
 				onSearch={this._onSearch}
 				preButtons={backButton}
 				animatedScrollValue={this.animatedScrollValue}>
-					<Text type="mainTitle">More people</Text>
+				<Text type="mainTitle">More people</Text>
 			</SearchBar>
 		);
 
 		return (
-			<TopBar content={ searchbar }
-				animatedScrollValue={ this.animatedScrollValue}
+			<TopBar content={searchbar}
+				animatedScrollValue={this.animatedScrollValue}
 				withSafeArea />
 		);
 	}
 
 	renderSearchSubtitle() {
 		let { searching, searchTerms, searchResults } = this.state;
-		if( !searchTerms ){
-			return 'Type the name of the person you are looking for. You can also use @ at the begining for searching by handle.'
+
+		if (!searchTerms) {
+			return this.renderSubtitle('Type the name of the person you are looking for. You can also use @ at the begining for searching by handle.');
 		}
-		if( searching ){
-			return 'Searching...';
-		}
-		if( !searchResults.length ){
-			return <Text>No people found for <Text>{ searchTerms }</Text></Text>
+		if (searching) {
+			return this.renderSubtitle('Searching...');
 		}
 
-		return `${ searchResults.length } people found for ${ searchTerms }`;
+		if (!searchResults.length) {
+			return (
+				<View>
+					{this.renderSubtitle(<Text>No people found for <Text>{searchTerms}</Text></Text>)}
+					<Button size="s">Clear search</Button>
+				</View>
+			)
+		}
+
+		return (
+			<View>
+				{this.renderSubtitle(`${searchResults.length} people found for ${searchTerms}`)}
+				<Button size="s" type="transparent">Clear search</Button>
+			</View>
+		)
 	}
 
-	getData(){
-		if( this.state.searchMode ){
+	renderSubtitle(text) {
+		return (
+			<Text type="paragraph" style={{ textAlign: 'center' }}>
+				{text}
+			</Text>
+		);
+	}
+
+	getData() {
+		if (this.state.searchMode) {
 			return this.state.searchResults;
 		}
 
@@ -110,25 +130,28 @@ export default class MorePeople extends Component<ScreenProps> {
 	}
 
 	componentDidMount() {
-		if ( !this.getPeople() ) {
+		let people = this.getPeople();
+		if (!people || !people.items) {
+			console.log('Loading!!');
 			this.props.actions.account.loadAround();
 		}
 	}
 
 	isLoading() {
-		if( this.state.searchMode ){
+		if (this.state.searchMode) {
 			return this.state.searching;
 		}
+
 		return !this.getPeople();
 	}
 
 	_renderItem = ({ item, index }) => {
 		return (
 			<PeopleListItem
-				peopleId={ item }
-				onPress={ this._goToAccount }
-				isFirstItem={ !index }
-				isLastItem={ index === this.lastIndex } />
+				peopleId={item}
+				onPress={this._goToAccount}
+				isFirstItem={!index}
+				isLastItem={index === this.lastIndex} />
 		);
 	}
 
@@ -154,14 +177,14 @@ export default class MorePeople extends Component<ScreenProps> {
 		};
 
 		this.setState({ searching: true });
-		this.props.actions.account.search( payload )
-			.then( results => {
+		this.props.actions.account.search(payload)
+			.then(results => {
 				this.setState({
 					searching: false,
 					searchResults: results
 				})
 			})
-		;
+			;
 	}
 }
 

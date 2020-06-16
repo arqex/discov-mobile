@@ -44,7 +44,7 @@ export default class Register extends React.Component<ScreenProps> {
 					<View style={styles.marginBottomX2}>
 						<Button onPress={this._register}
 							loading={this.state.loading}
-							disabled={ this.state.googleLoading }>
+							disabled={this.state.googleLoading}>
 							Create account
 						</Button>
 					</View>
@@ -53,9 +53,9 @@ export default class Register extends React.Component<ScreenProps> {
 					</View>
 					<View style={styles.marginBottom}>
 						<Button color="white"
-							onPress={ this._federatedRegister }
-							disabled={ this.state.loading }
-							loading={ this.state.googleLoading }>Enter with G</Button>
+							onPress={this._federatedRegister}
+							disabled={this.state.loading}
+							loading={this.state.googleLoading}>Enter with G</Button>
 					</View>
 				</View>
 				<View>
@@ -81,10 +81,10 @@ export default class Register extends React.Component<ScreenProps> {
 			return this.alert(error.msg);
 		}
 
-		const {email, password} = this.state;
+		const { email, password } = this.state;
 
-		if( NEED_INVITATION ){
-			this.props.store.validateInvitationData = {email, password};
+		if (NEED_INVITATION) {
+			this.props.store.validateInvitationData = { email, password };
 			return this.props.router.navigate(
 				`/auth?content=validateInvitation`
 			);
@@ -97,18 +97,20 @@ export default class Register extends React.Component<ScreenProps> {
 			.catch(err => {
 				console.error(err)
 			})
-		;
+			;
 	}
-	
+
 	_federatedRegister = () => {
-		this.setState({googleLoading: true});
+		return Alert.alert('Google register not available yet');
+
+		this.setState({ googleLoading: true });
 
 		this.props.actions.auth.federatedLogin()
-			.then( this._onRegisterAndLogin )
-			.catch( err => {
-				console.error( err )
+			.then(this._onRegisterAndLogin)
+			.catch(err => {
+				console.error(err)
 			})
-		;
+			;
 	}
 
 	_onRegisterAndLogin = (registerResponse: any = {}) => {
@@ -116,7 +118,7 @@ export default class Register extends React.Component<ScreenProps> {
 		let redirected = loginService.redirectOnLogin(registerResponse, this.props.router);
 
 		if (!redirected && registerResponse.error) {
-			this.alert( registerResponse.error.message) ;
+			this.alert(registerResponse.error.message);
 		}
 	}
 

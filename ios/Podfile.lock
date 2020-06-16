@@ -58,9 +58,6 @@ PODS:
     - UMConstantsInterface
     - UMCore
     - UMTaskManagerInterface
-  - EXUpdates (0.2.5):
-    - React
-    - UMCore
   - EXWebBrowser (8.2.1):
     - UMCore
   - FBLazyVector (0.61.4)
@@ -393,7 +390,6 @@ DEPENDENCIES:
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXTaskManager (from `../node_modules/expo-task-manager/ios`)
-  - EXUpdates (from `../node_modules/expo-updates/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/Libraries/FBReactNativeSpec`)
@@ -497,8 +493,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-sqlite/ios"
   EXTaskManager:
     :path: "../node_modules/expo-task-manager/ios"
-  EXUpdates:
-    :path: "../node_modules/expo-updates/ios"
   EXWebBrowser:
     :path: "../node_modules/expo-web-browser/ios"
   FBLazyVector:
@@ -620,7 +614,6 @@ SPEC CHECKSUMS:
   EXPermissions: d2cafee9c72578ecc9ca121481e6c4a04a798861
   EXSQLite: 15268ec49f859e4594fe5b0a1c7a47913da0b67e
   EXTaskManager: 62e38435210f4ec379239dbe3af21e0be1087b18
-  EXUpdates: f3c3e613f022e36b544bdb39f3e865ed257b0f69
   EXWebBrowser: 6364e9e1ea73f6c3c2e6e3cc0ac17259a260e3a8
   FBLazyVector: feb35a6b7f7b50f367be07f34012f34a79282fa3
   FBReactNativeSpec: 51477b84b1bf7ab6f9ef307c24e3dd675391be44

@@ -9,7 +9,7 @@ const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : Touchabl
 
 type ButtonSizes = 'm' | 's';
 type ButtonColors = 'primary' | 'secondary' | 'white';
-type ButtonTypes = 'filled' | 'border' | 'transparent' | 'icon' | 'iconFilled' | 'menu' ;
+type ButtonTypes = 'filled' | 'border' | 'transparent' | 'icon' | 'iconFilled' | 'menu';
 type IconPositions = 'pre' | 'post';
 
 interface ButtonProps {
@@ -28,7 +28,7 @@ const colors = styleVars.colors;
 let router;
 
 const Button = (props: ButtonProps) => {
-	const {type, size, color, icon, iconPosition, disabled, loading, onPress, link, withShadow,...others} = props;
+	const { type, size, color, icon, iconPosition, disabled, loading, onPress, link, withShadow, ...others } = props;
 
 	const isIcon = type === 'icon' || type === 'iconFilled';
 
@@ -36,8 +36,8 @@ const Button = (props: ButtonProps) => {
 
 	const containerStyles = [
 		styles.container,
-		styles[ `size_${size}` ],
-		styles[ `${type}_${color}` ],
+		styles[`size_${size}`],
+		styles[`${type}_${color}`],
 		isMenuButton && styles.container_menu,
 		disabled && styles.disabled,
 		isIcon && styles.iconContainer,
@@ -49,28 +49,28 @@ const Button = (props: ButtonProps) => {
 		styles[`text_${type}_${color}`],
 		isMenuButton && styles.text_menu
 	];
-	
+
 	const iconSize = isMenuButton ? 32 : 24;
 
 	let content;
-	if( isIcon ){
+	if (isIcon) {
 		content = (
-			<MaterialIcons name={ props.icon } size={ iconSize } color={ getIconColor( props ) } />
+			<MaterialIcons name={props.icon} size={iconSize} color={getIconColor(props)} />
 		);
 	}
 	else {
 		let iconPre, iconPost;
-		if( props.icon ){
-			let icon = <MaterialIcons name={props.icon} size={iconSize} color={ getIconColor(props) } />;
-			if( props.iconPosition === 'pre' ){
-				iconPre = <View style={ [styles.iconWrapperPre , isMenuButton && styles.iconWrapper_pre]}>{ icon }</View>;
+		if (props.icon) {
+			let icon = <MaterialIcons name={props.icon} size={iconSize} color={getIconColor(props)} />;
+			if (props.iconPosition === 'pre') {
+				iconPre = <View style={[styles.iconWrapperPre, isMenuButton && styles.iconWrapper_pre]}>{icon}</View>;
 			}
 			else {
 				iconPost = <View style={[styles.iconWrapperPost, isMenuButton && styles.iconWrapper_post]}>{icon}</View>;
 			}
 		}
 		content = (
-			<View style={[styles.textWrapper,	loading && styles.textLoading] }>
+			<View style={[styles.textWrapper, loading && styles.textLoading]}>
 				{iconPre}
 				<Text style={textStyles}>
 					{props.children}
@@ -81,35 +81,39 @@ const Button = (props: ButtonProps) => {
 	}
 
 	let spinner;
-	if( loading ){
+	if (loading) {
 		spinner = (
 			<View style={styles.spinner}>
-				<Spinner color={ getIconColor(props) } />
+				<Spinner color={getIconColor(props)} />
 			</View>
 		);
 	}
 
 	const linkedPress = e => {
-		if( link ){
-			router.navigate( link );
+		if (link) {
+			router.navigate(link);
 		}
-		return onPress( e );
+		return onPress(e);
 	}
 
+
+	// External wrapper to make the android effect not to overflow the button
 	return (
-		<Touchable
-			disabled={ disabled }
-			{...others}
-			onPress={ linkedPress }>
-			<View style={containerStyles}>
-				{ content }
-				{ spinner }
-			</View>
-		</Touchable>
+		<View style={{ overflow: 'hidden', borderRadius: isMenuButton ? 28 : 20 }}>
+			<Touchable
+				disabled={disabled}
+				{...others}
+				onPress={linkedPress}>
+				<View style={containerStyles}>
+					{content}
+					{spinner}
+				</View>
+			</Touchable>
+		</View>
 	);
 };
 
-Button.setRouter = function( r ){
+Button.setRouter = function (r) {
 	router = r;
 }
 
@@ -119,18 +123,18 @@ Button.defaultProps = {
 	size: 'm',
 	icon: '',
 	iconPosition: 'pre',
-	onPress: function(){}
+	onPress: function () { }
 };
 
 export default Button;
 
-function getIconColor( props ){
+function getIconColor(props) {
 	let { type, color, iconColor } = props;
 
-	if( iconColor ){
+	if (iconColor) {
 		return iconColor
 	}
-	
+
 	if (type === 'icon') {
 		return colors[color];
 	}

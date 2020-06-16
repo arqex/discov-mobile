@@ -10,9 +10,8 @@
 #import <React/RCTBridgeDelegate.h>
 #import <UMCore/UMAppDelegateWrapper.h>
 #import <UserNotifications/UNUserNotificationCenter.h>
-#import <EXUpdates/EXUpdatesAppController.h>
 
-@interface AppDelegate : UMAppDelegateWrapper <RCTBridgeDelegate, UNUserNotificationCenterDelegate, EXUpdatesAppControllerDelegate>
+@interface AppDelegate : UMAppDelegateWrapper <RCTBridgeDelegate, UNUserNotificationCenterDelegate>
 
 @property (nonatomic, strong) UMModuleRegistryAdapter *moduleRegistryAdapter;
 @property (nonatomic, strong) UIWindow *window;
