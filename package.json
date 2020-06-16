@@ -36,6 +36,7 @@
     "react-interactable": "^0.6.4",
     "react-native": "0.61.4",
     "react-native-app-settings": "^2.0.1",
+    "react-native-code-push": "^6.2.1",
     "react-native-device-info": "^5.5.4",
     "react-native-fast-image": "^8.1.5",
     "react-native-gesture-handler": "~1.6.0",

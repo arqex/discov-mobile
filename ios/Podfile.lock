@@ -22,7 +22,13 @@ PODS:
     - AppCenter/Core
   - AppCenterReactNativeShared (3.0.3):
     - AppCenter/Core (= 3.2.0)
+  - Base64 (1.1.2)
   - boost-for-react-native (1.63.0)
+  - CodePush (6.2.1):
+    - Base64 (~> 1.1)
+    - JWT (~> 3.0.0-beta.7)
+    - React
+    - SSZipArchive (~> 2.1)
   - DoubleConversion (1.1.6)
   - EXConstants (9.0.0):
     - UMConstantsInterface
@@ -112,6 +118,8 @@ PODS:
   - GTMSessionFetcher/Full (1.4.0):
     - GTMSessionFetcher/Core (= 1.4.0)
   - JKBigInteger2 (0.0.5)
+  - JWT (3.0.0-beta.12):
+    - Base64 (~> 1.1.2)
   - libwebp (1.1.0):
     - libwebp/demux (= 1.1.0)
     - libwebp/mux (= 1.1.0)
@@ -355,6 +363,7 @@ PODS:
   - SDWebImageWebPCoder (0.4.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.5)
+  - SSZipArchive (2.2.3)
   - UMAppLoader (1.0.1)
   - UMBarCodeScannerInterface (5.1.0)
   - UMCameraInterface (5.1.0)
@@ -378,6 +387,7 @@ DEPENDENCIES:
   - appcenter-analytics (from `../node_modules/appcenter-analytics/ios`)
   - appcenter-core (from `../node_modules/appcenter/ios`)
   - appcenter-crashes (from `../node_modules/appcenter-crashes/ios`)
+  - CodePush (from `../node_modules/react-native-code-push`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXErrorRecovery (from `../node_modules/expo-error-recovery/ios`)
@@ -451,6 +461,7 @@ SPEC REPOS:
     - AppAuth
     - AppCenter
     - AppCenterReactNativeShared
+    - Base64
     - boost-for-react-native
     - Google-Maps-iOS-Utils
     - GoogleMaps
@@ -458,9 +469,11 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - JKBigInteger2
+    - JWT
     - libwebp
     - SDWebImage
     - SDWebImageWebPCoder
+    - SSZipArchive
 
 EXTERNAL SOURCES:
   appcenter-analytics:
@@ -469,6 +482,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/appcenter/ios"
   appcenter-crashes:
     :path: "../node_modules/appcenter-crashes/ios"
+  CodePush:
+    :path: "../node_modules/react-native-code-push"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXConstants:
@@ -601,7 +616,9 @@ SPEC CHECKSUMS:
   appcenter-core: 84a1c69361d10272bf08b2ff906c37f4e422b940
   appcenter-crashes: e9008710be7612c585c39f3dc2cf3894172dc6e2
   AppCenterReactNativeShared: d1218878427a69d4b76f73883256455ed20f12b3
+  Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  CodePush: 4b21ce24113167513a6fd1602718b22e322069b2
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   EXConstants: 9f18e9ef229706394f41735d9c7f309d479b36c0
   EXErrorRecovery: 88541714d9bbf8a823f4ee0b7078a92d3e0e42d2
@@ -625,6 +642,7 @@ SPEC CHECKSUMS:
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
+  JWT: 9b5c05abbcc1a0e69c3c91e1655b3387fc7e581d
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   RCTRequired: f3b3fb6f4723e8e52facb229d0c75fdc76773849
   RCTTypeSafety: 2ec60de6abb1db050b56ecc4b60188026078fd10
@@ -659,6 +677,7 @@ SPEC CHECKSUMS:
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   SDWebImage: d9ea4959d99c52276dfada481987018fcaea3d58
   SDWebImageWebPCoder: 36f8f47bd9879a8aea6044765c1351120fd8e3a8
+  SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   UMAppLoader: 83885655be9ce3e5b3684d20f9973da67b78b3a9
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
   UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928
