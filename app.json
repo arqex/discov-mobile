@@ -1,0 +1,39 @@
+{
+  "expo": {
+    "name": "discovmobile",
+    "slug": "discovmobile",
+    "privacy": "unlisted",
+    "sdkVersion": "37.0.0",
+    "assetBundlePatterns": ["**/*"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "me.discov.android.app",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAyovAYNMAf9yxr1H9k5lbPGfEX_iqQ0dk"
+        }
+      }
+    },
+    "entryPoint": "node_modules/expo/AppEntry.js"
+  },
+  "displayName": "Discov",
+  "name": "discovmobile"
+}

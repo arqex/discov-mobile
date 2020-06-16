@@ -1,0 +1,85 @@
+import Auth from '../screens/login/Auth';
+
+import Menu from '../screens/Menu';
+
+import Onboarding from '../screens/onboarding/Onboarding';
+import OnboardingDetails from '../screens/onboarding/OnboardingDetails';
+import OnboardingLocation from '../screens/onboarding/OnboardingLocation';
+import OnboardingPeople from '../screens/onboarding/OnboardingPeople';
+
+import UnknownScreen from '../screens/UnknownScreen';
+import Gallery from '../components/gallery/Gallery';
+import Account from '../screens/account/Account';
+import MyDiscoveries from '../screens/myDiscoveries/MyDiscoveries';
+import MyStories from '../screens/myStories/MyStories';
+import OwnStory from '../screens/ownStory/OwnStory';
+
+import MyPeople from '../screens/myPeople/MyPeople';
+import MyFollowers from '../screens/myPeople/MyFollowers';
+import Following from '../screens/myPeople/Following';
+import MorePeople from '../screens/myPeople/MorePeople';
+
+import PeerAccountModal from '../screens/peerAccount/PeerAccountModal';
+import PeerAccountScreen from '../screens/peerAccount/PeerAccountScreen';
+
+import Settings from '../screens/settings/Settings';
+
+import CreateStory from '../screens/createStory/CreateStory';
+import AddStoryContent from '../screens/createStory/AddStoryContent';
+import ShareStory from '../screens/createStory/ShareStory';
+import StorySummary from '../screens/createStory/StorySummary';
+import OwnDiscovery from '../screens/ownDiscovery/OwnDiscovery';
+import LocationReport from '../screens/locationReport/LocationReport';
+
+export const routes = [
+	{ path: '/', cb: Auth },
+	{ path: '/auth', cb: Auth },
+	{ path: '/menu', cb: Menu },
+	{ path: '/onboarding', cb: Onboarding, children: [
+		{	path: '/details', cb: OnboardingDetails, children: [
+			{ path: '/location', cb: OnboardingLocation, children: [
+				{ path: '/people', cb: OnboardingPeople }
+			]}
+		]}
+	]},
+
+	{ path: '/account', cb: Account},
+	{ path: '/createStory', cb: CreateStory, children: [
+		{ path: '/addContent', cb: AddStoryContent, children: [
+			{ path: '/share', cb: ShareStory, children: [
+				{ path: '/summary', cb: StorySummary }
+			]}
+		] }
+	]},
+	
+	{
+		path: '/myDiscoveries', cb: MyDiscoveries, children: [
+			{ path: '/:id', cb: OwnDiscovery }
+		]
+	},
+
+	{ path: '/myPeople', cb: MyPeople, isTabs: true, children: [
+		{ path: '/myFollowers', cb: MyFollowers, children: [
+			{ path: '/:id', cb: PeerAccountScreen },
+		]},
+		{ path: '/following', cb: Following, children: [
+			{ path: '/:id', cb: PeerAccountScreen },
+		] },
+		{ path: '/morePeople', cb: MorePeople, children: [
+			{ path: '/:id', cb: PeerAccountScreen },
+		] }
+	]},
+
+	{ path: '/myStories', cb: MyStories, children: [
+		{ path: '/:id', cb: OwnStory }
+	]},
+
+	{ path: '/settings', cb: Settings },
+
+	{ path: '/locationReport', cb: LocationReport },
+
+	{ path: '/accountModal', cb: PeerAccountModal, isModal: true },
+
+	{ path: '/componentGallery', cb: Gallery},
+	{ path: '/*', cb: UnknownScreen }
+]
