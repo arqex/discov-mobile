@@ -29,5 +29,10 @@
 		"noDiscoverable": "No follower selected. This is a private story.",
 		"publish": "Publish story",
 		"draft": "Save as draft"
+	},
+
+	"myDiscoveries": {
+		"title": "My discoveries",
+		"empty": "No discoveries yet"
 	}
 }

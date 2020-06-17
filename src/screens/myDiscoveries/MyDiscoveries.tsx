@@ -17,7 +17,7 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 		}
 
 		const header = (
-			<Text type="header">My discoveries</Text>
+			<Text type="header">{ __('myDiscoveries.title') }</Text>
 		);
 
 		const topBar = (
@@ -25,7 +25,7 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 				onBack={() => this.props.drawer.open()}
 				withSafeArea
 				animatedScrollValue={this.animatedScrollValue}
-				title="My discoveries" />
+				title={ __('myDiscoveries.title')} />
 		);
 
 		return (
@@ -46,13 +46,13 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 			<View style={ styles.noStoriesTitle }>
 				<Image source={ require('../_img/no-discoveries.png') }
 					style={ styles.noStoriesImage } />
-				<Text type="header">No discoveries yet</Text>
+				<Text type="header">{ __('myDiscoveries.empty')}</Text>
 			</View>
 		);
 
 		let closedHeader = (
 			<View>
-				<Text type="mainTitle">My discoveries</Text>
+				<Text type="mainTitle">{ __('myDiscoveries.title')}</Text>
 			</View>
 		);
 

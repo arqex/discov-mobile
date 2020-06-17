@@ -6,14 +6,14 @@
 
 	"menu": {
 		"stories": "mis historias",
-		"discoveries": "mis hallazgos",
+		"discoveries": "mis descubrimientos",
 		"people": "mi gente",
 		"create": "nueva historia"
 	},
 
 	"createStory": {
 		"locateTitle": "Situa la historia",
-		"selectCurrent": "En En mi ubicación actual",
+		"selectCurrent": "En mi ubicación actual",
 		"selectLocation": "En esta ubicación",
 		"selectPlace": "En este lugar",
 		"editTitle": "Editar el nombre del lugar",
@@ -29,5 +29,10 @@
 		"noDiscoverable": "Ningún seguidor seleccionado. Esta será una historia privada.",
 		"publish": "Publicar historia",
 		"draft": "Guardar como borrador"
+	},
+
+	"myDiscoveries": {
+		"title": "Mis descubrimientos",
+		"empty": "Ningun descubrimiento todavía"
 	}
 }

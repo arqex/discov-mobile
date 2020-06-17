@@ -29,5 +29,10 @@
 		"noDiscoverable": "Cap seguidor seleccionat. Aquesta serà una història privada.",
 		"publish": "Publicar història",
 		"draft": "Desa com a esborrany"
+	},
+
+	"myDiscoveries": {
+		"title": "Els meus descobriments",
+		"empty": "Cap descubriment encara"
 	}
 }

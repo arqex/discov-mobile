@@ -15,8 +15,8 @@ export default class EditLocationModal extends React.Component<EditLocationModal
 	render() {
 		return (
 			<ModalContent
-				title="Edit location name"
-				description="This is the location name that your followers will see when discover the story."
+				title={ __('createStory.editTitle') }
+				description={ __('createStory.editInfo') }
 				controls={[
 					{ text: 'ok', onPress: this._onFinish },
 					{ text: 'Cancel', type: 'transparent', onPress: Modal.close }
