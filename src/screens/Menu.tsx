@@ -5,6 +5,7 @@ import { ScreenProps } from '../utils/ScreenProps';
 import { getStatusbarHeight } from '../components/utils/getStatusbarHeight';
 import RootLoading from '../RootLoading';
 import storeService from '../state/store.service';
+import '../utils/i18n';
 
 export default class Menu extends Component<ScreenProps> {
 	constructor( props ){
@@ -56,7 +57,7 @@ export default class Menu extends Component<ScreenProps> {
 								color="secondary"
 								iconColor={ styleVars.colors.primary }
 								onPress={ this.props.drawer.close } link="/myStories">
-								my stories
+								{ __('menu.stories') }
 							</Button>
 						</View>
 						<View style={ [styles.button, styles.discoveries] }>
@@ -65,7 +66,7 @@ export default class Menu extends Component<ScreenProps> {
 								color="secondary"
 								iconColor={ styleVars.colors.primary }
 								onPress={ this.props.drawer.close } link="/myDiscoveries">
-								my discoveries
+								{__('menu.discoveries')}
 							</Button>
 							{ this.renderDiscoveryCounter() }
 						</View>
@@ -74,11 +75,13 @@ export default class Menu extends Component<ScreenProps> {
 							color="secondary"
 							iconColor={ styleVars.colors.primary }
 							onPress={ this.props.drawer.close } link="/myPeople">
-							my people
+							{__('menu.people')}
 						</Button>
 					</View>
 					<View style={ styles.create }>
-						<Button icon="looks" onPress={ this.props.drawer.close } link="/createStory">Create story</Button>
+						<Button icon="looks" onPress={this.props.drawer.close} link="/createStory">
+							{__('menu.create')}
+						</Button>
 					</View>
 				</View>
 			</Bg>

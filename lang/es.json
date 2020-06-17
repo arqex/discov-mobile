@@ -1,0 +1,33 @@
+{
+	"edit": "Editar",
+	"ok": "Ok",
+	"cancel": "Cancelar",
+	"allFollowers": "Todos mis seguidores",
+
+	"menu": {
+		"stories": "mis historias",
+		"discoveries": "mis hallazgos",
+		"people": "mi gente",
+		"create": "nueva historia"
+	},
+
+	"createStory": {
+		"locateTitle": "Situa la historia",
+		"selectCurrent": "En En mi ubicación actual",
+		"selectLocation": "En esta ubicación",
+		"selectPlace": "En este lugar",
+		"editTitle": "Editar el nombre del lugar",
+		"editInfo": "Este es el nombre de lugar que tus seguidores verán cuando descubran la historia.",
+		"areaTitle": "Area de descubrimiento",
+		"areaInfo": "Mueve la barra para hacer el área más grande o pequeña. Los amigos que selecciones descubrirán la historia cuando pasen por el círculo azul.",
+		"radiusLabel": "Elige la distancia",
+		"writeTitle": "Escribe tu mensaje",
+		"shareTitle": "Comparte con seguidores",
+		"summaryTitle": "Revisión final",
+		"discoverableByAll": "Disponible para todos mis seguidores",
+		"discoverableBySome": "Disponible para algunos",
+		"noDiscoverable": "Ningún seguidor seleccionado. Esta será una historia privada.",
+		"publish": "Publicar historia",
+		"draft": "Guardar como borrador"
+	}
+}

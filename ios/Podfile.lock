@@ -353,6 +353,8 @@ PODS:
   - RNGoogleSignin (4.0.3):
     - GoogleSignIn (~> 5.0.0)
     - React
+  - RNLocalize (1.4.0):
+    - React
   - RNOpenAppSettings (1.0.0):
     - React
   - RNSVG (11.0.1):
@@ -439,6 +441,7 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-community/google-signin`)"
+  - RNLocalize (from `../node_modules/react-native-localize`)
   - RNOpenAppSettings (from `../node_modules/react-native-app-settings`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
@@ -576,6 +579,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-community/google-signin"
+  RNLocalize:
+    :path: "../node_modules/react-native-localize"
   RNOpenAppSettings:
     :path: "../node_modules/react-native-app-settings"
   RNSVG:
@@ -673,6 +678,7 @@ SPEC CHECKSUMS:
   RNFastImage: 35ae972d6727c84ee3f5c6897e07f84d0a3445e9
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNGoogleSignin: ccf71ee4b6cfd324fd788a41e457e2043838c0d9
+  RNLocalize: fc27ee5878ce5a3af73873fb2d8e866e0d1e6d84
   RNOpenAppSettings: 1169b90a275e9e18c5973e1608949f97d426e7f3
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   SDWebImage: d9ea4959d99c52276dfada481987018fcaea3d58

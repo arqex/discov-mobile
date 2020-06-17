@@ -28,6 +28,8 @@
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B47C5AFCB8BDE514B7D1AC6 /* Pods-discovmobile.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-discovmobile.debug.xcconfig"; path = "Target Support Files/Pods-discovmobile/Pods-discovmobile.debug.xcconfig"; sourceTree = "<group>"; };
 		59207AF7249912130083B6F3 /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "discovmobile/AppCenter-Config.plist"; sourceTree = "<group>"; };
+		593BC1DA249A70B5000004B2 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = ca.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		593BC1DB249A70C0000004B2 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		59C91279245B25840000AF97 /* discovmobile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = discovmobile.entitlements; path = discovmobile/discovmobile.entitlements; sourceTree = "<group>"; };
 		59DA9E402468156A00A82F17 /* Courgette-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Courgette-Regular.ttf"; sourceTree = "<group>"; };
 		8AC623DBF3A3E2CB072F81F2 /* Pods-discovmobile.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-discovmobile.release.xcconfig"; path = "Target Support Files/Pods-discovmobile/Pods-discovmobile.release.xcconfig"; sourceTree = "<group>"; };
@@ -167,6 +169,8 @@
 			knownRegions = (
 				en,
 				Base,
+				ca,
+				es,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
@@ -287,6 +291,8 @@
 			isa = PBXVariantGroup;
 			children = (
 				13B07FB21A68108700A75B9A /* Base */,
+				593BC1DA249A70B5000004B2 /* ca */,
+				593BC1DB249A70C0000004B2 /* es */,
 			);
 			name = LaunchScreen.xib;
 			path = discovmobile;

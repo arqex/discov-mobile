@@ -1,0 +1,33 @@
+{
+	"edit": "Edit",
+	"ok": "Ok",
+	"cancel": "Cancel",
+	"allFollowers": "All my followers",
+
+	"menu": {
+		"stories": "my stories",
+		"discoveries": "my discoveries",
+		"people": "my people",
+		"create": "create story"
+	},
+
+	"createStory": {
+		"locateTitle": "Place a new story",
+		"selectCurrent": "Select my current location",
+		"selectLocation": "Select this location",
+		"selectPlace": "Select this place",
+		"editTitle": "Edit location name",
+		"editInfo": "This is the location name that your followers will see when they discover the story.",
+		"areaTitle": "Discovery area",
+		"areaInfo": "Drag the slider to change the size of the discovery area. Selected friends will discover the story when passing through the blue circle.",
+		"radiusLabel": "Select the distance",
+		"writeTitle": "Write your message",
+		"shareTitle": "Share with followers",
+		"summaryTitle": "Final review",
+		"discoverableByAll": "Discoverable by all my followers",
+		"discoverableBySome": "Discoverable by some followers",
+		"noDiscoverable": "No follower selected. This is a private story.",
+		"publish": "Publish story",
+		"draft": "Save as draft"
+	}
+}

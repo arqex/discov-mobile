@@ -76,7 +76,7 @@ export default class ShareStory extends Component<ScreenProps, ShareStoryState> 
 	renderTopBar() {
 		return (
 			<TopBar onBack={ this._onBack }
-				title="Share with followers"
+				title={ __('createStory.shareTitle') }
 				withSafeArea
 				post={this.renderSearchButton()} />
 		)
@@ -87,44 +87,6 @@ export default class ShareStory extends Component<ScreenProps, ShareStoryState> 
 		if ( followers && followers.valid ) {
 			return followers;
 		}
-	}
-
-	renderOld() {
-		if( usersService.following.isLoading() ){
-			return <View><Text>Loading</Text></View>;
-		}
-
-		let users = this.props.store.user.followers;
-		let extraPadding = {paddingBottom: getNavigationBarHeight() || 10 };
-
-		return (
-			<KeyboardAvoidingView style={styles.container} behavior="height">
-				<Bg>
-					<TopBar onBack={ this._onBack }
-						title="Share with followers"
-						withSafeArea
-						post={this.renderSearchButton()}
-					/>
-					<View style={styles.listWrapper}>
-						<FlatList data={ this.getData(users) }
-							extraData={ this.state }
-							bounces={ false }
-							contentContainerStyle={ styles.list }
-							renderItem={this._renderUser}
-							keyExtractor={ this._keyExtractor } />
-					</View>
-					<View style={[styles.bottomBar, extraPadding]}>
-						<View style={ styles.bottomPre }>
-
-						</View>
-						<View style={styles.bottomPost}>
-							{ this.renderCount() }
-							<Button size="s" onPress={this._onShareOk}>OK</Button>
-						</View>
-					</View>
-				</Bg>
-			</KeyboardAvoidingView>
-		);
 	}
 
 	_renderUser = ({item, index}) => {

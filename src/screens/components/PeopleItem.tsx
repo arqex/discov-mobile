@@ -36,13 +36,20 @@ const PeopleItem = (props: PeopleItemProps) => {
 	return (
 		<ListItem
 			pre={ renderAvatar( people ) }
-			title={ people.displayName || people.name }
+			title={ getName( people ) }
 			subtitle={ props.subtitle }
 			style={ itemStyles }
 			post={ post }
 			onPress={ () => props.onPress( people.id ) } />
 	);
 };
+
+function getName( people ) {
+	if( people.name && people.name === 'All followers' ){
+		return __('allFollowers');
+	}
+	return people.displayName || people.name;
+}
 
 function renderLoading(){
 	return <Text>Loading...</Text>;

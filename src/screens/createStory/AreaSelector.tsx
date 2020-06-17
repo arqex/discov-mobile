@@ -31,9 +31,9 @@ export default class AreaSelector extends React.Component<AreaSelectorProps> {
 						story={ this.props.story} />
 				</View>
 				<View style={{ marginBottom: 20 }}>
-					<Text>Drag the slider to increase or decrease the discovery area. Selected friends will discover the story when passing through the circle.</Text>
+					<Text>{ __("createStory.areaInfo") }</Text>
 				</View>
-				<Text type="label">Select a radius</Text>
+				<Text type="label">{ __("createStory.radiusLabel") }</Text>
 				<View style={styles.inputWrapper}>
 					<View style={styles.sliderWrapper}>
 						<Slider
@@ -48,7 +48,7 @@ export default class AreaSelector extends React.Component<AreaSelectorProps> {
 					</View>
 				</View>
 				<View>
-					<Button onPress={this.props.onSelect}>Ok</Button>
+					<Button onPress={this.props.onSelect}>{ __('ok') }</Button>
 				</View>
 			</View>
 		);

@@ -32,7 +32,7 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 				<TopBar onBack={ this._onBack }
 					withSafeArea
 					showBorder={ false }
-					title="Write your story"
+					title={ __('createStory.writeTitle') }
 				/>
 				<View style={styles.textInputWrapper }>
 					<TextInput multiline style={styles.textInput}
@@ -41,7 +41,7 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 						value={ this.state.content } />
 				</View>
 				<View style={[styles.bottomBar, extraPadding]}>
-					<Button size="s" onPress={ this._onContentOk }>OK</Button>
+					<Button size="s" onPress={ this._onContentOk }>{ __('ok') }</Button>
 				</View>
 			</View>
 		)

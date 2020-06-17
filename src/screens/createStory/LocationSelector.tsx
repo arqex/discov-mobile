@@ -29,16 +29,16 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 
 	getSelectTitle(){
 		if( this.props.dragMode ){
-			return 'Select this location';
+			return __('createStory.selectLocation');
 		}
 
 		let place = this.props.storyLocation.place;
 		
 		if( place && place.type === 'address' ){
-			return 'Select my current location';
+			return __('createStory.selectCurrent');
 		}
-		
-		return 'Select this place';
+
+		return __('createStory.selectPlace');
 	}
 
 	getSelectSubtitle() {

@@ -38,7 +38,6 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		super(props);
 
 		let story = this.getStory();
-		console.log('story in progress', story);
 		let location = story.location && lngToLocation(story.location) || this.props.position;
 
 		let storyLocation = location && {
@@ -68,14 +67,13 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 			if( !this.state.storyLocation ){
 				this.loadPlaces( position )
 				this.loadAddress( position );
-				console.log( 'updating region!!!!')
+				
 				this.setState({
 					regionInView: this.getRegion( position )
 				})
 			}
 		}
 		if( prevState.locationSelected !== this.state.locationSelected ){
-			console.log('Updated state');
 			this._closeMap();
 		}
 	}
@@ -127,7 +125,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		if( this.state.locationSelected ){
 			return (
 				<TopBar onBack={ () => this.setState({locationSelected: false}) }
-					title="Discovery area"
+					title={ __('createStory.areaTitle') } 
 					withSafeArea
 				/>
 			);
@@ -135,7 +133,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 
 		return (
 			<TopBar onBack={ () => this.props.drawer.open() }
-				title="Place a new story"
+				title={ __('createStory.locateTitle') } 
 				withSafeArea
 				post={<Button type="icon" icon="search" color="secondary" onPress={this._startSearch} />}
 			/>
@@ -177,9 +175,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 					size="s"
 					withShadow
 					style={{ opacity: .85}}
-					onPress={ this._toggleDrag }>
-					{ dragActive ? 'Ok' : 'Drag'}
-				</Button>
+					onPress={ this._toggleDrag } />
 			</View>
 		);
 	}
