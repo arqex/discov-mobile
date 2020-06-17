@@ -13,6 +13,8 @@ export default class Menu extends Component<ScreenProps> {
 		Button.setRouter( this.props.router );
 	}
 
+	fakeUser = '';
+
 	render() {
 		let widthStyle = {
 			width: Dimensions.get('window').width
@@ -26,6 +28,11 @@ export default class Menu extends Component<ScreenProps> {
 					<RootLoading finished={false} />
 				</View>
 			);
+		}
+
+		if( !this.fakeUser ){
+			this.fakeUser = 'eso';
+			this.props.store.user.account.displayName = 'Pau Vinyals';
 		}
 
 		let account = user.account;
@@ -99,6 +106,9 @@ export default class Menu extends Component<ScreenProps> {
 				</View>
 			);
 		}
+	}
+	componentDidMount() {
+
 	}
 }
 

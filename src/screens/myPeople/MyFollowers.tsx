@@ -20,16 +20,17 @@ export default class MyFollowers extends Component<ScreenProps> {
 			<Text type="header">My followers</Text>
 		);
 
-
 		const topBar = (
 			<TopBar
 				onBack={() => this.props.drawer.open()}
 				withSafeArea
+				animatedScrollValue={this.animatedScrollValue}
 				title="My followers" />
 		);
 
 
-		if (followers) {
+		if (followers && followers.items ) {
+			this.addFakeNames( followers.items );
 			this.lastIndex = followers.items.length - 1;
 		}
 
@@ -38,6 +39,7 @@ export default class MyFollowers extends Component<ScreenProps> {
 				<ScrollScreen header={header}
 					topBar={topBar}
 					loading={!followers}
+					animatedScrollValue={this.animatedScrollValue}
 					data={followers && followers.items}
 					renderItem={this._renderItem}
 					keyExtractor={item => item} />
@@ -57,6 +59,16 @@ export default class MyFollowers extends Component<ScreenProps> {
 		if (!this.getFollowers()) {
 			this.props.actions.relationship.loadUserFollowers();
 		}
+	}
+
+	fakeNames = false;
+	addFakeNames( ids ) {
+		if( this.fakeNames ) return;
+		this.fakeNames = true;
+		ids.forEach( (id,i) => {
+			console.log( this.props.store.peerAccounts[id] );
+			this.props.store.peerAccounts[id].displayName = fakeNames[i];
+		})
 	}
 
 	_renderItem = ({ item, index }) => {
@@ -79,3 +91,11 @@ const styles = StyleSheet.create({
 
 	}
 });
+
+
+const fakeNames = [
+	'Ona Ferrer',
+	'Ada López',
+	'Júlia Serra',
+	'Cindy Vila Puig'
+]

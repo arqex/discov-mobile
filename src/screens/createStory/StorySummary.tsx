@@ -61,14 +61,14 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 						<Button onPress={ this._onCreate }
 							loading={ this.state.saving}
 							disabled={ this.state.savingDraft}>
-								Publish Story
+								{ __('createStory.publish') }
 							</Button>
 					</View>
 					<Button type="transparent"
 						loading={ this.state.savingDraft}
 						disabled={ this.state.saving }
 						iconColor={ styleVars.colors.primary }
-						onPress={ this._onDraft }>Save as a draft</Button>
+						onPress={ this._onDraft }>{ __('createStory.draft') }</Button>
 				</View>
 			</View>
 		);
@@ -77,7 +77,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 	renderTopBar(){
 		return (
 			<TopBar onBack={() => this.navigate('/createStory/addContent/share') }
-				title="Final review"
+				title={ __('createStory.summaryTitle') }
 				withSafeArea
 			/>
 		);
@@ -89,7 +89,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 		if (!selected.total && !selected.all ) {
 			return this.renderDiscoverableLink(
 				<MaterialIcons name="visibility-off" size={40} color="#949494" />,
-				'No follower selected. This is a private story.'
+				__('createStory.noDiscoverable')
 			);
 		}
 
@@ -124,7 +124,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 				total: followers.total,
 				users: followers.items.slice(0,3),
 				all: true,
-				text: 'Discoverable by all followers'
+				text: __('createStory.discoverableByAll')
 			};
 		}
 
@@ -134,7 +134,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 			total: sharedList.length,
 			users: sharedList,
 			all: false,
-			text: 'Discoverable by some followers'
+			text: __('createStory.discoverableBySome')
 		};
 	});
 
