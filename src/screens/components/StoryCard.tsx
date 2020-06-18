@@ -64,8 +64,8 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 						{ this.renderTags( story ) }
 					</View>
 					<View style={ styles.rightControls }>
-						<Button type="transparent" icon="gps-fixed" iconColor="#666" size="s">
-							5 / 12
+						<Button type="transparent" color="secondary" icon="chat-bubble-outline" iconColor="#666" size="s">
+							12
 						</Button>
 					</View>
 				</View>

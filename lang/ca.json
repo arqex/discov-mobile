@@ -19,15 +19,22 @@
 		"editTitle": "Edita el nom de lloc",
 		"editInfo": "És el nom de lloc que veurà la gent amb qui comparteixis la història.",
 		"areaTitle": "Àrea de descobriment",
-		"areaInfo": "Mou la barra per fer el perímetre més gran o petit. La gent amb qui comparteixis la història la descobriran quan passin pel cercle blau.",
+		"areaInfo": "Mou la barra per fer el perímetre més gran o petit. La gent amb qui comparteixis la història la descobrirà quan passin pel cercle blau.",
 		"radiusLabel": "Selecciona la distància",
 		"writeTitle": "Escriu el teu missatge",
 		"shareTitle": "Comparteix amb seguidors",
-		"summaryTitle": "Revisió final",
+		"summaryTitle": "Validació final",
 		"discoverableByAll": "Disponible per a tots els meus seguidors",
 		"discoverableBySome": "Disponible per a alguns seguidors",
 		"noDiscoverable": "Cap seguidor seleccionat. Aquesta serà una història privada.",
 		"publish": "Publicar història",
 		"draft": "Desa com a esborrany"
+	},
+
+	"myDiscoveries": {
+		"title": "Els meus descobriments",
+		"empty": "Cap descubriment encara",
+		"newStory": "Nova història trobada!",
+		"tapme": "Clica'm per descobrir-la"
 	}
 }

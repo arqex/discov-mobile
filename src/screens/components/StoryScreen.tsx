@@ -87,8 +87,7 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	panel: {
-		paddingTop: 0,
-		paddingRight: 30
+		paddingTop: 0
 	},
 	mapBar: {
 		marginLeft: 20,

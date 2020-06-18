@@ -13,6 +13,7 @@ export default class StoryCard extends React.PureComponent<UnseenDiscoveryProps>
   state = {
     flash: false
   }
+  
 	render() {
 		let story = this.props.story;
 
@@ -20,10 +21,14 @@ export default class StoryCard extends React.PureComponent<UnseenDiscoveryProps>
 			<TouchableOpacity style={ styles.container }
 				onPress={ this._reveal }>
           { this.renderFlash() }
-          <AccountAvatar accountId={ story.ownerId }
-            size={ 60 } />
-          <Text type="mainTitle">New story found!</Text>
-          <Text>Tap me to reveal</Text>
+          <View style={{marginBottom: 4}}>
+            <AccountAvatar accountId={ story.ownerId }
+              size={ 60 } />
+          </View>
+          <View style={{ marginBottom: 2 }}>
+            <Text type="mainTitle">{ __('myDiscoveries.newStory') }</Text>
+          </View>
+          <Text>{ __('myDiscoveries.tapme') }</Text>
 			</TouchableOpacity>
 		);
   }

@@ -1,11 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Animated, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, Animated, ActivityIndicator, Platform } from 'react-native';
 import styleVars from './styleVars';
 import interpolations from './utils/scrollInterpolation';
 import { getStatusbarHeight } from './utils/getStatusbarHeight';
 
 const headerOpenHeight = 240;
 const headerClosedHeight = 58;
+const headerFactor = Platform.OS === 'android' ? 8 : 15;
 
 interface ScrollScreenProps {
 	topBar?: any,
@@ -126,6 +127,7 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 
 	renderScrollPadding() {
 		let headerStyles = [styles.header, {
+			paddingTop: getStatusbarHeight() + (headerClosedHeight / headerFactor * 3),
 			opacity: this.openOpacity,
 			transform: [{ translateY: this.headerTranslate }]
 		}];
@@ -164,7 +166,6 @@ const styles = StyleSheet.create({
 		top: 0, left: 0, right: 0,
 		zIndex: 2,
 		height: headerOpenHeight,
-		paddingTop: getStatusbarHeight() + (headerClosedHeight / 5 * 2),
 		alignItems: 'center',
 		justifyContent: 'center'
 	},

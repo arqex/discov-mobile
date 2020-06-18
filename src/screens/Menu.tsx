@@ -13,8 +13,6 @@ export default class Menu extends Component<ScreenProps> {
 		Button.setRouter( this.props.router );
 	}
 
-	fakeUser = '';
-
 	render() {
 		let widthStyle = {
 			width: Dimensions.get('window').width
@@ -105,12 +103,13 @@ export default class Menu extends Component<ScreenProps> {
 		}
 	}
 
+	fakeUser = false;
 	setFakeUser() {
 		if (!this.fakeUser) {
-			this.fakeUser = 'eso';
+			this.fakeUser = true;
 			let account = this.props.store.user.account;
-			account.displayName = 'Pau Vinyals';
-			this.props.store.peerAccounts[ account.id ].displayName = 'Pau Vinyals';
+			account.displayName = 'Ada López';
+			this.props.store.peerAccounts[ account.id ].displayName = 'Ada López';
 		}
 	}
 }

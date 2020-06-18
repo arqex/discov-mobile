@@ -1,4 +1,5 @@
 
+/// <reference path="../types/custom.d.ts" />
 import React, {Component} from 'react';
 import { StyleSheet, View, BackHandler, StatusBar, Platform } from 'react-native';
 import codePush from "react-native-code-push";
