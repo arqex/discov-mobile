@@ -30,10 +30,7 @@ export default class Menu extends Component<ScreenProps> {
 			);
 		}
 
-		if( !this.fakeUser ){
-			this.fakeUser = 'eso';
-			this.props.store.user.account.displayName = 'Pau Vinyals';
-		}
+		this.setFakeUser();
 
 		let account = user.account;
 
@@ -107,8 +104,14 @@ export default class Menu extends Component<ScreenProps> {
 			);
 		}
 	}
-	componentDidMount() {
 
+	setFakeUser() {
+		if (!this.fakeUser) {
+			this.fakeUser = 'eso';
+			let account = this.props.store.user.account;
+			account.displayName = 'Pau Vinyals';
+			this.props.store.peerAccounts[ account.id ].displayName = 'Pau Vinyals';
+		}
 	}
 }
 
