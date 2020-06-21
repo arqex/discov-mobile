@@ -23,12 +23,20 @@
 		"radiusLabel": "Select the distance",
 		"writeTitle": "Write your message",
 		"shareTitle": "Share with followers",
+		"private": "No followers selected. The story will be published as private.",
 		"summaryTitle": "Final review",
 		"discoverableByAll": "Discoverable by all my followers",
 		"discoverableBySome": "Discoverable by some followers",
 		"noDiscoverable": "No follower selected. This is a private story.",
 		"publish": "Publish story",
 		"draft": "Save as draft"
+	},
+
+	"myStories": {
+		"title": "My stories",
+		"empty": "Write your own story!",
+		"noStoryInfo": "You haven't placed any story yet. Surprise your followers with the first one!",
+		"create": "Create story"
 	},
 
 	"myDiscoveries": {

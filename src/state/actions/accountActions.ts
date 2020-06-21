@@ -20,10 +20,13 @@ export default function (store, api) {
 			let payload = {
 				email: store.user.email
 			};
+
+			console.log('Creating account....')
 			return api.methods.createAccount( actionService.userAccountFields )
 				.run( payload )
 				.then( account => {
 					if (!account.error) {
+						console.log( "Error creating account", account.error)
 						storeUserAccount( store, account );
 					}
 					else {
@@ -64,7 +67,8 @@ export default function (store, api) {
 					if (!account.error) {
 						storeUserAccount(store, account);
 					}
-					else {
+					else if( account.error.name !== 'not_found' ){
+						console.log('ERrro de load', account.error );
 						let error =  {
 							on: 'loadUserAccount',
 							userId: storeService.getUserId(),
@@ -73,6 +77,7 @@ export default function (store, api) {
 
 						throw error;
 					}
+					
 					return account;
 				})
 			;

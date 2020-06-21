@@ -28,7 +28,7 @@ export default class Menu extends Component<ScreenProps> {
 			);
 		}
 
-		this.setFakeUser();
+		// this.setFakeUser();
 
 		let account = user.account;
 

@@ -67,7 +67,7 @@ export default class ShareStory extends Component<ScreenProps, ShareStoryState> 
 		return (
 			<View style={ styles.privateMsg }>
 				<Text style={{textAlign: 'center'}}>
-					No followers selected. The story will be published as private.
+					{ __('createStory.private') }
 				</Text>
 			</View>
 		)

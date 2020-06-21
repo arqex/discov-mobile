@@ -23,7 +23,8 @@ export default {
 		blueText: '#1E2F55',
 		lightText: '#666666',
 		rowHover: '#fefefe',
-		borderBlue: '#E6EAF2'
+		borderBlue: '#E6EAF2',
+		borderRed: '#FFEEE9',
 	},
 	shadow: shadowStyles,
 	card: {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { StyleSheet, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, ScrollScreen, Text, Button, TopBar } from '../../components';
+import { Bg, ScrollScreen, Text, TopBar } from '../../components';
 import NoStories from './NoStories';
 import StoryCard from '../components/StoryCard';
 

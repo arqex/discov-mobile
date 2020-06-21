@@ -30,7 +30,7 @@ export default class MyFollowers extends Component<ScreenProps> {
 
 
 		if (followers && followers.items ) {
-			this.addFakeNames( followers.items );
+			// this.addFakeNames( followers.items );
 			this.lastIndex = followers.items.length - 1;
 		}
 

@@ -31,7 +31,10 @@ export default StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		...styleVars.shadow
+		borderTopWidth: 2,
+		borderBottomWidth: 2,
+		borderWidth: 1,
+		borderColor: styleVars.colors.borderRed
 	},
 	content: {
 		maxWidth: 360,

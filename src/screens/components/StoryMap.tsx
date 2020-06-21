@@ -52,7 +52,13 @@ export default class StoryMap extends React.Component<StoryMapProps, StoryMapSta
 			return this.renderLoadingLayer();
 		}
 
-		const { storyLocation, showMarker, showCircle, children, region, discoveryRadius, dragMode, ...mapProps } = this.props;
+		const { 
+			storyLocation, showMarker, showCircle, children, 
+			region, discoveryRadius, dragMode, currentPosition,
+			 ...mapProps
+		} = this.props;
+
+		console.log('map props', mapProps)
 
 		return (
 			<View style={{ display: 'flex', flexGrow: 1, width: windowWidth }}>
@@ -134,12 +140,11 @@ export default class StoryMap extends React.Component<StoryMapProps, StoryMapSta
 	}
 
 	componentDidUpdate( prevProps ){
-		let region = this.getRegion( this.props );
-
-		if( !this.sameRegions( region, this.currentRegion) ){
-			return this.moveToRegion( region );
+		let propRegion = this.props.region;
+		if( propRegion && prevProps.region !== propRegion && this.currentRegion !== this.props.region ){
+			return this.moveToRegion( propRegion );
 		}
-
+		
 		if ( this.props.trackCurrentPosition && prevProps.currentPosition !== this.props.currentPosition){
 			console.log('Moving, trackin position');
 			return this.moveToRegion({
@@ -208,6 +213,8 @@ export default class StoryMap extends React.Component<StoryMapProps, StoryMapSta
 			...this.currentRegion,
 			...region
 		};
+
+		console.log('Moving to region!');
 
 		this.currentRegion = r;
 		this.refs.map && this.refs.map.animateToRegion( r );

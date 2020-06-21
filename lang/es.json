@@ -23,6 +23,7 @@
 		"radiusLabel": "Elige la distancia",
 		"writeTitle": "Escribe tu mensaje",
 		"shareTitle": "Comparte con seguidores",
+		"private": "Ningún seguidor seleccionado. La historia se publicará como privada.",
 		"summaryTitle": "Revisión final",
 		"discoverableByAll": "Disponible para todos mis seguidores",
 		"discoverableBySome": "Disponible para algunos",
@@ -33,6 +34,8 @@
 
 	"myDiscoveries": {
 		"title": "Mis descubrimientos",
-		"empty": "Ningun descubrimiento todavía"
+		"empty": "Ningun descubrimiento todavía",
+		"newStory": "Nueva historia encontrada!",
+		"tapme": "Púlsame para descubrirla"
 	}
 }
