@@ -41,6 +41,8 @@ TaskManager.defineTask( LOCATION_TASK, locationUpdate => {
 
 type TrackingMode = 'active' | 'passive';
 function setTrackingMode( mode:TrackingMode ){
+  currentTrackingMode = mode;
+  
   return isLocationReady()
     .then( isReady => {
       // Not having the permissions will make no change
