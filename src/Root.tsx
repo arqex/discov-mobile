@@ -232,7 +232,12 @@ class Root extends Component {
 	}
 }
 
-export default codePush(Root);
+const codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.ON_NEXT_RESUME,
+  minimumBackgroundDuration: 30*60 // 30 minutes
+}
+export default codePush(codePushOptions)(Root);
 
 const styles = StyleSheet.create({
   container: {
