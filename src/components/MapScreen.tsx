@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Animated, Platform } from 'react-native';
+import layoutUtils from './utils/layout.utils';
 import { getStatusbarHeight } from './utils/getStatusbarHeight';
 
 interface MapScreenProps {
@@ -18,8 +19,6 @@ export default class MapScreen extends Component<MapScreenProps> {
 
 	paddingTranslate: Animated.AnimatedInterpolation;
 
-	topBarHeight: number = this.props.top ? 60 : 0;
-
 	static defaultProps = {
 		allowScroll: true,
 		allowBigMap: true
@@ -30,7 +29,7 @@ export default class MapScreen extends Component<MapScreenProps> {
 
 		let heights = this.getHeights();
 
-		this.deltaY.setValue( heights.bigMap - heights.smallMap);
+		this.deltaY.setValue( heights.bigMap - heights.header );
 		
 		this.paddingTranslate = this.deltaY.interpolate({
 			inputRange: [0, heights.bigMap],
@@ -59,7 +58,7 @@ export default class MapScreen extends Component<MapScreenProps> {
 		let contentStyles = [
 			styles.childrenWrapper,
 			!this.props.allowScroll && styles.noScrollable,
-			!this.props.allowScroll && { height: heights.content - heights.smallMap }
+			!this.props.allowScroll && { height: heights.minPanel }
 		];
 
 		// console.log( 'Min panel', heights.minPanel );
@@ -98,7 +97,7 @@ export default class MapScreen extends Component<MapScreenProps> {
 		if( !this.props.top ) return;
 
 		return (
-			<View style={{ zIndex: 10 }} onLayout={ e => this.calculateTopBarHeight(e) }>
+			<View style={{ zIndex: 10 }}>
 				{ this.props.top }
 			</View>
 		)
@@ -137,24 +136,14 @@ export default class MapScreen extends Component<MapScreenProps> {
 		);
 	}
 
-	calculateTopBarHeight(e) {
-		this.topBarHeight = e.nativeEvent.layout.height;
-		this.forceUpdate();
-	}
-
 	getHeights() {
-		let topBar = this.topBarHeight;
-		let screenHeight = this.props.layout.height;
-		let content = screenHeight - topBar;
-		let smallMap = content / 3;
-		let bigMap = content - 80;
+		let heights = layoutUtils.getHeights();
 
-		return {
-			content,
-			smallMap: smallMap,
-			bigMap: bigMap,
-			minPanel: bigMap - smallMap
-		};
+		if( this.props.top ){
+			heights.header += heights.topBar;
+		}
+
+		return heights;
 	}
 	
 	componentDidMount() {
