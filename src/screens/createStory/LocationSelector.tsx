@@ -86,8 +86,6 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 	renderPlaces(){
 		const places = this.props.places
 		if( !places ) return;
-
-		console.log('Places!', places);
 		
 		return (
 			<ScrollView style={ styles.placesWrapper }

@@ -34,7 +34,7 @@ let bufferLocation;
 let bufferTimer;
 function checkDiscoveries( location ){
   console.log('Location received');
-  
+
   if( isInGeoFence( location ) ){
     console.log('Location in fence');
     return Promise.resolve( true );
@@ -99,6 +99,11 @@ function isInGeoFence( location ){
     console.log('fence expired');
     fence = false;
     return false;
+  }
+
+  if( fence.distance === -1 ){
+    // If there are no discoveries to do, it's like being in the fence
+    return true;
   }
 
   let distance = getDistance( location, fence.coords );

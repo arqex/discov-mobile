@@ -235,7 +235,7 @@ class Root extends Component {
 const codePushOptions = {
   checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
   installMode: codePush.InstallMode.ON_NEXT_RESUME,
-  minimumBackgroundDuration: 30*60 // 30 minutes
+  minimumBackgroundDuration: 5*60 // 5 minutes
 }
 export default codePush(codePushOptions)(Root);
 
