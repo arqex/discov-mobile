@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
+import { Button } from '../../components';
+import store from '../../state/store';
 
 export default class LocationReport extends Component<ScreenProps> {
 	render() {
@@ -10,6 +12,7 @@ export default class LocationReport extends Component<ScreenProps> {
     return (
       <ScrollView contentContainerStyle={ styles.container }>
         <Text>Location report ({locations.length})</Text>
+        <Button onPress={ this._clearLocationReport }>Clear report</Button>
         <View style={ styles.location }>
           <Text>date</Text>
           <Text>lon/lat</Text>
@@ -28,6 +31,11 @@ export default class LocationReport extends Component<ScreenProps> {
         <Text>{ location.accuracy }</Text>
       </View>
     )
+  }
+
+  _clearLocationReport = () => {
+    store.locationReport = [];
+    this.forceUpdate();
   }
   
   formatDate( time ){

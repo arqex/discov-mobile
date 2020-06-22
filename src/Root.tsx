@@ -12,7 +12,7 @@ import RootLoading from './RootLoading';
 import notifications from './utils/notifications';
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 
-import './background/bgLocation';
+import './location/location.tracking';
 import storeService from './state/store.service';
 import { Modal } from './components';
 

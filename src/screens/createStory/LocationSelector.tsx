@@ -87,6 +87,8 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 		const places = this.props.places
 		if( !places ) return;
 
+		console.log('Places!', places);
+		
 		return (
 			<ScrollView style={ styles.placesWrapper }
 				nestedScrollEnabled={ true }

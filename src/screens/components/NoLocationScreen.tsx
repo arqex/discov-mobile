@@ -4,8 +4,7 @@ import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, Text, Button, styleVars } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
 import OpenAppSettings from 'react-native-app-settings';
-import * as Location from 'expo-location';
-import storeService from '../../state/store.service';
+import locationTracking from '../../location/location.tracking';
 
 interface NoLocationScreenProps extends ScreenProps {
 
@@ -80,24 +79,15 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 	_askForPermission = () => {
 		this.setState({loading: true});
 
-		return Location.requestPermissionsAsync()
-			.then(permissions => {
+		locationTracking.requestPermissions()
+			.then( () => {
 				this.setState({loading: false});
-				storeService.setLocationPermissions(permissions);
 			})
 		;
 	}
 
 	_openSettings = () => {
 		OpenAppSettings.open();
-	}
-
-	componentDidMount(){
-		Location.getPermissionsAsync()
-			.then(permissions => {
-				storeService.setLocationPermissions(permissions);
-			})
-		;
 	}
 };
 

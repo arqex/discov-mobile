@@ -7,10 +7,9 @@ import { actions } from '../state/appState';
 import notifications from '../utils/notifications';
 import { getDistance } from '../utils/maps';
 
-import location from './locationConfig';
+const TRACK_LOCATION = 'BG_LOCATION';
 
-const LOCATION_TASK = 'BG_LOCATION';
-location.setTaskName( LOCATION_TASK );
+let startingPromise, stoppingPromise;
 
 TaskManager.unregisterAllTasksAsync()
   .then( () => console.log('All tasks unregistered') )
@@ -20,25 +19,88 @@ TaskManager.unregisterAllTasksAsync()
   })
 ;
 
-// Start the tracking up
-if (readyForTracking()) {
-  location.setLocationMode('passive', true);
+const bgTracking = {
+	start: function(){
+    if( startingPromise ) return startingPromise;
+    
+    return startingPromise = this.isStarted()
+      .then( isStarted => {
+        startingPromise = false;
+        console.log('BG Locations STATUS - isStarted', isStarted);
+        
+        if ( isStarted ) {
+          return console.log('Already running');
+        }
+
+        return checkPermission();
+      })
+      .then( permissionGranted => {
+        if( permissionGranted ){
+          const options = {
+            accuracy: Location.Accuracy.High,
+            timeInterval: 5000,
+            distanceInterval: 20,
+            foregroundService: {
+              notificationTitle: 'A new story is nearby!',
+              notificationBody: 'Geo location is now active to notify when you discover it.'
+            }
+          }
+          
+          return waitForTask()
+            .then( () => Location.startLocationUpdatesAsync(TRACK_LOCATION, options) )
+            .then( () => {
+              console.log('Location task registered');
+            })
+          ;
+        }
+      })
+      .catch( err => {
+        console.log('Error registering task')
+        console.error( err );
+      })
+    ;
+  },
+  isStarted() {
+    return Location.hasStartedLocationUpdatesAsync(TRACK_LOCATION);
+  },
+  stop() {
+    console.log('gbTracking stop called')
+
+    if( stoppingPromise ) return stoppingPromise;
+
+    console.log('gbTracking try to stop')
+
+    
+    return stoppingPromise = this.isStarted().then( isStarted => {
+			startingPromise = false;
+      if ( !isStarted ) {
+				return console.log('Already stopped');
+      }
+
+      console.log('gbTracking stopping');
+      return Location.stopLocationUpdatesAsync( TRACK_LOCATION );
+    });
+  }
 }
 
+// Start the tracking up
+if (readyForTracking()) {
+  bgTracking.start();
+}
 // Handle login changes
 dataService.addStatusListener( status => {
 	if ( readyForTracking() ) {
-    location.setLocationMode('passive', true);
+		bgTracking.start();
 	}
 	else if (status === 'OUT') {
-		location.stopTracking();
+		bgTracking.stop();
 	}
 });
 
 export default bgTracking;
 
 
-TaskManager.defineTask( LOCATION_TASK, locationUpdate => {
+TaskManager.defineTask( TRACK_LOCATION, locationUpdate => {
   console.log('Tracking location');
   if( locationUpdate.error ) return;
 

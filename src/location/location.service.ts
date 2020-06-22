@@ -1,3 +1,7 @@
+// The service is the responsible of start/stop the
+// location updates from the phone. These location updates
+// will be configured by, and provided to, the location tracker.
+
 import * as Location from 'expo-location';
 
 let LOCATION_TASK: string;
@@ -61,6 +65,14 @@ function stopTracking() {
   })
 }
 
+function getPermissions() {
+  return Location.getPermissionsAsync();
+}
+
+function getCurrentLocation() {
+  return Location.getCurrentPositionAsync();
+}
+
 // There will be 2 modes:
 // * active - when we are around a discovery or when we are showing a map
 // * passive - when there are no discoveries around and we are showing no map
@@ -68,11 +80,16 @@ function stopTracking() {
 // foreground service notification to receive the updates frequently
 type LocationTrackMode = 'active' | 'passive';
 let trackMode: LocationTrackMode;
-let trackingInBackground: boolean;
-function setLocationMode( mode: LocationTrackMode, inBackground: boolean ){
-  if( mode === trackMode && trackingInBackground === inBackground ){
-    return console.log(`Location tracking already in mode ${mode}, ${inBackground ? 'in background' : 'in foreground'}`);
+let trackingInForeground: boolean;
+function setLocationMode( mode: LocationTrackMode, inForeground: boolean ){
+  if( mode === trackMode && trackingInForeground === inForeground ){
+    return console.log(`Location tracking already in mode ${mode}, ${inForeground ? 'in background' : 'in foreground'}`);
   }
+
+  console.log('Setting location mode', mode, inForeground ? 'foreground' : 'background');
+
+  trackMode = mode;
+  trackingInForeground = inForeground;
 
   let options: any = {
     accuracy: mode === 'active' ? Location.Accuracy.High : Location.Accuracy.Balanced,
@@ -80,7 +97,7 @@ function setLocationMode( mode: LocationTrackMode, inBackground: boolean ){
     distanceInterval: 20
   };
 
-  if( inBackground ){
+  if( mode === 'active' && !inForeground ){
     options.foregroundService = {
       notificationTitle: 'A new story is nearby!',
       notificationBody: 'Geo location is now active to notify when you discover it.'
@@ -90,11 +107,18 @@ function setLocationMode( mode: LocationTrackMode, inBackground: boolean ){
   return startWithOptions( options );
 }
 
+function requestPermissions() {
+  return Location.requestPermissionsAsync();
+}
+
 
 export default {
   setTaskName,
   isStarted,
   startWithOptions,
   stopTracking,
-  setLocationMode
+  setLocationMode,
+  getPermissions,
+  requestPermissions,
+  getCurrentLocation
 }

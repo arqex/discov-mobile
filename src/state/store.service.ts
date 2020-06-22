@@ -74,7 +74,6 @@ export default {
 		delete discovery.owner;
 		delete discovery.discoverer;
 		discovery.extra = JSON.parse(discovery.extra);
-		console.log('parsed extra', discovery)
 		store.discoveries[discovery.id] = discovery;
 	},
 

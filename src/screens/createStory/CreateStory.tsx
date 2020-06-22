@@ -281,8 +281,6 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 			}
 		};
 
-		console.log( 'stateupdate', stateUpdate );
-
 		this.setState( stateUpdate );
 	}
 
