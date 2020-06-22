@@ -37,5 +37,12 @@
 		"empty": "Cap descubriment encara",
 		"newStory": "Nova història trobada!",
 		"tapme": "Clica'm per descobrir-la"
+	},
+
+	"notifications": {
+		"singleTitle": "Tens un nou descobriment!",
+		"singleMessage": "Has trobat una història de {{name}}.",
+		"multipleTitle": "Tens {{count}} nous descobriments!",
+		"multipleMessage": "De {{name}} i de altres."
 	}
 }

@@ -23,6 +23,9 @@ export default {
         setTrackingMode( inFence ? 'passive' : 'active' );
       })
     ;
+  },
+  resetFence(){
+    fence = false;
   }
 }
 

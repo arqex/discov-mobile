@@ -3,12 +3,6 @@ import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from "react-native-push-notification";
 import storeService from "../state/store.service";
 
-// These are special characters, not whitespaces. With them we mark types of
-// notifications and then we can group them.
-const invisible = {
-	new_discoveries: '‏‏‎ ‎',
-}
-
 function init( router ){
 	PushNotification.configure({
 		// (optional) Called when Token is generated (iOS and Android)
@@ -88,8 +82,8 @@ export default {
 		if(type === 'new_discoveries'){
 			// console.log('Notification', data)
 			return this.open({
-				title: 'You have a new discovery!' + invisible[ type ],
-				message: `You found a story from ${data[0].owner.displayName}.`,
+				title: __( 'notifications.singleTitle'),
+				message: __( 'notifications.singleMessage', {name: data[0].owner.displayName} ),
 				group: type
 			});
 		}
@@ -103,13 +97,13 @@ export default {
 		this.clear();
 
 		const title = count > 1 ?
-			`You have ${ count } new discoveries!` :
-			'You have a new discovery!'
+			__( 'notifications.multipleTitle', {count} ) :
+			__( 'notifications.singleTitle')
 		;
 
 		const message = count > 1 ?
-			`From ${discoveries[0].owner.displayName} and others.` :
-			`You found a story from ${discoveries[0].owner.displayName}.`
+			__( 'notifications.multipleMessage', {name: discoveries[0].owner.displayName} ) :
+			__( 'notifications.singleMessage', {name: discoveries[0].owner.displayName} )
 		;
 
 		return this.open({ title, message });

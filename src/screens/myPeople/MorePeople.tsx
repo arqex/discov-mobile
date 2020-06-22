@@ -23,8 +23,6 @@ export default class MorePeople extends Component<ScreenProps> {
 			this.lastIndex = data.length - 1;
 		}
 
-		console.log('Data', data)
-
 		return (
 			<Bg>
 				<ScrollScreen

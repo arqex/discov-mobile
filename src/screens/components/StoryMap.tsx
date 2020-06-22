@@ -58,8 +58,6 @@ export default class StoryMap extends React.Component<StoryMapProps, StoryMapSta
 			 ...mapProps
 		} = this.props;
 
-		console.log('map props', mapProps)
-
 		return (
 			<View style={{ display: 'flex', flexGrow: 1, width: windowWidth }}>
 				<MapView 
@@ -201,7 +199,6 @@ export default class StoryMap extends React.Component<StoryMapProps, StoryMapSta
 	}
 
 	_onLoadEnd = () => {
-		console.log( 'Load map end');
 		if( !this.sameRegions( this.currentRegion && this.state.region, this.currentRegion ) ){
 			this.moveToRegion( this.currentRegion );
 		};

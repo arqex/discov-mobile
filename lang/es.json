@@ -37,5 +37,12 @@
 		"empty": "Ningun descubrimiento todavía",
 		"newStory": "Nueva historia encontrada!",
 		"tapme": "Púlsame para descubrirla"
+	},
+
+	"notifications": {
+		"singleTitle": "Tienes un nuevo descubrimiento!",
+		"singleMessage": "Has encontrado una historia de {{name}}.",
+		"multipleTitle": "Tienes {{count}} nueveos descubrimientos!",
+		"multipleMessage": "De {{name}} y otros."
 	}
 }

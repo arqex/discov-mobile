@@ -92,9 +92,9 @@ function setLocationMode( mode: LocationTrackMode, inForeground: boolean ){
   trackingInForeground = inForeground;
 
   let options: any = {
-    accuracy: mode === 'active' ? Location.Accuracy.High : Location.Accuracy.Balanced,
-    timeInterval: 5000,
-    distanceInterval: 20
+    accuracy: Location.Accuracy.High, // mode === 'active' ? Location.Accuracy.High : Location.Accuracy.Balanced,
+    // timeInterval: 5000,
+    // distanceInterval: 20
   };
 
   if( mode === 'active' && !inForeground ){

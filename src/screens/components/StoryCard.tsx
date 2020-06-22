@@ -36,8 +36,6 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 			Platform.OS === 'android' && styles.markerAndroid
 		];
 
-		console.log( this.props.discovery );
-
 		return (
 			<TouchableOpacity style={ styles.container }
 				onPress={ this._goToDiscovery }>

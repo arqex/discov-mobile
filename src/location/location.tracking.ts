@@ -111,6 +111,7 @@ function addEventListeners(){
       setTrackingMode( currentTrackingMode );
     } 
     else {
+      locationHandler.resetFence();
       locationService.stopTracking();
     }
   });

@@ -41,6 +41,15 @@
 
 	"myDiscoveries": {
 		"title": "My discoveries",
-		"empty": "No discoveries yet"
+		"empty": "No discoveries yet",
+		"newStory": "New story found!",
+		"tapme": "Tap here to reveal it"
+	},
+
+	"notifications": {
+		"singleTitle": "You have a new discovery!",
+		"singleMessage": "You found a story from {{name}}.",
+		"multipleTitle": "You have {{count}} new discoveries!",
+		"multipleMessage": "From {{name}} and others."
 	}
 }
