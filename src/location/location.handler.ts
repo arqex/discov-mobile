@@ -43,6 +43,10 @@ function checkDiscoveries( location ){
     return Promise.resolve( true );
   }
 
+  if (!actions || !actions.discovery) {
+    return Promise.resolve(false);
+  }
+
   // From here we have a location out of the fence, we are close to
   // a discovery
   if( bufferLocation ){

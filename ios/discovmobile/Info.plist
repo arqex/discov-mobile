@@ -52,7 +52,7 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Allow Discov to access your microphone</string>
 	<key>NSMotionUsageDescription</key>
-	<string>Allow Discov to access your device&apos;s accelerometer</string>
+	<string>Let Discov to know when your are on the move, so it will save battery when you are not moving.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Give Discov periences permission to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>

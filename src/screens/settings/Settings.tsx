@@ -124,12 +124,14 @@ class Settings extends React.Component<ScreenProps> {
 	}
 
 	componentDidMount(){
-		codePush.getUpdateMetadata().then( meta => {
+		codePush.getUpdateMetadata().then(meta => {
+			console.log('Meta', meta);
+			if (!meta) return;
+
 			this.setState({
 				version: `${meta.appVersion}.${meta.packageHash.slice(-6)} ${meta.isPending? '*' : ''}`
 			})
-			console.log( meta );
-		})
+		});
 	}
 };
 

@@ -24,6 +24,8 @@
 #import <AppCenterReactNativeCrashes.h>
 #import <CodePush/CodePush.h>
 
+#import <TSBackgroundFetch/TSBackgroundFetch.h>
+
 @implementation AppDelegate
 
 @synthesize window = _window;
@@ -47,8 +49,11 @@
   [super application:application didFinishLaunchingWithOptions:launchOptions];
   
   // Define UNUserNotificationCenter
-   UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
-   center.delegate = self;
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  center.delegate = self;
+
+  // [REQUIRED] Register BackgroundFetch
+  [[TSBackgroundFetch sharedInstance] didFinishLaunching];
 
   return YES;
 }
