@@ -1,100 +1,195 @@
+/**
+ * We'll have 2 fences:
+ *  - The native geofence that we call "geoFence", that will wake up our app when we exit from it
+ *    so we can request a new location at that point
+ *  - The "passiveFence" that we control. We will continue receiving locations even when we are in
+ *    the geoFence, so we will keep track of those positions and set the active mode if we get out of the
+ *    passiveFence.
+ */
+
 import { getDistance } from '../utils/maps';
 import storeService from '../state/store.service';
 import { actions } from '../state/appState';
 import notifications from '../utils/notifications';
+import geofenceService from './geofence.service';
 
+let hasPendingDiscoveries = true;
+let lastUpdate = Date.now();
 let currentlyInFence = false;
-let fence;
+let distanceFromOutOfFence = -1;
+let passiveFence;
 
 export default {
   onLocation: function onLocation( location, setTrackingMode ){
     
+    console.log('----- Receiving location');
     // Render location available in the store for the rest of the app
     storeService.addLocationReport( location );
     storeService.storeCurrentPosition( location );
 
     // Check if we have new discoveries
-    checkDiscoveries( location )
-      .then( inFence => {
-        console.log('In fence?', inFence);
-        if( inFence === currentlyInFence ) return;
-
-        currentlyInFence = inFence;
-        setTrackingMode( inFence ? 'passive' : 'active' );
-      })
-    ;
+    checkDiscoveries( location, setTrackingMode );
   },
+
   resetFence(){
-    fence = false;
+    destroyFences();
+  },
+
+  getFenceData() {
+    return {
+      passiveFence: passiveFence,
+      distanceFromOutOfFence: distanceFromOutOfFence
+    };
   }
+
 }
 
-// checkDiscoveries has a buffer of 30 secs
+// checkDiscoveries has a buffer of 10 secs
 // to not to saturate the endpoint with calls with close locations
-const BUFFER_TIME = 30000;
-const OUT_FENCE_RADIUS = 200; // 200m around of a discovery we are not in the fence
+const BUFFER_TIME = 10000;
+let bufferDate = Date.now();
 let bufferLocation;
-let bufferTimer;
-function checkDiscoveries( location ){
+function checkDiscoveries( location, setTrackingMode ){
   console.log('Location received');
 
-  if( isInGeoFence( location ) ){
-    console.log('Location in fence');
-    return Promise.resolve( true );
+  if( !hasAvailableDiscoveries() ){
+    console.log('----- Nothing to discover');
+    return Promise.resolve( false );
+  }
+
+  if( isInGeoFence( passiveFence, location ) ){
+    console.log('----- Location in fence');
+    return Promise.resolve( false );
   }
 
   // From here we have a location out of the fence, we are close to
   // a discovery
-  if( bufferLocation ){
-    console.log('Buffering location');
+  if( needToBuffer() ){
+    console.log('----- Buffering location');
     bufferLocation = location;
     return Promise.resolve( false );
   }
 
   console.log('Getting discoveries!')
   // Setting the buffer location we prevent asking for discoveries
-  // in the next minute
+  // in some time
   bufferLocation = location;
 
   return actions.discovery.discoverAround( location )
-    .then( res => {
-      saveFence( location, res.closestDiscoveryDistance );
-
-      if( res.discoveries && res.discoveries.length ){
-        notifications.createDiscoveriesNofication( res.discoveries );
-      }
-
-      startLocationTimer( location );
-
-      return isInGeoFence( location );
+    .then( res => onDiscoveryResponse( res, location, setTrackingMode ) )
+    .then( () => {
+      // No more updates in some time
+      startLocationTimer( location, setTrackingMode );
+      console.log('----- End location update');
     })
   ;
 }
 
-function startLocationTimer( lastLocation ){
+const STALE_UPDATE_TIME = 5 * 60 * 1000;
+function hasAvailableDiscoveries(){
+  return hasPendingDiscoveries || (Date.now() - lastUpdate) > STALE_UPDATE_TIME;
+}
+
+const ACTIVE_RADIUS = 200;
+function onDiscoveryResponse( res, location, setTrackingMode ){
+  console.log('On discovery response');
+
+  // Notify new discoveries 
+  if( res.discoveries && res.discoveries.length ){
+    notifications.createDiscoveriesNofication( res.discoveries );
+  }
+  else {
+    console.log('No new discoveries');
+  }
+
+  const distanceToDiscovery = res.closestDiscoveryDistance;
+
+  hasPendingDiscoveries = distanceToDiscovery !== -1;
+  lastUpdate = Date.now();
+
+  if( !hasPendingDiscoveries ){
+    // No discoveries around
+    distanceFromOutOfFence = -1;
+    setTrackingMode('passive');
+    return destroyFences();
+  }
+
+  const inFence = distanceToDiscovery > ACTIVE_RADIUS;
+  if( inFence !== currentlyInFence ){
+    console.log('Fence change!', inFence ? 'In the fence' : 'Out the fence');
+    currentlyInFence = inFence;
+    setTrackingMode( inFence ? 'passive' : 'active' );
+  }
+  else {
+    console.log('Fence the same');
+  }
+
+  updateFences( location, distanceToDiscovery - ACTIVE_RADIUS );
+}
+
+function needToBuffer(){
+  return bufferLocation && (Date.now() - bufferDate) < BUFFER_TIME;
+}
+
+function startLocationTimer( lastLocation, setTrackingMode ){
+  bufferDate = Date.now();
+
   setTimeout( () => {
     let location = bufferLocation;
     bufferLocation = false;
-    if( location !== lastLocation ){
-      checkDiscoveries( location );
+    if( location && location !== lastLocation ){
+      console.log('Unbuffering', location);
+      checkDiscoveries( location, setTrackingMode );
+    }
+    else {
+      console.log('Buffer end without changes' );
     }
   }, BUFFER_TIME);
 }
 
-function setLocationBuffer( location ){
-  bufferLocation = location;
-  clearTimeout( bufferTimer );
-  bufferTimer = setTimeout( () => {
-    let location = bufferLocation;
-    bufferLocation = false;
-    bufferTimer = false;
-    checkDiscoveries( location );
-  }, BUFFER_TIME);
+function updateFences( location, radius ){
+  console.log('updateFences', radius);
+
+  distanceFromOutOfFence = radius;
+
+  if( radius <= 0 ){
+    // We are out of the fences
+    return destroyFences();
+  }
+
+  const candidateFence = {
+    latitude: location.latitude,
+    longitude: location.longitude,
+    lastUpdated: new Date(),
+    radius
+  };
+
+  // We create a new fence if there isn't a current one
+  // or if the current one doesn't contain the new fence
+  if( !passiveFence || !fenceContainsFence( passiveFence, candidateFence ) ){
+    createFences( candidateFence );
+  };
+}
+
+function fenceContainsFence( container, fence ){
+  let centerDistance = getDistance( container, fence );
+  return container.radius - centerDistance - fence.radius > 0;
+}
+
+function destroyFences(){
+  console.log( 'Destroying fences');
+  passiveFence = false;
+  geofenceService.removeStaleRegion();
+}
+
+function createFences( circle ){
+  passiveFence = circle;
+  geofenceService.addStaleRegion( circle );
 }
 
 // Two hours and the fence is not valid anymore
 const FENCE_EXPIRY = 2 * 60 * 60 * 1000;
-function isInGeoFence( location ){
+function isInGeoFence( fence, location ){
   console.log('Current fence', fence);
   if( !fence ) return false;
 
@@ -104,25 +199,11 @@ function isInGeoFence( location ){
     return false;
   }
 
-  if( fence.distance === -1 ){
+  if( fence.radius === -1 ){
     // If there are no discoveries to do, it's like being in the fence
     return true;
   }
 
-  let distance = getDistance( location, fence.coords );
-  return distance < fence.distance;
-}
-
-function saveFence( location, distance ){
-  if( distance !== -1 && distance < OUT_FENCE_RADIUS ){
-    // We are close to a discovery, out of fence
-    fence = false;
-  }
-  else {
-    fence = {
-      lastUpdated: Date.now(),
-      distance,
-      coords: location
-    }
-  }
+  let distance = getDistance( location, fence );
+  return distance < fence.radius;
 }

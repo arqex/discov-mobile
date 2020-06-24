@@ -223,7 +223,8 @@ export default {
 	resetStore() {
 		this.invalidateFollowers();
 		this.invalidateFollowing();
-		this.invalidatePeerMeta();
+		store.peerAccounts = {};
+		store.peerMeta = {};
 		
 		delete store.user.stories;
 		delete store.user.discoveries;

@@ -21,6 +21,9 @@ function startWithOptions( options ){
   if( startingData && startingData.options === serializedOptions ){
     return startingData.promise;
   }
+  else {
+    startingData = false;
+  }
 
   let promise = isStarted()
     .then( isStarted => {
@@ -83,7 +86,7 @@ let trackMode: LocationTrackMode;
 let trackingInForeground: boolean;
 function setLocationMode( mode: LocationTrackMode, inForeground: boolean ){
   if( mode === trackMode && trackingInForeground === inForeground ){
-    return console.log(`Location tracking already in mode ${mode}, ${inForeground ? 'in background' : 'in foreground'}`);
+    return console.log(`Location tracking already in mode ${mode}, ${inForeground ? 'in foreground' : 'in background'}`);
   }
 
   console.log('Setting location mode', mode, inForeground ? 'foreground' : 'background');

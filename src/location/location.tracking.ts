@@ -9,9 +9,11 @@ import locationHandler from './location.handler';
 import storeService from '../state/store.service';
 import { dataService } from '../services/data.service';
 import * as TaskManager from 'expo-task-manager';
+import geofenceService from './geofence.service';
 
 
-const LOCATION_TASK = 'BG_LOCATION';
+const LOCATION_TASK = 'DISCOV_LOCATION';
+const GEOFENCING_TASK = 'DISCOV_GEOFENCE';
 
 let currentLoginStatus = isUserLoggedIn() ? 'IN' : 'OUT';
 let currentAppStatus: AppStateStatus = AppState.currentState;
@@ -19,6 +21,7 @@ let currentTrackingMode: TrackingMode = 'active';
 
 function init(){
   locationService.setTaskName( LOCATION_TASK );
+  geofenceService.setTaskName( GEOFENCING_TASK );
   setTrackingMode( currentTrackingMode );
   addEventListeners();
 }
@@ -30,13 +33,46 @@ init();
 // a location available.
 TaskManager.defineTask( LOCATION_TASK, locationUpdate => {
   console.log('Tracking location');
-  if( locationUpdate.error ) return;
+  if( locationUpdate.error ) return console.log( locationUpdate.error );
 
-  let location = locationUpdate.data.locations[0];
+  let locations = locationUpdate.data.locations;
+  console.log(`**** ${locations.length} NEW LOCATIONS` );
+
+  let location = locations[0];
   if( !location ) return;
 
   locationHandler.onLocation( location.coords, setTrackingMode );
 });
+
+// We need also to register the geofence task
+let exiting = false;
+let exitingTimer:any = false;
+TaskManager.defineTask( GEOFENCING_TASK, event => {
+  console.log('Geofence event', event.data);
+  if( event.error ) return console.warn( event.error );
+
+  if( geofenceService.isExitEvent( event ) ){
+    console.log('An exit event');
+    exiting = true;
+    if( exitingTimer ){
+      clearTimeout( exitingTimer );
+    }
+    setTimeout( () => {
+      exitingTimer = false;
+      if( exiting ){
+        exiting = false;
+        console.log('destroying geofence');
+        locationHandler.resetFence();
+        setTrackingMode('active');
+      }
+    }, 2000 );
+  }
+  else {
+    console.log('Not an exit event');
+    // Cancel the exit if were exiting
+    exiting = false;
+  }
+}); 
 
 
 type TrackingMode = 'active' | 'passive';
@@ -119,6 +155,8 @@ function addEventListeners(){
   // This will activate/deactivate the foreground notification
   // if needed, when the app goes in background/foreground
   AppState.addEventListener('change', status => {
+    console.log('---- APP GOES TO ' + (status === 'active' ? 'FOREGROUND' : 'BACKGROUND') );
+
     if( status === currentAppStatus ) return;
     currentAppStatus = status;
 
@@ -143,7 +181,7 @@ function updateCurrentLocation(){
 
       return locationService.getCurrentLocation()
         .then( location => {
-          return locationHandler.onLocation( location, setTrackingMode );
+          return locationHandler.onLocation( location.coords, setTrackingMode );
         })
       ;
     })

@@ -3,15 +3,19 @@ import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Button } from '../../components';
 import store from '../../state/store';
+import locationHandler from '../../location/location.handler';
 
 export default class LocationReport extends Component<ScreenProps> {
 	render() {
     let store = this.props.store;
     let locations = store && store.locationReport || [];
+    let fenceData = locationHandler.getFenceData();
 
     return (
       <ScrollView contentContainerStyle={ styles.container }>
         <Text>Location report ({locations.length})</Text>
+        <Text>In fence: { fenceData.passiveFence ? 'true' : 'false' }</Text>
+        <Text>Distance from out of the fence: { fenceData.distanceFromOutOfFence }</Text>
         <Button onPress={ this._clearLocationReport }>Clear report</Button>
         <View style={ styles.location }>
           <Text>date</Text>
