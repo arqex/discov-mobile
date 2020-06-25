@@ -146,7 +146,7 @@ export default class MapScreen extends Component<MapScreenProps> {
 	getHeights() {
 		let heights: any = layoutUtils.getHeights()[ this.props.top ? 'withTopBar' : 'withoutTopBar' ];
 
-		heights.initialScroll = heights.minPanel - heights.window + heights.bigMap;
+		heights.initialScroll = heights.window - heights.header;
 
 		console.log('HHHHEIGHTS', heights );
 

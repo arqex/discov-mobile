@@ -55,8 +55,8 @@ export default class ModalContent extends React.Component<ModalContentProps> {
 	renderControl( control, i ){
 		let {text, ...buttonProps} = control;
 		return (
-			<View style={styles.control}>
-				<Button {...buttonProps} key={`button${i}`}>
+			<View style={styles.control} key={`button${i}`}>
+				<Button {...buttonProps}>
 					{text}
 				</Button>
 			</View>
