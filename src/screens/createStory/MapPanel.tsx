@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
 		minHeight: layoutUtils.getHeights().minPanel,
 		transform: [{ translateY: - 10 }],
 		borderWidth: 1,
+		borderBottomWidth: 0,
 		borderColor: '#E6EAF2',
 	}
 });

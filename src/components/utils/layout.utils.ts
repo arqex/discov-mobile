@@ -30,7 +30,7 @@ export default {
         window: (window-topBar),
         header: (window-topBar) / 3,
         minPanel: (window-topBar) / 3 * 2,
-        bigMap: (window-topBar) - 100
+        bigMap: (window-topBar) - 90
       }
     };
 
