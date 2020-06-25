@@ -1,15 +1,23 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
+import layoutUtils from '../../components/utils/layout.utils';
 
 interface MapPanelProps {
 	style?: any,
-	children: any
+	children: any,
+	withTopBar: boolean
 }
 
 const MapPanel = (props: MapPanelProps) => {
-	let propStyles = props.style || {};
+	let heights = layoutUtils.getHeights()[ props.withTopBar ? 'withTopBar' : 'withoutTopBar' ];
+	let panelStyles = [
+		styles.container,
+		props.style,
+		{ minHeight: heights.minPanel }
+	];
+	
 	return (
-		<View style={[styles.container, propStyles]}>
+		<View style={ panelStyles }>
 			{ props.children }
 		</View>
 	);
@@ -25,7 +33,7 @@ const styles = StyleSheet.create({
 		zIndex: 5,
 		backgroundColor: '#fff',
 		borderRadius: 10,
-		minHeight: 600,
+		minHeight: layoutUtils.getHeights().minPanel,
 		transform: [{ translateY: - 10 }],
 		borderWidth: 1,
 		borderColor: '#E6EAF2',

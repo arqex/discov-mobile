@@ -29,7 +29,7 @@ export default class MapScreen extends Component<MapScreenProps> {
 
 		let heights = this.getHeights();
 
-		this.deltaY.setValue( heights.bigMap - heights.header );
+		this.deltaY.setValue( this.getInitialDelta(props, heights) );
 		
 		this.paddingTranslate = this.deltaY.interpolate({
 			inputRange: [0, heights.bigMap],
@@ -61,8 +61,6 @@ export default class MapScreen extends Component<MapScreenProps> {
 			!this.props.allowScroll && { height: heights.minPanel }
 		];
 
-		// console.log( 'Min panel', heights.minPanel );
-
 		return (
 			<View style={styles.container}>
 				{this.renderTopBar()}
@@ -70,7 +68,7 @@ export default class MapScreen extends Component<MapScreenProps> {
 				<Animated.ScrollView
 					ref="scroll"
 					bounces={ false }
-					contentOffset={ {x: 0, y: Math.floor(heights.minPanel) } }
+					contentOffset={ {x: 0, y: heights.initialScroll } }
 					onScroll={ this.scrollMapping }
 					snapToOffsets={[heights.minPanel]}
 					nestedScrollEnabled={ true }
@@ -136,12 +134,21 @@ export default class MapScreen extends Component<MapScreenProps> {
 		);
 	}
 
-	getHeights() {
-		let heights = layoutUtils.getHeights();
-
-		if( this.props.top ){
-			heights.header += heights.topBar;
+	getInitialDelta( props, heights ){
+		let initialDelta = heights.bigMap - heights.header;
+		if( props.top ){
+			initialDelta += heights.topBar;
 		}
+
+		return initialDelta;
+	}
+
+	getHeights() {
+		let heights: any = layoutUtils.getHeights()[ this.props.top ? 'withTopBar' : 'withoutTopBar' ];
+
+		heights.initialScroll = heights.minPanel - heights.window + heights.bigMap;
+
+		console.log('HHHHEIGHTS', heights );
 
 		return heights;
 	}
@@ -182,6 +189,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1
 	},
+
 	padding: {
 		display: 'flex',
 		alignItems: 'stretch',
