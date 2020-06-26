@@ -105,7 +105,7 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 				data={this.props.data}
 				renderItem={this.props.renderItem}
 				keyExtractor={this.props.keyExtractor}
-				contentContainerStyle={{ width: '100%' }}
+				// contentContainerStyle={{ width: '100%' }}
 			/>
 		);
 	}

@@ -68,7 +68,7 @@ If they don't use Discov yet, the link will ask them to join, and they will be f
 const styles = StyleSheet.create({
 	noStoriesTitle: {
 		alignItems: 'center',
-		marginBottom: 20
+		marginBottom: 10
 	},
 
 	noStoriesImage: {
