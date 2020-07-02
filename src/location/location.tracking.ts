@@ -10,6 +10,7 @@ import storeService from '../state/store.service';
 import { dataService } from '../services/data.service';
 import * as TaskManager from 'expo-task-manager';
 import geofenceService from './geofence.service';
+import backgroundFetch from './backgroundFetch.service';
 
 
 const LOCATION_TASK = 'DISCOV_LOCATION';
@@ -20,9 +21,13 @@ let currentAppStatus: AppStateStatus = AppState.currentState;
 let currentTrackingMode: TrackingMode = 'active';
 
 function init(){
+  console.log('HEeEEEEETEY INIT!');
   locationService.setTaskName( LOCATION_TASK );
   geofenceService.setTaskName( GEOFENCING_TASK );
-  setTrackingMode( currentTrackingMode );
+  setTrackingMode(currentTrackingMode);
+  console.log('HEeEEEEETEY INIT!');
+  backgroundFetch.init(onBgFetchEvent);
+  console.log('HEeEEEEETEY INIT!');
   addEventListeners();
 }
 init();
@@ -184,6 +189,24 @@ function updateCurrentLocation(){
           return locationHandler.onLocation( location.coords, setTrackingMode );
         })
       ;
+    })
+  ;
+}
+
+function onBgFetchEvent(){
+  console.log('$$$ BG fetch event');
+
+  return locationService.getLastLocation()
+    .then( location => {
+      if (location) {
+        console.log('$$$ BG location received');
+        storeService.addLocationReport( location, true );
+        locationHandler.onLocation(location.coords, setTrackingMode);
+      }
+    })
+    .catch( err => {
+      console.log('$$$ BG location error');
+      console.error( err );
     })
   ;
 }

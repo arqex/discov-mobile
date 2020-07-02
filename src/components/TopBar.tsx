@@ -4,6 +4,7 @@ import Text from './Text';
 import Button from './Button';
 import { getStatusbarHeight } from './utils/getStatusbarHeight';
 import interpolations from './utils/scrollInterpolation';
+import layoutUtils from './utils/layout.utils';
 
 interface TopBarProps {
 	pre?: any,
@@ -28,11 +29,12 @@ class TopBar extends React.Component<TopBarProps> {
 
 	render() {
 		let props = this.props;
-
-		let statusBarHeight = props.withSafeArea ? getStatusbarHeight() : 0;
+		let heights = layoutUtils.getHeights().withTopBar;
+		let statusBarHeight = props.withSafeArea ? heights.statusBar : 0;
+		
 		let barStyles = [
 			styles.bar,
-			{ paddingTop: statusBarHeight, height: 56 + statusBarHeight }
+			{ paddingTop: statusBarHeight, height: heights.topBar + statusBarHeight }
 		];
 
 		let opacity = { opacity: this.animatedOpacity };

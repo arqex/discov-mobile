@@ -5,7 +5,7 @@ import layoutUtils from '../../components/utils/layout.utils';
 interface MapPanelProps {
 	style?: any,
 	children: any,
-	withTopBar: boolean
+	withTopBar?: boolean
 }
 
 const MapPanel = (props: MapPanelProps) => {

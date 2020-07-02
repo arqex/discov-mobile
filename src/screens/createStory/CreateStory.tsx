@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Alert, View } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { TopBar, Button, MapScreen, Text, Modal } from '../../components';
+import { TopBar, Button, MapScreen, Text, Modal, SearchBar } from '../../components';
 import MapPanel from './MapPanel';
 import AreaSelector from './AreaSelector';
 import LocationSelector from './LocationSelector';
@@ -11,6 +11,7 @@ import { lngToLocation, locationToLng } from '../../utils/maps';
 import StoryMap from '../components/StoryMap';
 import NoLocationScreen from '../components/NoLocationScreen';
 import EditLocationModal from './EditLocationModal';
+import SearchPlacePanel from './SearchPlacePanel';
 
 
 // Stores the temporal data in store.storyInProgress
@@ -23,7 +24,9 @@ interface CreateStoryState {
 	userAddress: false | String,
 	places: false | [any],
 	dragActive: boolean,
-	customLocation: string
+	customLocation: string,
+	searchingPlace: boolean,
+	searchQuery: string
 }
 
 interface CreateStoryProps extends ScreenProps {
@@ -53,7 +56,9 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 			places: this.loadPlaces( this.props.position ),
 			userAddress: this.loadAddress( this.props.position ),
 			dragActive: false,
-			customLocation: ''
+			customLocation: '',
+			searchingPlace: false,
+			searchQuery: ''
 		}
 	}	
 	
@@ -89,7 +94,8 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 				layout={ this.props.layout }
 				mapBottom={ this.renderMapControls() }
 				ref="mapScreen"
-				allowScroll={ false }>
+				allowScroll={ false }
+				overlay={	this.renderSearchPanel() }>
 				<MapPanel style={styles.panel}>
 					{ this.renderContent() }
 				</MapPanel>
@@ -131,13 +137,30 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 			);
 		}
 
+		let backButton = (
+			<Button type="icon" icon="arrow-back" color="secondary"
+				onPress={() => this.props.drawer.open()} />
+		);
+
+		let searchbar = (
+			<SearchBar onOpen={this._startSearch}
+				onClose={this._endSearch}
+				onOpen={this._startSearch}
+				preButtons={backButton}>
+				<Text type="mainTitle">{__('createStory.locateTitle')}</Text>
+			</SearchBar>
+		);
+
 		return (
-			<TopBar onBack={ () => this.props.drawer.open() }
-				title={ __('createStory.locateTitle') } 
+			<TopBar content={searchbar}
 				withSafeArea
-				post={<Button type="icon" icon="search" color="secondary" onPress={this._startSearch} />}
 			/>
 		)
+	}
+
+	renderSearchPanel() {
+		if( !this.state.searchingPlace ) return;
+		return <SearchPlacePanel />;
 	}
 
 	renderMap() {
@@ -210,7 +233,11 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	}
 
 	_startSearch = () => {
-		Alert.alert('Place search not implemented yet');
+		this.setState({ searchingPlace: true });
+	}
+
+	_endSearch = () => {
+		this.setState({ searchingPlace: false });
 	}
 
 	_toggleDrag = () => {

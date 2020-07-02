@@ -52,6 +52,11 @@ let bufferLocation;
 function checkDiscoveries( location, setTrackingMode ){
   console.log('Location received');
 
+  if( !actions || !actions.discovery ){
+    console.log('----- Actions not ready yet');
+    return Promise.resolve( false );
+  }
+
   if( !hasAvailableDiscoveries() ){
     console.log('----- Nothing to discover');
     return Promise.resolve( false );

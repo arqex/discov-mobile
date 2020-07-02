@@ -187,12 +187,13 @@ export default {
 		};
 	},
 
-	addLocationReport( loc ){
+	addLocationReport( loc, isBgFetch = false){
 		let locations = store.locationReport && store.locationReport.slice ? store.locationReport.slice() : [];
 
 		locations.unshift({
-			longitude: loc.longitude,
-			latitude: loc.latitude,
+			isBgFetch,
+			longitude: truncateDegrees(loc.longitude),
+			latitude: truncateDegrees(loc.latitude),
 			accuracy: loc.accuracy,
 			date: Date.now()
 		});

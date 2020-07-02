@@ -11,7 +11,7 @@ export default {
     let screen = Dimensions.get('screen');
     let statusBar = getStatusbarHeight();
     let window = screen.height - statusBar;
-    let topBar = 40;
+    let topBar = 56;
 
     let heights = {
       withoutTopBar: {

@@ -114,6 +114,10 @@ function requestPermissions() {
   return Location.requestPermissionsAsync();
 }
 
+function getLastLocation() {
+  return Location.getLastKnownPositionAsync();
+}
+
 
 export default {
   setTaskName,
@@ -123,5 +127,6 @@ export default {
   setLocationMode,
   getPermissions,
   requestPermissions,
-  getCurrentLocation
+  getCurrentLocation,
+  getLastLocation
 }

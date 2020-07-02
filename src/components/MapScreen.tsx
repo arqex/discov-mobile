@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import * as React from 'react'
 import { StyleSheet, View, Animated, Platform } from 'react-native';
 import layoutUtils from './utils/layout.utils';
 import { getStatusbarHeight } from './utils/getStatusbarHeight';
@@ -11,10 +11,11 @@ interface MapScreenProps {
 	allowBigMap?: boolean,
 	allowScroll?: boolean,
 	mapTop?: any,
-	mapBottom?: any
+	mapBottom?: any,
+	overlay?: any
 }
 
-export default class MapScreen extends Component<MapScreenProps> {
+export default class MapScreen extends React.Component<MapScreenProps> {
 	deltaY = new Animated.Value(0);
 
 	paddingTranslate: Animated.AnimatedInterpolation;
@@ -65,6 +66,7 @@ export default class MapScreen extends Component<MapScreenProps> {
 			<View style={styles.container}>
 				{this.renderTopBar()}
 				{this.renderMapTopControls()}
+				{this.renderOverlay()}
 				<Animated.ScrollView
 					ref="scroll"
 					bounces={ false }
@@ -116,6 +118,23 @@ export default class MapScreen extends Component<MapScreenProps> {
 		)
 	}
 
+	renderOverlay() {
+		if( !this.props.overlay ) return;
+
+		let heights = this.getHeights();
+		let olStyle = [
+			styles.searchPanelWrapper,
+			{ top: this.props.top ? heights.topBar + heights.statusBar : 0 } 
+		];
+
+		return (
+			<View style={ olStyle }>
+				{ this.props.overlay }
+			</View>
+		);
+
+	}
+
 	renderHandle() {
 		if( !this.props.allowBigMap && !this.props.allowScroll ) return;
 
@@ -144,9 +163,11 @@ export default class MapScreen extends Component<MapScreenProps> {
 	}
 
 	getHeights() {
-		let heights: any = layoutUtils.getHeights()[ this.props.top ? 'withTopBar' : 'withoutTopBar' ];
+		let heights: any = layoutUtils.getHeights()[
+			this.props.top ? 'withTopBar' : 'withoutTopBar'
+		];
 
-		heights.initialScroll = heights.window - heights.header;
+		heights.initialScroll = heights.window - heights.header - heights.statusBar;
 
 		console.log('HHHHEIGHTS', heights );
 
@@ -231,5 +252,11 @@ const styles = StyleSheet.create({
 		top: -70, right: 20,
 		height: 46,
 		zIndex: 40
+	},
+
+	searchPanelWrapper: {
+		position: 'absolute',
+		left: 0, right: 0, bottom: 0,
+		zIndex: 10
 	}
 })
