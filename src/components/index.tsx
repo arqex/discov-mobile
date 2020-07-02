@@ -14,6 +14,7 @@ export { default as Marker } from './Marker';
 export { default as Modal } from './Modal';
 export { default as ModalContent } from './ModalContent';
 export { default as Panel } from './Panel';
+export { default as Reveal } from './Reveal';
 export { default as ScrollScreen } from './ScrollScreen';
 export { default as SearchBar } from './SearchBar';
 export { default as Separator } from './Separator';

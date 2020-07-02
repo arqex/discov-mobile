@@ -169,8 +169,6 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 
 		heights.initialScroll = heights.window - heights.header - heights.statusBar;
 
-		console.log('HHHHEIGHTS', heights );
-
 		return heights;
 	}
 	
@@ -224,7 +222,7 @@ const styles = StyleSheet.create({
 	mapTop: {
 		position: 'absolute',
 		left: 0, top: 8,
-		zIndex: 20
+		zIndex: 5
 	},
 
 	handleWrapper: {
@@ -257,6 +255,6 @@ const styles = StyleSheet.create({
 	searchPanelWrapper: {
 		position: 'absolute',
 		left: 0, right: 0, bottom: 0,
-		zIndex: 10
+		zIndex: 8
 	}
 })

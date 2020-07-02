@@ -20,7 +20,7 @@ export default class SearchBar extends React.Component<SearchBarProps> {
   circleInterpolation: Animated.AnimatedInterpolation
 
   animatedOpacity = interpolations.interpolateTo1(
-    this.props.animatedScrollValue || new Animated.Value(1)
+    this.props.animatedScrollValue || new Animated.Value(499)
   )
 
   static defaultProps = {
@@ -66,7 +66,7 @@ export default class SearchBar extends React.Component<SearchBarProps> {
           <View>
             { this.props.preButtons }
           </View>
-          <Animated.View style={{opacity: this.animatedOpacity}}>
+          <Animated.View style={{marginLeft: 5, opacity: this.animatedOpacity}}>
             { this.props.children }
           </Animated.View>
         </View>
@@ -156,7 +156,9 @@ export default class SearchBar extends React.Component<SearchBarProps> {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    position: 'relative'
+    position: 'relative',
+    paddingLeft: 5,
+    paddingRight: 6
   },
   closedContent: {
     flexGrow: 1,
@@ -168,7 +170,7 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     position: "absolute",
-    top: 0, left: 0,
+    top: 0, left: 5,
     width: '100%',
     height: '100%',
     zIndex: -1,

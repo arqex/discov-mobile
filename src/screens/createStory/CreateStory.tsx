@@ -26,7 +26,8 @@ interface CreateStoryState {
 	dragActive: boolean,
 	customLocation: string,
 	searchingPlace: boolean,
-	searchQuery: string
+	searchQuery: string,
+	showingSearchOverlay: boolean
 }
 
 interface CreateStoryProps extends ScreenProps {
@@ -58,7 +59,8 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 			dragActive: false,
 			customLocation: '',
 			searchingPlace: false,
-			searchQuery: ''
+			searchQuery: '',
+			showingSearchOverlay: false
 		}
 	}	
 	
@@ -143,12 +145,13 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		);
 
 		let searchbar = (
-			<SearchBar onOpen={this._startSearch}
-				onClose={this._endSearch}
-				onOpen={this._startSearch}
-				preButtons={backButton}>
-				<Text type="mainTitle">{__('createStory.locateTitle')}</Text>
-			</SearchBar>
+			<View style={styles.searchBar}>
+				<SearchBar onOpen={this._startSearch}
+					onClose={this._endSearch}
+					preButtons={backButton}>
+					<Text type="mainTitle">{__('createStory.locateTitle')}</Text>
+				</SearchBar>
+			</View>
 		);
 
 		return (
@@ -160,7 +163,11 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 
 	renderSearchPanel() {
 		if( !this.state.searchingPlace ) return;
-		return <SearchPlacePanel />;
+
+		return (
+			<SearchPlacePanel
+				visible={this.state.showingSearchOverlay } />
+		);
 	}
 
 	renderMap() {
@@ -233,11 +240,23 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	}
 
 	_startSearch = () => {
-		this.setState({ searchingPlace: true });
+		// First mount the search panel
+		console.log('Searching');
+		this.setState({ searchingPlace: true }, () => {
+			console.log('Visible');
+			// Then make it visible
+			this.setState({ showingSearchOverlay: true });
+		});
 	}
 
 	_endSearch = () => {
-		this.setState({ searchingPlace: false });
+		// First hide the search panel
+		this.setState({ showingSearchOverlay: false }, () => {
+			setTimeout(() => {
+				// Then unmount it
+				this.setState({ searchingPlace: false, searchQuery: '' });
+			}, 300);
+		})
 	}
 
 	_toggleDrag = () => {
@@ -520,8 +539,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'stretch'
 	},
-	topBar: {
-		zIndex: 10
+	searchBar: {
 	},
 	map: {
 		height: 1000,
