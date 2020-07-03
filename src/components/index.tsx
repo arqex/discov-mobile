@@ -26,6 +26,7 @@ export { default as StoryHeader } from './StoryHeader';
 export { default as Tag } from './Tag';
 export { default as TabSelector } from './TabSelector';
 export { default as Text } from './Text';
+export { default as Tooltip } from './Tooltip';
 export { default as TopBar } from './TopBar';
 
 export { default as styleVars } from './styleVars';

@@ -20,6 +20,7 @@ import TagGallery from './TagGallery';
 import DrawerUpdate from './DrawerUpdate';
 import TabSelectorGallery from './TabSelectorGallery';
 import FontGallery from './FontGallery';
+import TooltipGallery from './TooltipGallery';
 
 const components = {
 	Avatar: AvatarGallery,
@@ -40,6 +41,7 @@ const components = {
 	TabSelector: TabSelectorGallery,
 	Tag: TagGallery,
 	Text: TextGallery,
+	Tooltip: TooltipGallery,
 	TopBar: TopBarGallery,
 	DrawerUpdate: DrawerUpdate
 }

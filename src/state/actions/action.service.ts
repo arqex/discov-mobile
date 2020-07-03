@@ -20,6 +20,7 @@ const followingPageFields = page.replace('%', followingFields);
 const locationFields = `{lng lat}`
 const locationAddressFields = `{formatted parts {longName shortName type}}`;
 const placeFields = `{sourceId name type location ${locationFields} ne ${locationFields} sw ${locationFields}}`;
+const placeSearchResults = `{sourceId mainText secondaryText distance }`
 
 const storyFields = '{id ownerId lng lat content aggregated createdAt status}';
 const userDiscoveryFields = `{id storyId ownerId discovererId createdAt extra story ${storyFields}}`;
@@ -41,6 +42,7 @@ export default {
 	followerGroupFields,
 	followerGroupPageFields,
 	placeFields,
+	placeSearchResults,
 	locationAddressFields,
 	storyFields,
 	userDiscoveryFields,

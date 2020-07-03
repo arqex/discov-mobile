@@ -13,7 +13,7 @@
 
 	"createStory": {
 		"locateTitle": "Situa la història",
-		"selectCurrent": "En la meva ubicació",
+		"selectCurrent": "A la meva ubicació",
 		"selectLocation": "En aquesta ubicació",
 		"selectPlace": "En aquest lloc",
 		"editTitle": "Edita el nom de lloc",
@@ -29,7 +29,9 @@
 		"discoverableBySome": "Disponible per a alguns seguidors",
 		"noDiscoverable": "Cap seguidor seleccionat. Aquesta serà una història privada.",
 		"publish": "Publicar història",
-		"draft": "Desa com a esborrany"
+		"draft": "Desa com a esborrany",
+		"searchTooltip": "Comença a escriure el lloc en què estàs pensant i els suggeriments apareixeran aquí.",
+		"noPlaceResults": "No hem trobat res per \"{{query}}\"."
 	},
 
 	"myDiscoveries": {

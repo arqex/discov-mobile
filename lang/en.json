@@ -29,7 +29,9 @@
 		"discoverableBySome": "Discoverable by some followers",
 		"noDiscoverable": "No follower selected. This is a private story.",
 		"publish": "Publish story",
-		"draft": "Save as draft"
+		"draft": "Save as draft",
+		"searchTooltip": "Start writing the name of the place you are thinking about and sugesstions will appear here.",
+		"noPlaceResults": "We couldn't find any place for \"{{query}}\"."
 	},
 
 	"myStories": {

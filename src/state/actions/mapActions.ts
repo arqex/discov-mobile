@@ -1,8 +1,9 @@
 
 import actionService from './action.service';
 import storeService from '../store.service';
-import { Alert } from 'react-native';
+import { Alert, I18nManager } from 'react-native';
 import { getCurrentPositionAsync, requestPermissionsAsync } from 'expo-location';
+import * as RNLocalize from "react-native-localize";
 
 export default function (store, api) {
 
@@ -37,14 +38,40 @@ export default function (store, api) {
 					console.log('Location not granted');
 				})
 			;
+		},
+
+		searchPlaces( query:string ){
+			let position = storeService.getCurrentPosition().coords;
+
+			let payload = {
+				query,
+				location: {
+					lng: position.longitude,
+					lat: position.latitude
+				},
+				sessionToken: getSessionToken,
+				language: RNLocalize.getLocales()[0].languageTag
+			}
+
+			console.log( position, payload );
+
+			return api.methods.searchPlaces( actionService.placeSearchResults )
+				.run( payload )
+			;
 		}
 	}
 }
 
+let sessionTokenData: any;
+function getSessionToken(){
+	if( sessionTokenData && sessionTokenData.updatedAt > Date.now() - 12000 ){
+		return sessionTokenData.token;
+	}
 
-function requestGeolocation() {
-	return requestPermissionsAsync()
-		.then(res => console.log(res))
-		.catch(err => console.log(err))
-	;
+	sessionTokenData = {
+		updatedAt: Date.now(),
+		token: Math.round( Math.random() * 10000 ) + ''
+	};
+
+	return sessionTokenData.token;
 }

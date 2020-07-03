@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, ScrollScreen, Text, Button, TopBar, styleVars } from '../../components';
+import { Bg, ScrollScreen, Text, Button, TopBar, Tooltip, styleVars } from '../../components';
 
 export default class NoStories extends Component<ScreenProps> {
 
@@ -30,7 +30,7 @@ export default class NoStories extends Component<ScreenProps> {
 					animatedScrollValue={this.animatedScrollValue}
 					topBar={ topBar }>
 						<View style={ styles.noStoriesCard }>
-							<Text>You haven't placed any story yet. Surprise your followers with the first one!</Text>
+							<Tooltip>You haven't placed any story yet. Surprise your followers with the first one!</Tooltip>
 							<View style={ styles.createWrapper }>
 								<Button onPress={ this._createStory }>
 									Create story

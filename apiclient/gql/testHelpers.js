@@ -4,7 +4,7 @@ const apiClient_1 = require("../apiClient");
 const pact_1 = require("@pact-foundation/pact");
 const { Interactor } = require('@discov/pact-interactor');
 const path = require('path');
-const MOCK_SERVER_PORT = 9998;
+const MOCK_SERVER_PORT = 9990;
 function setupPactServer() {
     const provider = new pact_1.Pact({
         consumer: 'apiClient',

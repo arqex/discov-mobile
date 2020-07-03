@@ -148,6 +148,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 			<View style={styles.searchBar}>
 				<SearchBar onOpen={this._startSearch}
 					onClose={this._endSearch}
+					onQueryChange={this._onUpdateSearchQuery}
 					preButtons={backButton}>
 					<Text type="mainTitle">{__('createStory.locateTitle')}</Text>
 				</SearchBar>
@@ -166,7 +167,9 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 
 		return (
 			<SearchPlacePanel
-				visible={this.state.showingSearchOverlay } />
+				query={ this.state.searchQuery }
+				visible={this.state.showingSearchOverlay }
+				search={ this.props.actions.map.searchPlaces } />
 		);
 	}
 
@@ -241,9 +244,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 
 	_startSearch = () => {
 		// First mount the search panel
-		console.log('Searching');
 		this.setState({ searchingPlace: true }, () => {
-			console.log('Visible');
 			// Then make it visible
 			this.setState({ showingSearchOverlay: true });
 		});
@@ -257,6 +258,10 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 				this.setState({ searchingPlace: false, searchQuery: '' });
 			}, 300);
 		})
+	}
+
+	_onUpdateSearchQuery = q => {
+		this.setState({ searchQuery: q });
 	}
 
 	_toggleDrag = () => {

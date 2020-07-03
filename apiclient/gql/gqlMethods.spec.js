@@ -8,6 +8,7 @@ const api_testing_1 = __importDefault(require("@discov/api-testing"));
 describe('API pacts', () => {
     let provider;
     beforeAll(() => {
+        console.log('Running setup!!');
         return testHelpers_1.setupPactServer()
             .then(p => {
             provider = p;

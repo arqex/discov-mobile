@@ -4,6 +4,7 @@ import Button from './Button';
 import Input from './Input';
 import styleVars from './styleVars';
 import interpolations from './utils/scrollInterpolation';
+import nofn from '../utils/nofn';
 
 const ANIM_DURATION = 300;
 
@@ -11,6 +12,7 @@ interface SearchBarProps {
   onSearch: (text: string) => void,
   onOpen: () => void,
   onClose: () => void,
+  onQueryChange: (text:string) => void,
   preButtons?: any,
   animatedScrollValue?: Animated.Value
 }
@@ -24,9 +26,10 @@ export default class SearchBar extends React.Component<SearchBarProps> {
   )
 
   static defaultProps = {
-    onSearch: () => {},
-    onClose: () => {},
-    onOpen: () => {}
+    onSearch: nofn,
+    onClose: nofn,
+    onOpen: nofn,
+    onQueryChange: nofn
   }
 
   state = {
@@ -82,7 +85,7 @@ export default class SearchBar extends React.Component<SearchBarProps> {
                 value={ this.state.text }
                 color={ styleVars.colors.blueText }
                 onSubmitEditing={ this._onSearch }
-                onChangeText={ text => this.setState({text}) } />
+                onChangeText={ this._onQueryChange } />
             </View>
           <Button type="icon"
             icon="search"
@@ -127,6 +130,10 @@ export default class SearchBar extends React.Component<SearchBarProps> {
     this.props.onSearch( this.state.text );
   }
 
+  _onQueryChange = text => {
+    this.setState({ text });
+    this.props.onQueryChange( text );
+  }
 
   componentDidUpdate( prevProps, prevState ) {
     if( !prevState.searching && this.state.searching ){

@@ -8,7 +8,8 @@ class GqlMethods {
         // to be implemented by a child class
         return {
             getBody: tbi,
-            run: tbi
+            run: tbi,
+            then: tbi
         };
     }
     /////////////
@@ -137,6 +138,20 @@ query getFollowerGroupMembers( $input: PaginatedGroupInput! ) {
         return this.makeRunnable(`
 query getPlacesNearby( $input: LocationRadiusInput! ) {
   getPlacesNearby(input: $input) ${returnFields} 
+}
+`);
+    }
+    getSinglePlace(returnFields) {
+        return this.makeRunnable(`
+query getSinglePlace( $sourceId: String! ) {
+  getSinglePlace(sourceId: $sourceId) ${returnFields} 
+}
+`);
+    }
+    searchPlaces(returnFields) {
+        return this.makeRunnable(`
+query searchPlaces( $input: SearchPlaceInput! ) {
+  searchPlaces(input: $input) ${returnFields} 
 }
 `);
     }

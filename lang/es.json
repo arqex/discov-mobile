@@ -29,7 +29,9 @@
 		"discoverableBySome": "Disponible para algunos",
 		"noDiscoverable": "Ningún seguidor seleccionado. Esta será una historia privada.",
 		"publish": "Publicar historia",
-		"draft": "Guardar como borrador"
+		"draft": "Guardar como borrador",
+		"searchTooltip": "Empieza a escribir el sitio en el que estás pensando y las sugerencias aparecerán aquí.",
+		"noPlaceResults": "Mmm, no me viene nada por \"{{query}}\"."
 	},
 
 	"myDiscoveries": {
