@@ -1,12 +1,15 @@
 import * as React from 'react'
 import { StyleSheet, View, FlatList } from 'react-native';
-import { Text, Reveal, Tooltip, ListItem } from '../../components';
+import { Reveal, Tooltip, LoadingBar } from '../../components';
+import PlaceListItem from '../components/PlaceListItem';
 
 
 interface SearchPlacePanelProps {
 	visible: boolean,
 	query: string,
-	search: (query:string) => Promise<[any]>
+	location: any,
+	mapActions: any,
+	onSelect: (place: any) => void
 }
 
 interface QueryIntent {
@@ -29,8 +32,24 @@ export default class SearchPlacePanel extends React.Component<SearchPlacePanelPr
 		return (
 			<Reveal visible={ this.props.visible }
 				style={styles.container}>
+					{ this.renderLoadingBar() }
 					{ this.renderResults() }
 			</Reveal>
+		);
+	}
+
+	renderLoadingBar() {
+		let intent = this.state.queries[ this.props.query ];
+		if( !intent || !intent.loading ) {
+			return (
+				<View style={ styles.loadingBarWrapper } />
+			);
+		}
+
+		return (
+			<View style={styles.loadingBarWrapper}>
+				<LoadingBar />
+			</View>
 		);
 	}
 
@@ -60,10 +79,13 @@ export default class SearchPlacePanel extends React.Component<SearchPlacePanelPr
 
 	_renderResultItem = ({item}) => {
 		return (
-			<ListItem title={ item.mainText }
-				subtitle={ item.secondaryText }
+			<PlaceListItem
+				place={ item }
+				name={ item.mainText }
+				address={ item.secondaryText }
+				type={ item.type }
 				onPress={ this._selectPlace } />
-		)
+		);
 	}
 
 	keyExtractor( item ) {
@@ -73,7 +95,7 @@ export default class SearchPlacePanel extends React.Component<SearchPlacePanelPr
 	renderInit() {
 		return (
 			<View style={styles.tooltipWrapper}>
-				<Tooltip>
+				<Tooltip style={{maxWidth: 300}}>
 					{__('createStory.searchTooltip')}
 				</Tooltip>
 			</View>
@@ -83,7 +105,7 @@ export default class SearchPlacePanel extends React.Component<SearchPlacePanelPr
 	renderNoResults() {
 		return (
 			<View style={styles.tooltipWrapper}>
-				<Tooltip>
+				<Tooltip style={{maxWidth: 300}}>
 					{__('createStory.noPlaceResults', {query: this.props.query})}
 				</Tooltip>
 			</View>
@@ -92,6 +114,12 @@ export default class SearchPlacePanel extends React.Component<SearchPlacePanelPr
 
 	_selectPlace = place => {
 		console.log('Place selected', place);
+
+		console.log('MapActions', this.props.mapActions );
+		this.props.mapActions.getSinglePlace( place.sourceId )
+			.then( place => {
+				this.props.onSelect( place );
+			})
 	}
 
 	componentDidUpdate( prevProps ){
@@ -124,10 +152,8 @@ export default class SearchPlacePanel extends React.Component<SearchPlacePanelPr
 	}
 
 	search( query ){
-		console.log('Search!!', query);
-
 		this.updateQueries( query, { loading: true } );
-		this.props.search( query )
+		this.props.mapActions.searchPlaces( query, this.props.location )
 			.then( results => {
 				if (query === this.props.query) {
 					this.lastResults = results;
@@ -162,5 +188,15 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+
+	resultsWrapper: {
+	},
+
+	loadingBarWrapper: {
+		height: 2,
+		overflow: 'hidden',
+		justifyContent: 'center',
+		alignItems: 'stretch'
 	}
 });

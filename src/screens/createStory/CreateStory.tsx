@@ -167,9 +167,11 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 
 		return (
 			<SearchPlacePanel
+				location={ this.state.regionInView }
 				query={ this.state.searchQuery }
 				visible={this.state.showingSearchOverlay }
-				search={ this.props.actions.map.searchPlaces } />
+				mapActions={ this.props.actions.map }
+				onSelect={ this._onSelectSearchPlace } />
 		);
 	}
 
@@ -269,11 +271,14 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	}
 
 	_onUpdateRegion = r => {
+		console.log('update region', r);
+
 		if( this.state.dragActive ){
 			let latLng = locationToLng(r);
 			this.props.actions.map.loadLocationAddress( latLng )
 				.then( () => {
 					this.setState({
+						regionInView: r,
 						storyLocation: {
 							location: latLng,
 							place: this.getCustomPlace() || this.getUserPlace( r )
@@ -283,6 +288,15 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 			;
 		}
 		this.setState({regionInView: r});
+	}
+
+	_onSelectSearchPlace = place => {
+		console.log('Place selected!', place);
+		this._onSelectLocation({
+			place,
+			location: place.location
+		});
+		this._endSearch();
 	}
 
 	_onSelectLocation = selection => {

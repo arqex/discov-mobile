@@ -40,8 +40,8 @@ export default function (store, api) {
 			;
 		},
 
-		searchPlaces( query:string ){
-			let position = storeService.getCurrentPosition().coords;
+		searchPlaces( query:string, location: any ){
+			let position = location || storeService.getCurrentPosition().coords || defaultLocation;
 
 			let payload = {
 				query,
@@ -58,9 +58,20 @@ export default function (store, api) {
 			return api.methods.searchPlaces( actionService.placeSearchResults )
 				.run( payload )
 			;
+		},
+
+		getSinglePlace( sourceId: string ){
+			return api.methods.getSinglePlace( actionService.placeFields )
+				.run( sourceId )
+			;
 		}
 	}
 }
+
+const defaultLocation = {
+	longitude: -5.98,
+	latitude: 37.39
+};
 
 let sessionTokenData: any;
 function getSessionToken(){

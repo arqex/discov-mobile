@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { ListItem, Button } from '../../components';
 import { MaterialIcons } from '@expo/vector-icons';
 import Flash from './Flash';
+import PlaceListItem from '../components/PlaceListItem';
 
 interface LocationSelectorProps {
 	onSelect: Function,
@@ -97,23 +98,14 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 	}
 
 	_renderPlace = place => {
-		const icon = (
-			<View style={ styles.placeIconWrapper }>
-				<MaterialIcons
-					name={ placeIcons[ place.type ] || placeIcons.default }
-					size={ 26 }
-					color="#949494" />
-			</View>
-		)
-
 		return (
-			<ListItem
-				key={place.sourceId}
-				onPress={ () => this.selectPlace(place) }
-				style={ styles.listItem }
-				title={ place.name }
-				pre={ icon } />
-		)
+			<PlaceListItem
+				key={ place.sourceId }
+				place={ place }
+				type={ place.type }
+				name={ place.name }
+				onPress={ this._selectPlace } />
+		);
 	}
 
 	_selectCurrentLocation = () => {
@@ -124,7 +116,7 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 		this.props.onEditLocationName();
 	}
 
-	selectPlace( place ) {
+	_selectPlace = place => {
 		let selection: any = {
 			place: {type: 'place', name: place.name, sourceId: place.sourceId}
 		}
@@ -183,14 +175,6 @@ const styles = StyleSheet.create({
 	placesList: {
 	},
 
-	placeIconWrapper:{
-		marginRight: 16,
-		borderRadius: 16,
-		backgroundColor: '#eee',
-		width: 36, height: 36,
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
 	listItem: {
 		height: 50,
 		paddingLeft: 20,
@@ -201,21 +185,3 @@ const styles = StyleSheet.create({
 		top: 30, left: 36
 	}
 });
-
-const placeIcons = {
-	cafe: 'local-cafe',
-	city: 'location-city',
-	drink: 'local-bar',
-	food: 'local-dining',
-	fun: 'local-activity',
-	lodging: 'hotel',
-	money: 'locat-atm',
-	museum: 'account-balance',
-	official: 'account-balance',
-	plane: 'flight',
-	service: 'business-center',
-	shop: 'local-grocery-store',
-	transport: 'airport-shuttle',
-	place: 'location-on',
-	default: 'location-on'
-}

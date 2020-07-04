@@ -127,7 +127,8 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
-		...styleVars.shadow
+		borderWidth: 1,
+		borderColor: '#E6EAF2'
 	},
 	content: {
 		maxWidth: 360,

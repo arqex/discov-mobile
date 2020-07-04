@@ -7,7 +7,7 @@ import { View, Animated, StyleSheet } from 'react-native'
  */
 
 interface LoadingBarProps {
-  finished: boolean
+  finished?: boolean
 }
 
 export default class LoadingBar extends React.Component<LoadingBarProps> {
@@ -79,12 +79,14 @@ export default class LoadingBar extends React.Component<LoadingBarProps> {
 
       Animated.timing( this.barWidth, {
         toValue: 1,
-        duration: 150
+        duration: 150,
+        useNativeDriver: true
       }).start();
       
       Animated.timing( this.barPosition, {
         toValue: 0,
-        duration: 150
+        duration: 150,
+        useNativeDriver: true
       }).start();
     }
   }
@@ -94,7 +96,7 @@ export default class LoadingBar extends React.Component<LoadingBarProps> {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'rgba(0,0,0,.2)',
+    backgroundColor: 'rgba(0,0,0,.1)',
     height: 6,
     borderRadius: 3,
     overflow: 'hidden',
