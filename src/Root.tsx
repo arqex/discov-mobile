@@ -12,7 +12,7 @@ import RootLoading from './RootLoading';
 import notifications from './utils/notifications';
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 
-import './location/location.tracking';
+import locationTracking from  './location/location.tracking';
 import storeService from './state/store.service';
 import { Modal } from './components';
 
@@ -152,10 +152,13 @@ class Root extends Component {
 
 			// We are poblating discoveries to show the
 			// unseen counter in the menu
-			if (!this.discoveriesPopulated ){
+			if ( !this.discoveriesPopulated ){
 				this.discoveriesPopulated = true;
 				this.actions.discovery.loadUserDiscoveries();
 			}
+
+			// We need to know if we have access to the permission
+			locationTracking.isPermissionGranted();
 		}
 		else if( status === 'OUT' ) {
 			this.discoveriesPopulated = false;
@@ -171,6 +174,7 @@ class Root extends Component {
 		this.setState({modalOpen: false});
 	}
 
+	/*
 	initializeUserData() {
 		if (!dataService.getStore().user.account) {
 			this.actions.account.loadUserAccount()
@@ -183,6 +187,7 @@ class Root extends Component {
 			;
 		}
 	}
+	*/
 
 	isDrawerInitiallyOpen() {
 		let path = router.location && router.location.pathname;
@@ -261,10 +266,12 @@ const screenTransition = {
 				inputRange: [ -2, -1, 0, 1, 2 ],
 				outputRange: [ layout.width, layout.width, 0, -layout.width, -layout.width ]
 			},
+			/*
 			opacity: {
 				inputRange: [ -2, -1, 0, .8, 1 ],
 				outputRange: [ 0, 1, 1, 0, 0]
 			}
+			*/
 		}
 	},
 	duration: 300,

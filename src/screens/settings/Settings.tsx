@@ -125,6 +125,8 @@ class Settings extends React.Component<ScreenProps> {
 
 	componentDidMount(){
 		codePush.getUpdateMetadata().then( meta => {
+			if( !meta ) return;
+			
 			this.setState({
 				version: `${meta.appVersion}.${meta.packageHash.slice(-6)} ${meta.isPending? '*' : ''}`
 			})

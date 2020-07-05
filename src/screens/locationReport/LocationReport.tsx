@@ -30,7 +30,7 @@ export default class LocationReport extends Component<ScreenProps> {
 	_renderLocation = location => {
     return (
       <View style={ styles.location }>
-        <Text>{ this.getWilcard(location) + this.formatDate(location.date) }</Text>
+        <Text>{this.getWildcard(location) + this.formatDate(location.date) }</Text>
         <Text>{ location.longitude } { location.latitude }</Text>
         <Text>{ location.accuracy }</Text>
       </View>

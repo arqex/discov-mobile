@@ -20,15 +20,17 @@ let currentLoginStatus = isUserLoggedIn() ? 'IN' : 'OUT';
 let currentAppStatus: AppStateStatus = AppState.currentState;
 let currentTrackingMode: TrackingMode = 'active';
 
+let initialized = false;
 function init(){
+  if( initialized ) return;
+  initialized = true;
   console.log('HEeEEEEETEY INIT!');
   locationService.setTaskName( LOCATION_TASK );
   geofenceService.setTaskName( GEOFENCING_TASK );
   setTrackingMode(currentTrackingMode);
-  console.log('HEeEEEEETEY INIT!');
   backgroundFetch.init(onBgFetchEvent);
-  console.log('HEeEEEEETEY INIT!');
   addEventListeners();
+  console.log('HEeEEEEETEY INIT FINISHED!');
 }
 init();
 
@@ -193,26 +195,35 @@ function updateCurrentLocation(){
   ;
 }
 
+let bgFetchPromise: any;
 function onBgFetchEvent(){
   console.log('$$$ BG fetch event');
 
-  return locationService.getLastLocation()
+  if( bgFetchPromise ) return;
+
+  console.log('$$$ BG fetch event is being handled');
+  bgFetchPromise = locationService.getLastLocation()
     .then( location => {
       if (location) {
-        console.log('$$$ BG location received');
-        storeService.addLocationReport( location, true );
-        locationHandler.onLocation(location.coords, setTrackingMode);
+        console.log('$$$ BG location received', location);
+        locationHandler.onLocation(location.coords, setTrackingMode, true);
       }
     })
     .catch( err => {
       console.log('$$$ BG location error');
       console.error( err );
     })
+    .finally( () => {
+      bgFetchPromise = false;
+    })
   ;
+
+  return bgFetchPromise;
 }
 
 export default {
   setTrackingMode,
   requestPermissions,
-  updateCurrentLocation
+  updateCurrentLocation,
+  isPermissionGranted
 }

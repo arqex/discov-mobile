@@ -20,11 +20,11 @@ let distanceFromOutOfFence = -1;
 let passiveFence;
 
 export default {
-  onLocation: function onLocation( location, setTrackingMode ){
+  onLocation: function onLocation( location, setTrackingMode, isBackgroundLocation ){
     
     console.log('----- Receiving location');
     // Render location available in the store for the rest of the app
-    storeService.addLocationReport( location );
+    storeService.addLocationReport( location, isBackgroundLocation);
     storeService.storeCurrentPosition( location );
 
     // Check if we have new discoveries
