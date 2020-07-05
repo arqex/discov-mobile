@@ -7,7 +7,10 @@ export default {
 		initialized = true;
 
 		const config = {
-			minimumFetchInterval: 15
+			minimumFetchInterval: 15,
+			stopOnTerminate: false,
+      enableHeadless: true,
+      startOnBoot: true
 		};
 
 		function onError(err) {
