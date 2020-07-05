@@ -31,7 +31,7 @@ export default class LocationReport extends Component<ScreenProps> {
     return (
       <View style={ styles.location }>
         <Text>{this.getWildcard(location) + this.formatDate(location.date) }</Text>
-        <Text>{ location.longitude } { location.latitude }</Text>
+        <Text>{ location.longitude } / { location.latitude }</Text>
         <Text>{ location.accuracy }</Text>
       </View>
     )

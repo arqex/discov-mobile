@@ -6,6 +6,7 @@ import { getNavigationBarHeight } from '../../components/utils/getNavigationBarH
 class MyPeople extends Component {
 
 	static navigationOptions = {}
+	/*
 	static getTransition = function(breakPoint) {
 		// Not returning anything means apply the default transition for other breakPoints
 		// If we want to not animate the transitions just return false
@@ -21,6 +22,7 @@ class MyPeople extends Component {
 			duration: 500
 		}
 	}
+	*/
 
 	tabStyles = {
 		transform: [

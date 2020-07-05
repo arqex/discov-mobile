@@ -264,7 +264,7 @@ const screenTransition = {
 		return {
 			translateX: {
 				inputRange: [ -2, -1, 0, 1, 2 ],
-				outputRange: [ layout.width, layout.width, 0, -layout.width, -layout.width ]
+				outputRange: [ layout.width, layout.width, 0, 0, 0 ] //-layout.width, -layout.width ]
 			},
 			/*
 			opacity: {

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Slider from '@react-native-community/slider';
-import {Text, Button, StoryHeader, Separator} from '../../components'
+import {Text, Button, StoryHeader, Separator, Wrapper, Tooltip} from '../../components'
 
 interface AreaSelectorProps {
 	value: number,
@@ -30,9 +30,9 @@ export default class AreaSelector extends React.Component<AreaSelectorProps> {
 						accountId={ this.props.accountId }
 						story={ this.props.story} />
 				</View>
-				<View style={{ marginBottom: 20 }}>
-					<Text>{ __("createStory.areaInfo") }</Text>
-				</View>
+				<Wrapper margin="0 0 24" textWidth>
+					<Tooltip>{__("createStory.areaInfo")}</Tooltip>
+				</Wrapper>
 				<Text type="label">{ __("createStory.radiusLabel") }</Text>
 				<View style={styles.inputWrapper}>
 					<View style={styles.sliderWrapper}>
@@ -47,9 +47,9 @@ export default class AreaSelector extends React.Component<AreaSelectorProps> {
 						<Text type="title">{this.getAmount()} {this.getUnit()}</Text>
 					</View>
 				</View>
-				<View>
+				<Wrapper textWidth>
 					<Button onPress={this.props.onSelect}>{ __('ok') }</Button>
-				</View>
+				</Wrapper>
 			</View>
 		);
 	}
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		padding: 20,
-		paddingTop: 0
+		paddingTop: 0,
 	},
 	inputWrapper: {
 		display: 'flex',

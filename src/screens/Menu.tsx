@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
-import { Bg, Logo, Button, Avatar, Text, styleVars } from '../components'
+import { View, StyleSheet, TouchableOpacity, Dimensions, ViewPagerAndroidBase } from 'react-native'
+import { Bg, Logo, Button, Avatar, Text, Wrapper, styleVars } from '../components'
 import { ScreenProps } from '../utils/ScreenProps';
 import { getStatusbarHeight } from '../components/utils/getStatusbarHeight';
 import RootLoading from '../RootLoading';
@@ -34,7 +34,7 @@ export default class Menu extends Component<ScreenProps> {
 
 		return (
 			<Bg type="red">
-				<View style={ [styles.container, widthStyle] }>
+				<Wrapper screenPadding style={ [styles.container, widthStyle] }>
 					<View style={ [styles.topBar, {paddingTop: getStatusbarHeight()}] }>
 						<Logo textColor={ styleVars.colors.blueText } />
 						<Button type="icon" icon="more-horiz" color="secondary"
@@ -80,12 +80,12 @@ export default class Menu extends Component<ScreenProps> {
 							{__('menu.people')}
 						</Button>
 					</View>
-					<View style={ styles.create }>
+					<Wrapper textWidth style={ styles.create }>
 						<Button icon="looks" onPress={this.props.drawer.close} link="/createStory">
 							{__('menu.create')}
 						</Button>
-					</View>
-				</View>
+					</Wrapper>
+				</Wrapper>
 			</Bg>
 		)
 	}
@@ -161,8 +161,9 @@ const styles = StyleSheet.create({
 	},
 	
 	create: {
-		flex: 2, 
+		flex: 2,
 		alignItems: 'stretch',
+		alignSelf: 'center'
 		// backgroundColor: '#ff00ff'
 	},
 

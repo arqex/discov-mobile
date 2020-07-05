@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View, StyleSheet, FlatList } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { TopBar, Button, Bg, Text, ScrollScreen } from '../../components';
-import { usersService } from '../../services/users.service';
+import { TopBar, Button, Bg, ScrollScreen, Tooltip, Wrapper } from '../../components';
 import memoize from 'memoize-one';
 import storeService from '../../state/store.service';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
@@ -65,11 +64,11 @@ export default class ShareStory extends Component<ScreenProps, ShareStoryState> 
 		if( Object.keys( selectedFriends ).length ) return;
 
 		return (
-			<View style={ styles.privateMsg }>
-				<Text style={{textAlign: 'center'}}>
-					{ __('createStory.private') }
-				</Text>
-			</View>
+			<Wrapper textWidth margin="56 0 0 0">
+				<Tooltip>
+					{__('createStory.private')}
+				</Tooltip>
+			</Wrapper>
 		)
 	}
 

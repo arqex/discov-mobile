@@ -37,7 +37,7 @@ export default class NoDiscoveries extends Component<ScreenProps> {
 							<SettingItem title="Invite friends"
 								subtitle="If you don't want to add the suggested people, invite some friends and tell them to share stories with you"
 								border />
-							<SettingItem title="Get out"
+							<SettingItem title="Start moving"
 								subtitle="Your are not far away from some discoveries, you just need to get a bit closer!" />
 						</View>
 				</ScrollScreen>

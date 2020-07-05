@@ -194,7 +194,7 @@ export default {
 			isBgFetch,
 			longitude: truncateDegrees(loc.longitude),
 			latitude: truncateDegrees(loc.latitude),
-			accuracy: truncateDegrees(loc.accuracy),
+			accuracy: parseInt(loc.accuracy),
 			date: Date.now()
 		});
 

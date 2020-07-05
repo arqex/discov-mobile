@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
-import { Bg, Logo, Text, Button, styleVars } from '../../components';
+import { Bg, Tooltip, Text, Button, styleVars, Wrapper } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
 import onboardingStyles from './onboarding.styles';
 
@@ -33,13 +33,15 @@ export default class Onboarding extends React.Component<ScreenProps> {
 			<View style={onboardingStyles.body}>
 				<View style={onboardingStyles.card}>
 					<View style={onboardingStyles.content}>
-						<Text type="paragraph">{`It's so great to have you in discov!
+						<Tooltip type="red">{`It's so great to have you in discov!
 
 Your are really close to start discovering around you, and place stories for your friends.
 
 But first, let's configure your account...`}
+						</Tooltip>
+						<Text type="paragraph">
 						</Text>
-						<View style={styles.buttonWrapper}>
+						<Wrapper textWidth margin="10 0 0 0">
 							<Button type="border"
 								icon="arrow-forward"
 								iconPosition="post"
@@ -47,7 +49,7 @@ But first, let's configure your account...`}
 								onPress={() => this.props.router.navigate('/onboarding/details')}>
 								Go!
 							</Button>
-						</View>
+						</Wrapper>
 					</View>
 				</View>
 			</View>
@@ -56,9 +58,6 @@ But first, let's configure your account...`}
 }
 
 const styles = StyleSheet.create({
-	buttonWrapper: {
-		marginTop: 20
-	},
 	
 	image: {
 		width: 160,

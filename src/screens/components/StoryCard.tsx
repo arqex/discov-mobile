@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions, TouchableOpacity, Platform } from 'react-native';
-import { StoryHeader, Button, MapImage, DiscovMarker, Text, styleVars, Tag } from '../../components';
+import { StoryHeader, Button, MapImage, DiscovMarker, Text, styleVars, Tag, Wrapper } from '../../components';
 import StoryProvider from '../../providers/StoryProvider';
 import UnseenDiscovery from './UnseenDiscovery';
 import notifications from '../../utils/notifications';
@@ -52,11 +52,11 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 						story={ story }
 						router={ this.props.router } />
 				</View>
-				<View style={ styles.body }>
+				<Wrapper textWidth style={ styles.body }>
 					<Text type="paragraph" numberOfLines={3}>
 						{ story.content.text }
 					</Text>
-				</View>
+				</Wrapper>
 				<View style={ styles.controls }>
 					<View style={ styles.leftControls }>
 						{ this.renderTags( story ) }

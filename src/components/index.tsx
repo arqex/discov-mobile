@@ -28,6 +28,7 @@ export { default as TabSelector } from './TabSelector';
 export { default as Text } from './Text';
 export { default as Tooltip } from './Tooltip';
 export { default as TopBar } from './TopBar';
+export { default as Wrapper } from './Wrapper';
 
 export { default as styleVars } from './styleVars';
 export { default as interpolations } from './utils/scrollInterpolation';

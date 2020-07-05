@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, Text, Button, styleVars } from '../../components';
+import { Bg, Text, Button, styleVars, Tooltip, Wrapper } from '../../components';
 import onboardingStyles from './onboarding.styles';
 import * as Location from 'expo-location';
 import storeService from '../../state/store.service';
@@ -45,20 +45,22 @@ export default class OnboardingLocation extends React.Component<ScreenProps> {
 				<View style={onboardingStyles.card}>
 					<View style={onboardingStyles.content}>
 						<View style={styles.text}>
-							<Text>{`In order to discover the stories that your friends leave around you, discov need to access to your location.
+							<Tooltip type="red">{`In order to discover the stories that your friends leave around you, discov need to access to your location.
 
-Please enable your location.`}</Text>
+Please enable your location.`}</Tooltip>
 						</View>
-						<View style={styles.button}>
-							<Button onPress={ this._askForLocation } loading={ this.state.loading }>
-								Enable location
-							</Button>
-						</View>
-						<View style={styles.button}>
-							<Button type="transparent" onPress={ this._goNext }>
-								Skip for now
-							</Button>
-						</View>
+						<Wrapper textWidth>
+							<View style={styles.button}>
+								<Button onPress={this._askForLocation} loading={this.state.loading}>
+									Enable location
+								</Button>
+							</View>
+							<View style={styles.button}>
+								<Button type="transparent" onPress={this._goNext}>
+									Skip for now
+								</Button>
+							</View>
+						</Wrapper>
 					</View>
 				</View>
 			</View>

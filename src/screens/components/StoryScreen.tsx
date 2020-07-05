@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { MapScreen, Button, StoryHeader, Text } from '../../components';
+import { MapScreen, Button, StoryHeader, Text, Wrapper } from '../../components';
 import MapPanel from '../createStory/MapPanel';
 import StoryMap from './StoryMap';
 import { lngToLocation } from '../../utils/maps';
@@ -50,9 +50,11 @@ export default class StoryScreen extends Component<StoryScreenProps> {
 			<View style={ styles.header }>
 				<StoryHeader accountId={story.ownerId}
 					story={story} />
-					<Text type="paragraph">
-					{story.content.text}
-				</Text>
+					<Wrapper textWidth>
+						<Text type="paragraph">
+							{story.content.text}
+						</Text>
+					</Wrapper>
 			</View>
 		)
 	}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { TopBar, MapScreen, Text, StoryHeader, Separator, AvatarGroup, Button, styleVars} from '../../components';
+import { TopBar, MapScreen, Text, StoryHeader, Separator, AvatarGroup, Button, styleVars, Wrapper} from '../../components';
 import MapPanel from './MapPanel';
 import memoize from 'memoize-one';
 import storeService from '../../state/store.service';
@@ -48,15 +48,17 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 					accountId={ storeService.getUserId() }
 					story={ story } />
 				<TouchableOpacity style={ styles.excerpt } onPress={ () => this.navigate('/createStory/addContent') }>
-					<Text numberOfLines={3}>
-						{ story.content }
-					</Text>
+					<Wrapper textWidth>
+						<Text numberOfLines={3}>
+							{story.content}
+						</Text>
+					</Wrapper>
 				</TouchableOpacity>
 				{ this.renderSeparator() }
 				<View>
 					{ this.renderPeople(story) }
 				</View>
-				<View style={ styles.buttons }>
+				<Wrapper textWidth margin="20 0">
 					<View style={ styles.buttonMargin }>
 						<Button onPress={ this._onCreate }
 							loading={ this.state.saving}
@@ -69,7 +71,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 						disabled={ this.state.saving }
 						iconColor={ styleVars.colors.primary }
 						onPress={ this._onDraft }>{ __('createStory.draft') }</Button>
-				</View>
+				</Wrapper>
 			</View>
 		);
 	}
@@ -106,9 +108,9 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 				<View style={styles.discoverableAvatars}>
 					{ left }
 				</View>
-				<View style={styles.discoverableText}>
+				<Wrapper textWidth style={styles.discoverableText}>
 					<Text>{ text }</Text>
-				</View>
+				</Wrapper>
 			</TouchableOpacity>
 		);
 	}
@@ -252,10 +254,6 @@ const styles = StyleSheet.create({
 		alignSelf: 'center',
 		opacity: .5,
 		marginTop: 10,
-	},
-	buttons: {
-		marginTop: 20,
-		paddingBottom: 20
 	},
 	buttonMargin: {
 		marginBottom: 5

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet, Image } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, Text, Button } from '../../components';
+import { Bg, Text, Button, Tooltip, Wrapper } from '../../components';
 import onboardingStyles from './onboarding.styles';
 
 export default class Onboarding extends React.Component<ScreenProps> {
@@ -34,18 +34,17 @@ export default class Onboarding extends React.Component<ScreenProps> {
 				<View style={onboardingStyles.card}>
 					<View style={onboardingStyles.content}>
 						<View style={styles.text}>
-							<Text>
+							<Tooltip type="red">
 		{`The basics for your account app are now in place.
 
-Discov is all about sharing with your people, so why not to begin by following some friends to start discovering their stories?
-		`}
-							</Text>
+Discov is all about sharing with your people, so why not to begin by following some friends to start discovering their stories?`}
+							</Tooltip>
 						</View>
-						<View style={styles.button}>
+						<Wrapper textWidth>
 							<Button onPress={this._goToPeople}>
 								Go find some people
 							</Button>
-						</View>
+						</Wrapper>
 					</View>
 				</View>
 			</View>
@@ -64,8 +63,6 @@ Discov is all about sharing with your people, so why not to begin by following s
 }
 
 const styles = StyleSheet.create({
-	button: {
-	},
 	image: {
 		width: 180,
 		height: 116,

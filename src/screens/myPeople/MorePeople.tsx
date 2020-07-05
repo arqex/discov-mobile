@@ -42,7 +42,7 @@ export default class MorePeople extends Component<ScreenProps> {
 			return (
 				<View style={styles.header}>
 					<Text type="header">
-						More people
+						People around
 					</Text>
 				</View>
 			);
@@ -68,7 +68,7 @@ export default class MorePeople extends Component<ScreenProps> {
 				onSearch={this._onSearch}
 				preButtons={backButton}
 				animatedScrollValue={this.animatedScrollValue}>
-				<Text type="mainTitle">More people</Text>
+				<Text type="mainTitle">People around</Text>
 			</SearchBar>
 		);
 

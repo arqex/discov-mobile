@@ -21,6 +21,7 @@ import DrawerUpdate from './DrawerUpdate';
 import TabSelectorGallery from './TabSelectorGallery';
 import FontGallery from './FontGallery';
 import TooltipGallery from './TooltipGallery';
+import WrapperGallery from './WrapperGallery';
 
 const components = {
 	Avatar: AvatarGallery,
@@ -43,7 +44,8 @@ const components = {
 	Text: TextGallery,
 	Tooltip: TooltipGallery,
 	TopBar: TopBarGallery,
-	DrawerUpdate: DrawerUpdate
+	DrawerUpdate: DrawerUpdate,
+	Wrapper: WrapperGallery,
 }
 
 interface GalleryProps {}

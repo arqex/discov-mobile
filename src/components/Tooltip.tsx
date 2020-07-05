@@ -4,7 +4,7 @@ import Text from './Text';
 import styleVars from './styleVars';
 
 interface TooltipProps {
-	type?: 'light' | 'dark',
+	type?: 'light' | 'dark' | 'red',
 	size?: 'm' | 's',
 	style?: any
 }
@@ -63,8 +63,13 @@ const styles = StyleSheet.create({
 	container_light: {
 		backgroundColor: '#f6f8fb'
 	},
+
 	container_dark: {
 		backgroundColor: '#304573'
+	},
+
+	container_red: {
+		backgroundColor: '#fff4f6'
 	},
 
 	text: {
@@ -86,5 +91,9 @@ const styles = StyleSheet.create({
 
 	text_dark:{
 		color: '#fbfcfd'
-	}
+	},
+
+	text_red: {
+		color: '#304573'
+	},
 });

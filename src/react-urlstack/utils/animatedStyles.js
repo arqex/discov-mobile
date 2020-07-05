@@ -9,9 +9,14 @@ export function animatedStyles( transition, indexes, layout ){
 	let animatedStyles = {}
 	let transformStyles = []
 
+	/*
 	if( indexes.count ){
 		animatedStyles.zIndex = indexes.count - Math.abs(indexes.relative)
 	}
+	*/
+
+	// animatedStyles.zIndex = indexes.screen;
+
 
 	Object.keys( styles ).forEach( key => {
 		let value = styles[key];

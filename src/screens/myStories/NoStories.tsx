@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, ScrollScreen, Text, Button, TopBar, Tooltip, styleVars } from '../../components';
+import { Bg, ScrollScreen, Text, Button, TopBar, Tooltip, styleVars, Wrapper } from '../../components';
 
 export default class NoStories extends Component<ScreenProps> {
 
@@ -30,12 +30,14 @@ export default class NoStories extends Component<ScreenProps> {
 					animatedScrollValue={this.animatedScrollValue}
 					topBar={ topBar }>
 						<View style={ styles.noStoriesCard }>
-							<Tooltip>You haven't placed any story yet. Surprise your followers with the first one!</Tooltip>
-							<View style={ styles.createWrapper }>
-								<Button onPress={ this._createStory }>
-									Create story
-								</Button>
-							</View>
+							<Wrapper textWidth>
+								<Tooltip>You haven't placed any story yet. Surprise your followers with the first one!</Tooltip>
+								<View style={ styles.createWrapper }>
+									<Button onPress={ this._createStory }>
+										Create story
+									</Button>
+								</View>
+							</Wrapper>
 						</View>
 				</ScrollScreen>
 			</Bg>
@@ -63,7 +65,8 @@ const styles = StyleSheet.create({
 	noStoriesCard: {
 		...styleVars.card,
 		padding: 20,
-		marginBottom: 10
+		marginBottom: 10,
+		alignItems: 'center'
 	},
 
 	createWrapper: {

@@ -5,11 +5,11 @@ let stackAndDrawer = {
 		translateY: {
 			inputRange: [ 0, 1 ],
 			outputRange: [ -100, 0 ]
-		},
+		},/*
 		opacity: {
 			inputRange: [ 0, 1 ],
 			outputRange: [ 0, 1 ]
-		}
+		}*/
 	},
 	easing: Easing.linear,
 	duration: 300
