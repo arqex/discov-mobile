@@ -1,4 +1,5 @@
 import BackgroundFetch from "react-native-background-fetch";
+import { Platform } from "react-native";
 
 let initialized = false;
 export default {
@@ -43,5 +44,9 @@ export default {
 					break;
 			}
 		});
+
+		if( Platform.OS === 'android' ){
+			BackgroundFetch.registerHeadlessTask( onEvent );
+		}
 	}
 }
