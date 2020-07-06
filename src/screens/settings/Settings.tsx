@@ -5,6 +5,8 @@ import { ScreenProps } from '../../utils/ScreenProps';
 import notifications from '../../utils/notifications';
 import storeService from '../../state/store.service';
 import codePush from 'react-native-code-push';
+import * as ImagePicker from 'expo-image-picker';
+import * as Permissions from 'expo-permissions';
  
 class Settings extends React.Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
@@ -54,6 +56,12 @@ class Settings extends React.Component<ScreenProps> {
 							border />
 						<SettingItem title="Open modal"
 							onPress={this._openModal}
+							border />
+						<SettingItem title="Open imagePicker"
+							onPress={this._openImagePicker}
+							border />
+						<SettingItem title="Open camera"
+							onPress={this._openCamera}
 							border />
 						<SettingItem title="Reset onboarding"
 							onPress={this._resetOnboarding} />
@@ -121,6 +129,35 @@ class Settings extends React.Component<ScreenProps> {
 				]}
 			/>
 		);
+	}
+
+	_openImagePicker = () => {
+		ImagePicker.launchImageLibraryAsync({
+			mediaTypes: ImagePicker.MediaTypeOptions.Images,
+			allowsEditing: true,
+			quality: .9
+		})
+		.then( result => {
+			if( result.cancelled ) return;
+			console.log('Picker result', result);
+		});
+	}
+
+	_openCamera = () => {
+		return Permissions.askAsync(Permissions.CAMERA)
+			.then( result => {
+				if (result.granted) {
+					ImagePicker.launchCameraAsync({
+						quality: .9
+					})
+						.then(result => {
+						if (result.cancelled) return;
+						console.log('Picker result', result);
+					})
+				}
+			})
+		;
+		
 	}
 
 	componentDidMount(){

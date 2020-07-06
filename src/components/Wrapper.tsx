@@ -20,8 +20,6 @@ export default class Wrapper extends React.Component<WrapperProps> {
 			this.props.style
 		];
 
-		console.log( styles );
-
 		return (
 			<View style={styles}>
 				{ this.props.children }

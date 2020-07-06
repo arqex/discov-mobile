@@ -54,9 +54,9 @@
 	<key>NSMotionUsageDescription</key>
 	<string>Allow Discov to access your device&apos;s accelerometer</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Give Discov periences permission to save photos</string>
+	<string>Allow Discov to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Give Discov periences permission to access your photos</string>
+	<string>Allow Discov to access your photos</string>
 	<key>NSRemindersUsageDescription</key>
 	<string>Allow Discov to access your reminders</string>
 	<key>UIBackgroundModes</key>

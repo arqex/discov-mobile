@@ -45,6 +45,10 @@ PODS:
     - React-Core
     - UMCore
     - UMImageLoaderInterface
+  - EXImagePicker (8.3.0):
+    - UMCore
+    - UMFileSystemInterface
+    - UMPermissionsInterface
   - EXKeepAwake (8.1.0):
     - UMCore
   - EXLinearGradient (8.1.0):
@@ -53,7 +57,7 @@ PODS:
     - UMCore
     - UMPermissionsInterface
     - UMTaskManagerInterface
-  - EXPermissions (8.1.0):
+  - EXPermissions (9.0.1):
     - UMCore
     - UMPermissionsInterface
   - EXSQLite (8.1.0):
@@ -340,7 +344,7 @@ PODS:
     - React
   - RNBackgroundFetch (3.1.0):
     - React
-  - RNCAsyncStorage (1.9.0):
+  - RNCAsyncStorage (1.11.0):
     - React
   - RNCPushNotificationIOS (1.1.0):
     - React
@@ -398,10 +402,11 @@ DEPENDENCIES:
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
+  - EXImagePicker (from `../node_modules/expo-image-picker/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
-  - EXPermissions (from `../node_modules/expo-permissions/ios`)
+  - EXPermissions (from `../node_modules/expo-image-picker/node_modules/expo-permissions/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXTaskManager (from `../node_modules/expo-task-manager/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
@@ -502,6 +507,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-font/ios"
   EXImageLoader:
     :path: "../node_modules/expo-image-loader/ios"
+  EXImagePicker:
+    :path: "../node_modules/expo-image-picker/ios"
   EXKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   EXLinearGradient:
@@ -509,7 +516,7 @@ EXTERNAL SOURCES:
   EXLocation:
     :path: "../node_modules/expo-location/ios"
   EXPermissions:
-    :path: "../node_modules/expo-permissions/ios"
+    :path: "../node_modules/expo-image-picker/node_modules/expo-permissions/ios"
   EXSQLite:
     :path: "../node_modules/expo-sqlite/ios"
   EXTaskManager:
@@ -635,10 +642,11 @@ SPEC CHECKSUMS:
   EXFileSystem: b82693d78de152efe10a77d4aac781f782e10916
   EXFont: af4c3281cac0bf6ccd8b8a534e9bce6437cc2e17
   EXImageLoader: 5c9d1bf408443ac4d4f44463eaf3b0d03bc70425
+  EXImagePicker: 2d94621fecfbd3cf2384e2e7d31ac661ed368de2
   EXKeepAwake: 4b53df0b4e87aa9f38bf57461e07fc167716a760
   EXLinearGradient: 8189387e3a65c2a9ba5507432e3a099ea8f7ea86
   EXLocation: 0397e4f11666d6ceb026b6424fdf66995c604964
-  EXPermissions: d2cafee9c72578ecc9ca121481e6c4a04a798861
+  EXPermissions: b6d7134b7215c33420318c2bbb5d362c20ac9726
   EXSQLite: 15268ec49f859e4594fe5b0a1c7a47913da0b67e
   EXTaskManager: 62e38435210f4ec379239dbe3af21e0be1087b18
   EXWebBrowser: 6364e9e1ea73f6c3c2e6e3cc0ac17259a260e3a8
@@ -678,7 +686,7 @@ SPEC CHECKSUMS:
   ReactCommon: a6a294e7028ed67b926d29551aa9394fd989c24c
   RNAWSCognito: 2b447b7459ba33684fb3c2409ebe35dda50a4d68
   RNBackgroundFetch: 81c690aa5e8e67dbc3f86ecb7f26629c00c6060d
-  RNCAsyncStorage: b16697280b08bab4b5f2f67f752d93d13a52e9ed
+  RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
   RNCPushNotificationIOS: de54f074e577e684c0619d4271a5b451e8a37ee1
   RNDeviceInfo: c3ea4a4d4547740c548cdd1e5a78f9b04e524688
   RNFastImage: 35ae972d6727c84ee3f5c6897e07f84d0a3445e9
