@@ -157,7 +157,7 @@ class Root extends Component {
 				this.actions.discovery.loadUserDiscoveries();
 			}
 
-			// We need to know if we have access to the permission
+			// We need to know if we have access to the location
 			locationTracking.isPermissionGranted();
 		}
 		else if( status === 'OUT' ) {

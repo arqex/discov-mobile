@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { View, Animated, StyleSheet } from 'react-native'
 import {TabSelector} from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
+import { ScreenProps } from '../../utils/ScreenProps';
 
-class MyPeople extends Component {
+class MyPeople extends Component<ScreenProps> {
 
 	static navigationOptions = {}
 	/*
@@ -57,7 +58,7 @@ class MyPeople extends Component {
 	}
 
 	getSelectedTab(){
-		let route = this.props.router.location.pathname;
+		let route = this.props.location.pathname;
 		if( route.includes('following') ){
 			return 'following';
 		}

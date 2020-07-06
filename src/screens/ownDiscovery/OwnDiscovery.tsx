@@ -47,7 +47,7 @@ export default class OwnStory extends Component<ScreenProps> {
 	}
 
 	getId() {
-		return this.props.router.location.params.id;
+		return this.props.location.params.id;
 	}
 
 	componentDidMount() {

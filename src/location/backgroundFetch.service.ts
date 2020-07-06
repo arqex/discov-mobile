@@ -19,7 +19,7 @@ export default {
 		}
 
 		function onEvent( taskId ){
-			clbk().then( () => {
+			return clbk().then( () => {
 				BackgroundFetch.finish( taskId );
 			});
 		}

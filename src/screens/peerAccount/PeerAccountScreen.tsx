@@ -16,7 +16,7 @@ export default class PeerAccountScreen extends Component<ScreenProps> {
 	}
 
 	_onBackPress = () => {
-		let path = this.props.router.location.pathname;
+		let path = this.props.location.pathname;
 		
 		if( path ){
 			let pathParts = path.split('/');
