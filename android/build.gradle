@@ -37,6 +37,12 @@ allprojects {
             // react-native-background-fetch
             url("${project(':react-native-background-fetch').projectDir}/libs")
         }
+
+        // ADD THIS
+        maven { url 'https://maven.google.com' }
+
+        // ADD THIS
+        maven { url "https://www.jitpack.io" }
     }
 }
 

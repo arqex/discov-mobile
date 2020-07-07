@@ -45,10 +45,6 @@ PODS:
     - React-Core
     - UMCore
     - UMImageLoaderInterface
-  - EXImagePicker (8.3.0):
-    - UMCore
-    - UMFileSystemInterface
-    - UMPermissionsInterface
   - EXKeepAwake (8.1.0):
     - UMCore
   - EXLinearGradient (8.1.0):
@@ -57,7 +53,7 @@ PODS:
     - UMCore
     - UMPermissionsInterface
     - UMTaskManagerInterface
-  - EXPermissions (9.0.1):
+  - EXPermissions (8.1.0):
     - UMCore
     - UMPermissionsInterface
   - EXSQLite (8.1.0):
@@ -359,6 +355,15 @@ PODS:
   - RNGoogleSignin (4.0.3):
     - GoogleSignIn (~> 5.0.0)
     - React
+  - RNImageCropPicker (0.32.2):
+    - React-Core
+    - React-RCTImage
+    - RNImageCropPicker/QBImagePickerController (= 0.32.2)
+    - TOCropViewController
+  - RNImageCropPicker/QBImagePickerController (0.32.2):
+    - React-Core
+    - React-RCTImage
+    - TOCropViewController
   - RNLocalize (1.4.0):
     - React
   - RNOpenAppSettings (1.0.0):
@@ -372,6 +377,7 @@ PODS:
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.5)
   - SSZipArchive (2.2.3)
+  - TOCropViewController (2.5.3)
   - UMAppLoader (1.0.1)
   - UMBarCodeScannerInterface (5.1.0)
   - UMCameraInterface (5.1.0)
@@ -402,11 +408,10 @@ DEPENDENCIES:
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
-  - EXImagePicker (from `../node_modules/expo-image-picker/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
-  - EXPermissions (from `../node_modules/expo-image-picker/node_modules/expo-permissions/ios`)
+  - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
   - EXTaskManager (from `../node_modules/expo-task-manager/ios`)
   - EXWebBrowser (from `../node_modules/expo-web-browser/ios`)
@@ -449,6 +454,7 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-community/google-signin`)"
+  - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNLocalize (from `../node_modules/react-native-localize`)
   - RNOpenAppSettings (from `../node_modules/react-native-app-settings`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -485,6 +491,7 @@ SPEC REPOS:
     - SDWebImage
     - SDWebImageWebPCoder
     - SSZipArchive
+    - TOCropViewController
 
 EXTERNAL SOURCES:
   appcenter-analytics:
@@ -507,8 +514,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-font/ios"
   EXImageLoader:
     :path: "../node_modules/expo-image-loader/ios"
-  EXImagePicker:
-    :path: "../node_modules/expo-image-picker/ios"
   EXKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   EXLinearGradient:
@@ -516,7 +521,7 @@ EXTERNAL SOURCES:
   EXLocation:
     :path: "../node_modules/expo-location/ios"
   EXPermissions:
-    :path: "../node_modules/expo-image-picker/node_modules/expo-permissions/ios"
+    :path: "../node_modules/expo-permissions/ios"
   EXSQLite:
     :path: "../node_modules/expo-sqlite/ios"
   EXTaskManager:
@@ -591,6 +596,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
     :path: "../node_modules/@react-native-community/google-signin"
+  RNImageCropPicker:
+    :path: "../node_modules/react-native-image-crop-picker"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
   RNOpenAppSettings:
@@ -642,11 +649,10 @@ SPEC CHECKSUMS:
   EXFileSystem: b82693d78de152efe10a77d4aac781f782e10916
   EXFont: af4c3281cac0bf6ccd8b8a534e9bce6437cc2e17
   EXImageLoader: 5c9d1bf408443ac4d4f44463eaf3b0d03bc70425
-  EXImagePicker: 2d94621fecfbd3cf2384e2e7d31ac661ed368de2
   EXKeepAwake: 4b53df0b4e87aa9f38bf57461e07fc167716a760
   EXLinearGradient: 8189387e3a65c2a9ba5507432e3a099ea8f7ea86
   EXLocation: 0397e4f11666d6ceb026b6424fdf66995c604964
-  EXPermissions: b6d7134b7215c33420318c2bbb5d362c20ac9726
+  EXPermissions: d2cafee9c72578ecc9ca121481e6c4a04a798861
   EXSQLite: 15268ec49f859e4594fe5b0a1c7a47913da0b67e
   EXTaskManager: 62e38435210f4ec379239dbe3af21e0be1087b18
   EXWebBrowser: 6364e9e1ea73f6c3c2e6e3cc0ac17259a260e3a8
@@ -692,12 +698,14 @@ SPEC CHECKSUMS:
   RNFastImage: 35ae972d6727c84ee3f5c6897e07f84d0a3445e9
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNGoogleSignin: ccf71ee4b6cfd324fd788a41e457e2043838c0d9
+  RNImageCropPicker: f0557a908758c4a3f83978894ec7227651529b45
   RNLocalize: fc27ee5878ce5a3af73873fb2d8e866e0d1e6d84
   RNOpenAppSettings: 1169b90a275e9e18c5973e1608949f97d426e7f3
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   SDWebImage: d9ea4959d99c52276dfada481987018fcaea3d58
   SDWebImageWebPCoder: 36f8f47bd9879a8aea6044765c1351120fd8e3a8
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
+  TOCropViewController: 20a14b6a7a098308bf369e7c8d700dc983a974e6
   UMAppLoader: 83885655be9ce3e5b3684d20f9973da67b78b3a9
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
   UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928

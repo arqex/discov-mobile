@@ -5,8 +5,8 @@ import { ScreenProps } from '../../utils/ScreenProps';
 import notifications from '../../utils/notifications';
 import storeService from '../../state/store.service';
 import codePush from 'react-native-code-push';
-import * as ImagePicker from 'expo-image-picker';
-import * as Permissions from 'expo-permissions';
+import ImagePicker from 'react-native-image-crop-picker';
+import { uploadImage } from '../../utils/image.service';
  
 class Settings extends React.Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
@@ -132,32 +132,24 @@ class Settings extends React.Component<ScreenProps> {
 	}
 
 	_openImagePicker = () => {
-		ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.Images,
-			allowsEditing: true,
-			quality: .9
+		ImagePicker.openPicker({
+			multiple: true
 		})
 		.then( result => {
 			if( result.cancelled ) return;
-			console.log('Picker result', result);
+
+			uploadImage( result[0] );
+			//console.log('Picker result', result[0]);
 		});
 	}
 
 	_openCamera = () => {
-		return Permissions.askAsync(Permissions.CAMERA)
-			.then( result => {
-				if (result.granted) {
-					ImagePicker.launchCameraAsync({
-						quality: .9
-					})
-						.then(result => {
-						if (result.cancelled) return;
-						console.log('Picker result', result);
-					})
-				}
-			})
-		;
-		
+		ImagePicker.openCamera({
+			compressImageQuality: .8
+		}).then(result => {
+			if (result.cancelled) return;
+			console.log('Picker result', result);
+		});
 	}
 
 	componentDidMount(){
