@@ -197,9 +197,11 @@ function updateCurrentLocation(){
 
 let bgFetchPromise: any;
 function onBgFetchEvent(){
+  console.log('$$$ BG fetch event');
+
   if( !isUserLoggedIn() ) return Promise.resolve(false);
 
-  console.log('$$$ BG fetch event');
+  console.log('$$$ BG user logged in');
 
   if( bgFetchPromise ) return bgFetchPromise;
 
@@ -207,19 +209,24 @@ function onBgFetchEvent(){
 
   bgFetchPromise = isPermissionGranted()
     .then( isGranted => {
-      if( !isGranted ) return;
+      if( !isGranted ) return console.log('$$$ Location permission not granted');;
 
+      console.log('$$$ BG fetch getting last location');
       return locationService.getLastLocation()
         .then(location => {
           if (location) {
             console.log('$$$ BG location received', location);
             locationHandler.onLocation(location.coords, setTrackingMode, true);
           }
+          else {
+            console.log('$$$ No location reveived');
+          }
         })
-        .catch(err => {
-          console.log('$$$ BG location error');
-          console.error(err);
-        })
+      ;
+    })
+    .catch(err => {
+      console.log('$$$ BG location error');
+      console.error(err);
     })
     .finally( () => {
       bgFetchPromise = false;

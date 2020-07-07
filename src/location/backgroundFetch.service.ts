@@ -46,7 +46,11 @@ export default {
 		});
 
 		if( Platform.OS === 'android' ){
-			BackgroundFetch.registerHeadlessTask( onEvent );
+			BackgroundFetch.registerHeadlessTask( e => {
+				return clbk().then( () => {
+					BackgroundFetch.finish( e.taskId );
+				});
+			});
 		}
 	}
 }

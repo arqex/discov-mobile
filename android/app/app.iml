@@ -104,7 +104,7 @@
     <orderEntry type="library" name="Gradle: androidx.annotation:annotation:1.1.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.50@jar" level="project" />
     <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.10@jar" level="project" />
-    <orderEntry type="library" name="Gradle: commons-io:commons-io:2.6@jar" level="project" />
+    <orderEntry type="library" name="Gradle: commons-io:commons-io:1.4@jar" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.50@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.bumptech.glide:disklrucache:4.11.0@jar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.bumptech.glide:annotations:4.11.0@jar" level="project" />
@@ -160,8 +160,12 @@
     <orderEntry type="library" name="Gradle: androidx.savedstate:savedstate:1.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-livedata-core:2.0.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.arch.core:core-runtime:2.0.1@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.arch.core:core-runtime:2.0.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: io.nlopez.smartlocation:library:3.2.11@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.microsoft.appcenter.reactnative:appcenter-react-native:3.0.3@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.microsoft.appcenter:appcenter-analytics:3.2.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.microsoft.appcenter:appcenter-crashes:3.2.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: com.microsoft.appcenter:appcenter:3.2.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.facebook.fresco:fbcore:2.0.0@aar" level="project" />
     <orderEntry type="module" module-name="expo-permissions" />
     <orderEntry type="module" module-name="react-native-community_slider" />
@@ -175,10 +179,9 @@
     <orderEntry type="module" module-name="expo-image-loader" />
     <orderEntry type="module" module-name="expo-keep-awake" />
     <orderEntry type="module" module-name="expo-linear-gradient" />
-    <orderEntry type="module" module-name="android-expo-location" />
+    <orderEntry type="module" module-name="expo-location" />
     <orderEntry type="module" module-name="expo-sqlite" />
     <orderEntry type="module" module-name="expo-task-manager" />
-    <orderEntry type="module" module-name="expo-updates" />
     <orderEntry type="module" module-name="expo-web-browser" />
     <orderEntry type="module" module-name="unimodules-app-loader" />
     <orderEntry type="module" module-name="unimodules-barcode-scanner-interface" />
@@ -194,9 +197,15 @@
     <orderEntry type="module" module-name="react-native-community_async-storage" />
     <orderEntry type="module" module-name="react-native-community_google-signin" />
     <orderEntry type="module" module-name="amazon-cognito-identity-js" />
+    <orderEntry type="module" module-name="appcenter" />
+    <orderEntry type="module" module-name="appcenter-analytics" />
+    <orderEntry type="module" module-name="appcenter-crashes" />
+    <orderEntry type="module" module-name="react-native-background-fetch" />
+    <orderEntry type="module" module-name="react-native-code-push" />
     <orderEntry type="module" module-name="react-native-device-info" />
     <orderEntry type="module" module-name="react-native-fast-image" />
-    <orderEntry type="module" module-name="android-react-native-gesture-handler" />
+    <orderEntry type="module" module-name="react-native-gesture-handler" />
+    <orderEntry type="module" module-name="react-native-localize" />
     <orderEntry type="module" module-name="react-native-maps" />
     <orderEntry type="module" module-name="react-native-push-notification" />
     <orderEntry type="module" module-name="react-native-svg" />

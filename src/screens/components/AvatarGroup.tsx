@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import AccountAvatar from './AccountAvatar';
 import Tag from '../../components/Tag';
-import { Avatar } from '../../components';
+import Avatar from '../../components/Avatar';
 
 interface AvatarGroupProps {
 	userIds: Array<string>,
