@@ -1,13 +1,21 @@
 import { Platform } from "react-native";
+import { getEnv } from '../../environment';
+import { dataService } from "../services/data.service";
 
 export function uploadImage( image ) {
-	const data = new FormData();
+	let apiClient = dataService.getAPIClient();
+	
+	let payload = {
+		type: 'avatar',
+		data: image.data
+	};
 
-	data.append('image', {
-		name: image.filename,
-		type: image.mime,
-		uri: image.path
-	});
-
-	console.log( data );
+	apiClient.uploadImage( payload )
+		.then( response => {
+			console.log('Image upload Ok', response);
+		})
+		.catch( err => {
+			console.log('Image upload ERROR', err );
+		})
+	;
 };

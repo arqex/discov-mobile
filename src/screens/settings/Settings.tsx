@@ -133,7 +133,8 @@ class Settings extends React.Component<ScreenProps> {
 
 	_openImagePicker = () => {
 		ImagePicker.openPicker({
-			multiple: true
+			multiple: true,
+			includeBase64: true
 		})
 		.then( result => {
 			if( result.cancelled ) return;
