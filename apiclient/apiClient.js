@@ -128,8 +128,9 @@ class ApiClient {
     }
     async uploadImage( imageData ) {
         let authorizationHeader = await this.methods.getAuthorizationHeader();
-        let endpointParts = this.config.API.graphql_endpoint.split('/gql');
-        let endpoint = endpointParts[0] + '/imageUpload';
+        let parts = this.config.API.graphql_endpoint.split('/gql');
+        parts.pop();
+        let endpoint = parts.join('/gql') + '/imageUpload';
         console.log('Uploading image to ' + endpoint);
 
         return fetch(endpoint, {

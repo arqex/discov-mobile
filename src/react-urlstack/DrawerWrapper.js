@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
-import { StyleSheet, Animated, View } from 'react-native'
+import { StyleSheet, Animated, View, Platform } from 'react-native'
 import {animatedStyles} from './utils/animatedStyles'
 import Interactable from 'react-interactable'
+import DeviceInfo from 'react-native-device-info'
 
 let handleWidth = 15
 
@@ -139,7 +140,13 @@ export default class DrawerWrapper extends Component {
 
 		let drawer = this.refs.drawer
 		this.setState({open: true})
-		drawer && drawer.setVelocity({x: 3000})
+
+		if( this.isAndroidEmulator() ){
+			return this.openEmulatorDrawer();
+		}
+		else {
+			drawer && drawer.setVelocity({x: 3000})
+		}
 	}
 
 	closeDrawer(){
@@ -147,7 +154,13 @@ export default class DrawerWrapper extends Component {
 
 		let drawer = this.refs.drawer
 		this.setState({open: false})
-		drawer && drawer.setVelocity({x: -3000})
+
+		if( this.isAndroidEmulator() ){
+			return this.closeEmulatorDrawer();
+		}
+		else {
+			drawer && drawer.setVelocity({x: -3000})
+		}
 	}
 
 	onDrag( e ){
@@ -159,6 +172,18 @@ export default class DrawerWrapper extends Component {
 		else if( e.state === 'end' && e.targetSnapPointId === 'closed' ){
 			this.setState({open: false})
 		}
+	}
+
+	isAndroidEmulator() {
+		return DeviceInfo.isEmulatorSync() && Platform.OS === 'android';
+	}
+
+	openEmulatorDrawer(){
+		this.drawerPos.setValue( this.drawerWidth );
+	}
+
+	closeEmulatorDrawer(){
+		this.drawerPos.setValue( 0 );
 	}
 }
 
