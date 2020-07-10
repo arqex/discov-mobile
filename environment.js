@@ -6,6 +6,7 @@ let baseUrlLocal = 'http://localhost:3000/';
 
 let dev = {
 	useCognito: true,
+	baseUrl: baseUrlDev,
 	apiUrl: `${baseUrlDev}gql`,
 	errorUrl: `${baseUrlDev}errorReport`,
 	isLocal: true
@@ -13,6 +14,7 @@ let dev = {
 
 let local = {
 	useCognito: false,
+	baseUrl: baseUrlLocal,
 	apiUrl: `${baseUrlLocal}gql`,
 	errorUrl: `${baseUrlLocal}errorReport`,
 	isLocal: false
@@ -25,7 +27,7 @@ let promise = isEmulator().then(result => {
 })
 
 function getCurrentEnv( isLocal ){
-	return dev;
+	// return dev;
 	return isLocal ? local: dev;
 }
 

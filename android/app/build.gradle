@@ -109,6 +109,7 @@ android {
         manifestPlaceholders = [
             'appAuthRedirectScheme': 'me.discov.mobile'
         ]
+        vectorDrawables.useSupportLibrary = true
     }
     
     signingConfigs {

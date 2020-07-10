@@ -29,12 +29,15 @@ class GqlApi extends gqlMethods_1.default {
     setAuthorization(authorization) {
         this.authorization = authorization;
     }
+    async getAuthorizationHeader() {
+        return this.authorization || (await auth_1.default.currentSession()).getIdToken().getJwtToken();
+    }
     makeRunnable(statement) {
         let paramName = statement.match((/\$([^:]+)/));
         if (paramName) {
             paramName = paramName[1];
         }
-        let auth = this.authorization;
+        let authHeaderPromise = this.getAuthorizationHeader();
         return {
             getBody: function (param) {
                 // Convert the single parameter into an object
@@ -50,29 +53,19 @@ class GqlApi extends gqlMethods_1.default {
             },
             run: async function (param) {
                 let body = this.getBody(param);
-                if (auth) {
-                    // console.log('Authorized by test!', auth);
-                    api_1.default.configure({
-                        graphql_headers: async () => ({
-                            Authorization: auth
-                        })
-                    });
-                }
-                else {
-                    // console.log('Authorized by gql!');
-                    api_1.default.configure({
-                        graphql_headers: async () => ({
-                            Authorization: (await auth_1.default.currentSession()).getIdToken().getJwtToken()
-                        })
-                    });
-                }
+                let authorizationHeader = await authHeaderPromise;
+                api_1.default.configure({
+                    graphql_headers: async () => ({
+                        Authorization: authorizationHeader
+                    })
+                });
                 try {
                     const res = await api_1.default.graphql(body);
                     if (glob.gql_debug) {
                         console.log({
                             'gql request': body,
                             'gql response': res.data,
-                            'authorizer': auth ? 'custom' : 'cognito'
+                            'authorizer': getAuthorizerType(authorizationHeader)
                         });
                     }
                     let keys = Object.keys(res.data);
@@ -84,7 +77,7 @@ class GqlApi extends gqlMethods_1.default {
                         console.log({
                             'gql request': body,
                             'gql error': err,
-                            'authorizer': auth ? 'custom' : 'cognito'
+                            'authorizer': getAuthorizerType(authorizationHeader)
                         });
                     }
                     if (err && err.errors && err.errors.length) {
@@ -103,4 +96,7 @@ class GqlApi extends gqlMethods_1.default {
     }
 }
 exports.GqlApi = GqlApi;
+function getAuthorizerType(header) {
+    return header.length < 50 ? 'custom' : 'cognito';
+}
 //# sourceMappingURL=gqlAPI.js.map

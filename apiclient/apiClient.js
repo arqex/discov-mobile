@@ -126,6 +126,22 @@ class ApiClient {
             this.methods.setAuthorization(auth);
         }
     }
+    async uploadImage( imageData ) {
+        let authorizationHeader = await this.methods.getAuthorizationHeader();
+        let endpointParts = this.config.API.graphql_endpoint.split('/gql');
+        let endpoint = endpointParts[0] + '/imageUpload';
+        console.log('Uploading image to ' + endpoint);
+
+        return fetch(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(imageData),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': authorizationHeader
+            }
+        }).then( response => response.json() );
+
+    }
 }
 exports.ApiClient = ApiClient;
 // Helpers

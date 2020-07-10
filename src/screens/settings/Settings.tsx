@@ -5,6 +5,8 @@ import { ScreenProps } from '../../utils/ScreenProps';
 import notifications from '../../utils/notifications';
 import storeService from '../../state/store.service';
 import codePush from 'react-native-code-push';
+import ImagePicker from 'react-native-image-crop-picker';
+import { uploadImage } from '../../utils/image.service';
  
 class Settings extends React.Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
@@ -54,6 +56,12 @@ class Settings extends React.Component<ScreenProps> {
 							border />
 						<SettingItem title="Open modal"
 							onPress={this._openModal}
+							border />
+						<SettingItem title="Open imagePicker"
+							onPress={this._openImagePicker}
+							border />
+						<SettingItem title="Open camera"
+							onPress={this._openCamera}
 							border />
 						<SettingItem title="Reset onboarding"
 							onPress={this._resetOnboarding} />
@@ -121,6 +129,28 @@ class Settings extends React.Component<ScreenProps> {
 				]}
 			/>
 		);
+	}
+
+	_openImagePicker = () => {
+		ImagePicker.openPicker({
+			multiple: true,
+			includeBase64: true
+		})
+		.then( result => {
+			if( result.cancelled ) return;
+
+			uploadImage( result[0] );
+			//console.log('Picker result', result[0]);
+		});
+	}
+
+	_openCamera = () => {
+		ImagePicker.openCamera({
+			compressImageQuality: .8
+		}).then(result => {
+			if (result.cancelled) return;
+			console.log('Picker result', result);
+		});
 	}
 
 	componentDidMount(){
