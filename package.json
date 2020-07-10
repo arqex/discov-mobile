@@ -1,18 +1,21 @@
 {
   "name": "@discov/mobile",
   "packagename": "discovmobile",
+  "version": "1.1.0",
   "scripts": {
     "start": "react-native start",
     "start:local": "expo start --host localhost --config app-local.json",
     "android": "react-native run-android",
     "android:release": "react-native run-android --variant=release",
-    "android:bundle": "cd android && gradlew bundleRelease",
+    "android:bundle": "cd android && ./gradlew bundleRelease",
     "android:ota:Production": "appcenter codepush release-react -a arqex/discov-android -d Production",
     "ios": "react-native run-ios",
     "ios:release": "react-native run-ios --device --configuration Release",
     "web": "expo start --web",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "bumpMinor": "node ./scripts/bumpVersion.js minor",
+    "bumpMajor": "node ./scripts/bumpVersion.js major"
   },
   "dependencies": {
     "@aws-amplify/api": "^1.2.4",

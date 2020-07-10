@@ -263,8 +263,9 @@ const screenTransition = {
 	styles: function screenTransition( indexes, layout ){
 		return {
 			translateX: {
-				inputRange: [ -2, -1, 0, 1, 2 ],
-				outputRange: [ layout.width, layout.width, 0, 0, 0 ] //-layout.width, -layout.width ]
+				inputRange: [ -1, 0, 1 ],
+				outputRange: [ layout.width, 0, (-layout.width) / 3], //-layout.width, -layout.width ]
+				extrapolate: 'clamp'
 			},
 			/*
 			opacity: {

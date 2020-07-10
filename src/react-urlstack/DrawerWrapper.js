@@ -169,7 +169,7 @@ let styles = StyleSheet.create({
 	collapsibleContainer: {
     position: 'absolute',
 		top: 0, bottom: 0,
-		zIndex: 2000,
+		zIndex: 10,
 	},
 	drawer: {
     // position: 'absolute',

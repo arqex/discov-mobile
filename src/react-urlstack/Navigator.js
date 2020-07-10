@@ -68,7 +68,6 @@ export default class Navigator extends Component {
 				<SharedElementWrapper router={router} layout={layout}>
 					<View style={ styles.windowWrapper }>
 						<View style={styles.container} onLayout={ e => this._onLayout( e.nativeEvent.layout ) }>
-							{ this.renderDrawer(props) }
 							<ScreenStack router={router}
 								animating={ this.state.animating }
 								screenTransition={transition}
@@ -90,6 +89,7 @@ export default class Navigator extends Component {
 								layout={layout}
 								drawer={this.drawer}
 								navProps={props} />
+							{this.renderDrawer(props)}
 						</View>
 					</View>
 				</SharedElementWrapper>
