@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, StyleSheet, Dimensions, TouchableOpacity, Platform } from 'react-native';
-import { StoryHeader, Button, MapImage, DiscovMarker, Text, styleVars, Tag, Wrapper } from '../../components';
+import { View, StyleSheet, Dimensions, Platform } from 'react-native';
+import { StoryHeader, Button, MapImage, DiscovMarker, Text, Touchable, Tag, Wrapper } from '../../components';
 import StoryProvider from '../../providers/StoryProvider';
 import UnseenDiscovery from './UnseenDiscovery';
 import notifications from '../../utils/notifications';
@@ -37,37 +37,39 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		];
 
 		return (
-			<TouchableOpacity style={ styles.container }
-				onPress={ this._goToDiscovery }>
-				<View style={ styles.images }  >
-					<View style={ markerStyles }>
-						<DiscovMarker location={ story } size="s" />
+			<View style={ styles.background }>
+				<Touchable style={ styles.container }
+					onPress={ this._goToDiscovery }>
+					<View style={ styles.images }  >
+						<View style={ markerStyles }>
+							<DiscovMarker location={ story } size="s" />
+						</View>
+						<MapImage width={ Dimensions.get('window').width }
+							height={ 80 }
+							location={ story } />
 					</View>
-					<MapImage width={ Dimensions.get('window').width }
-						height={ 80 }
-						location={ story } />
-				</View>
-				<View style={ styles.header }>
-					<StoryHeader accountId={ story.ownerId }
-						story={ story }
-						router={ this.props.router } />
-				</View>
-				<Wrapper textWidth style={ styles.body }>
-					<Text type="paragraph" numberOfLines={3}>
-						{ story.content.text }
-					</Text>
-				</Wrapper>
-				<View style={ styles.controls }>
-					<View style={ styles.leftControls }>
-						{ this.renderTags( story ) }
+					<View style={ styles.header }>
+						<StoryHeader accountId={ story.ownerId }
+							story={ story }
+							router={ this.props.router } />
 					</View>
-					<View style={ styles.rightControls }>
-						<Button type="transparent" color="secondary" icon="chat-bubble-outline" iconColor="#666" size="s">
-							12
-						</Button>
+					<Wrapper textWidth style={ styles.body }>
+						<Text type="paragraph" numberOfLines={3}>
+							{ story.content.text }
+						</Text>
+					</Wrapper>
+					<View style={ styles.controls }>
+						<View style={ styles.leftControls }>
+							{ this.renderTags( story ) }
+						</View>
+						<View style={ styles.rightControls }>
+							<Button type="transparent" color="secondary" icon="chat-bubble-outline" iconColor="#666" size="s">
+								12
+							</Button>
+						</View>
 					</View>
-				</View>
-			</TouchableOpacity>
+				</Touchable>
+			</View>
 		);
 	}
 
@@ -121,14 +123,19 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 };
 
 const styles = StyleSheet.create({
-	container: {
+	background: {
 		backgroundColor: '#fff',
 		marginBottom: 20,
 		borderRadius: 10,
-		alignItems: 'center',
+		overflow: 'hidden',
 		borderWidth: 1,
 		borderColor: '#E6EAF2'
 	},
+
+	container: {
+		alignItems: 'center',
+	},
+
 	images: {
 		overflow: 'hidden',
 		position: 'relative',

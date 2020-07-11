@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { invertColor } from './utils/colors';
-import { Text, View, StyleSheet, TouchableOpacity, GestureResponderEvent } from 'react-native';
+import { Text, View, StyleSheet, GestureResponderEvent } from 'react-native';
 import styleVars from './styleVars';
+import Touchable from './Touchable';
 
 interface TagProps {
 	size?: 'xs' | 's' | 'm',
@@ -28,9 +29,9 @@ export default class Tag extends React.Component<TagProps> {
 
 		if( this.props.onPress ){
 			return (
-				<TouchableOpacity style={ bgStyle } onPress={ this.props.onPress }>
+				<Touchable style={ bgStyle } onPress={ this.props.onPress }>
 					{ this.renderText() }
-				</TouchableOpacity>
+				</Touchable>
 			)
 		}
 

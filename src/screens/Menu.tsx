@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, TouchableOpacity, Dimensions, ViewPagerAndroidBase } from 'react-native'
-import { Bg, Logo, Button, Avatar, Text, Wrapper, styleVars } from '../components'
+import { View, StyleSheet, Dimensions, ViewPagerAndroidBase } from 'react-native'
+import { Bg, Logo, Button, Avatar, Text, Wrapper, styleVars, Touchable } from '../components'
 import { ScreenProps } from '../utils/ScreenProps';
 import { getStatusbarHeight } from '../components/utils/getStatusbarHeight';
 import RootLoading from '../RootLoading';
@@ -42,15 +42,19 @@ export default class Menu extends Component<ScreenProps> {
 							link="/settings" />
 					</View>
 					<View style={ styles.account }>
-						<TouchableOpacity onPress={ () => this.props.router.navigate('/account') } style={ styles.accountLink }>
-							<View style={ styles.avatar }>
-								<Avatar name={ account.displayName }
-									pic={ account.avatarPic }
-									size={ 60 }
-									border={ 3 } />
-							</View>
-							<Text type="header">{account.displayName}</Text>
-						</TouchableOpacity>
+						<View style={ styles.accountTouchableWrapper }>
+							<Touchable onPress={ () => this.props.router.navigate('/account') } style={ styles.accountLink }>
+								<View style={{alignItems: 'center'}}>
+									<View style={ styles.avatar }>
+										<Avatar name={ account.displayName }
+											pic={ account.avatarPic }
+											size={ 60 }
+											border={ 3 } />
+									</View>
+									<Text type="header">{account.displayName}</Text>
+								</View>
+							</Touchable>
+						</View>
 					</View>
 					<View style={ styles.sections }>
 						<View style={ styles.button }>
@@ -136,8 +140,15 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		// backgroundColor: '#00ff00'
 	},
+	
 	accountLink: {
-		alignItems: 'center'
+		alignItems: 'center',
+		padding: 10,
+	},
+
+	accountTouchableWrapper: {
+		borderRadius: 10,
+		overflow: 'hidden'
 	},
 
 	avatar: {

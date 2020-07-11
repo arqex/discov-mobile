@@ -27,6 +27,7 @@ export { default as Tag } from './Tag';
 export { default as TabSelector } from './TabSelector';
 export { default as Text } from './Text';
 export { default as Tooltip } from './Tooltip';
+export { default as Touchable } from './Touchable';
 export { default as TopBar } from './TopBar';
 export { default as Wrapper } from './Wrapper';
 

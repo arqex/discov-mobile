@@ -34,9 +34,7 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 				</View>
 				<View style={styles.texts}>
 					<View style={styles.name}>
-						<TouchableOpacity onPress={ this._goToAccount }>
-							{ this.renderUserName( account ) }
-						</TouchableOpacity>
+						{ this.renderUserName( account ) }
 						{ this.renderPlace( story ) }
 					</View>
 					<View style={styles.date}>

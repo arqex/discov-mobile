@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Spinner from './Spinner';
 import styleVars from './styleVars';
-
-const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
-
+import Touchable from './Touchable';
 
 type ButtonSizes = 'm' | 's';
 type ButtonColors = 'primary' | 'secondary' | 'white';

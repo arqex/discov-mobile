@@ -7,7 +7,6 @@ export default class PeerAccountModal extends Component<ScreenProps> {
 
 	render() {
 		let accountId = this.props.location.query.accountId;
-
 		return (	
 			<PeerAccount
 				accountId={ accountId }
@@ -17,8 +16,8 @@ export default class PeerAccountModal extends Component<ScreenProps> {
 	}
 
 	_onBackPress = () => {
-		let stack = this.props.router.stack;
-		let lastRoute = stack[stack.length - 1].path;
+		let {stack, activeIndex} = this.props.router;
+		let lastRoute = stack[ activeIndex ].path;
 
 		this.props.router.navigate( lastRoute );
 	}

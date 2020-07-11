@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Text from './Text';
-
-const Touchable = Platform.OS === 'android' ? TouchableNativeFeedback : TouchableOpacity;
+import Touchable from './Touchable';
 
 export interface ListItemProps {
 	title: string,
