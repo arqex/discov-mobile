@@ -1,14 +1,14 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { StyleSheet, Animated, View } from 'react-native'
-import {animatedStyles} from './utils/animatedStyles'
+import { animatedStyles } from './utils/animatedStyles'
 import Interactable from 'react-interactable'
 
 let handleWidth = 15
 
 export default class DrawerWrapper extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
-	
+
 		this.state = {
 			open: props.initiallyOpen || false
 		};
@@ -16,18 +16,20 @@ export default class DrawerWrapper extends Component {
 		// This will be true when we know the real width of the drawer
 		this.layoutUpdated = false;
 		this.drawerWidth = 300;
-		
-		this.drawerPos = new Animated.Value( props.initiallyOpen ? this.drawerWidth : 0 );
+
+		this.drawerPos = new Animated.Value(props.initiallyOpen ? this.drawerWidth : 0);
 		this.calculateDrawerIndex();
 
 		this.overlayAnimStyle = {
-			transform: [{translateX: this.drawerIndex.interpolate({
-				inputRange: [0, 0.01, 1],
-				outputRange: [ -10000, 0, 0]
-			})}],
+			transform: [{
+				translateX: this.drawerIndex.interpolate({
+					inputRange: [0, 0.01, 1],
+					outputRange: [-10000, 0, 0]
+				})
+			}],
 			opacity: this.drawerIndex.interpolate({
-				inputRange: [0,0,1,1],
-				outputRange: [0,0,.5,.5]
+				inputRange: [0, 0, 1, 1],
+				outputRange: [0, 0, .5, .5]
 			})
 		}
 
@@ -38,15 +40,15 @@ export default class DrawerWrapper extends Component {
 		this._drawerMethods = drawerMethods
 	}
 
-	render(){
+	render() {
 		let { Drawer, router, collapsible, navProps } = this.props
 		let handle, overlay
-		if( collapsible ){
-			handle = <View style={ styles.handle } />
+		if (collapsible) {
+			handle = <View style={styles.handle} />
 			overlay = (
-			<Animated.View style={ [styles.overlay, this.overlayAnimStyle] }
-				onClick={ () => this.closeDrawer() }>
-			</Animated.View>
+				<Animated.View style={[styles.overlay, this.overlayAnimStyle]}
+					onClick={() => this.closeDrawer()}>
+				</Animated.View>
 			)
 		}
 
@@ -56,7 +58,7 @@ export default class DrawerWrapper extends Component {
 		let containerStyles = [
 			styles.container,
 			styles.collapsibleContainer,
-			{width, left},
+			{ width, left },
 			this.animatedStyles
 		]
 
@@ -66,66 +68,66 @@ export default class DrawerWrapper extends Component {
 		]
 
 		let snapPoints = [
-			{ x: 0, id: 'closed' }, {x: this.drawerWidth, id: 'open'}
+			{ x: 0, id: 'closed' }, { x: this.drawerWidth, id: 'open' }
 		];
 
 		return (
-			<Animated.View style={ containerStyles }>
-				{ overlay }
-				<Interactable.View dragEnabled={ !!collapsible }
+			<Animated.View style={containerStyles}>
+				{overlay}
+				<Interactable.View dragEnabled={!!collapsible}
 					ref="drawer"
-					horizontalOnly={ true } snapPoints={ snapPoints }
-					boundaries={{right: this.drawerWidth, bounce: 0}}
-					onDrag={ e => this.onDrag( e ) }
-					animatedValueX={ this.drawerPos }>
-					<View style={ drawerStyles } ref="layout" onLayout={ e => this.updateLayout(e) }>
-						<Drawer router={ router }
-							drawer={ this._drawerMethods }
-							layout={ this.props.layout }
-							breakPoint={ this.props.breakPoint }
+					horizontalOnly={true} snapPoints={snapPoints}
+					boundaries={{ right: this.drawerWidth, bounce: 0 }}
+					onDrag={e => this.onDrag(e)}
+					animatedValueX={this.drawerPos}>
+					<View style={drawerStyles} ref="layout" onLayout={e => this.updateLayout(e)}>
+						<Drawer router={router}
+							drawer={this._drawerMethods}
+							layout={this.props.layout}
+							breakPoint={this.props.breakPoint}
 							indexes={{ transition: this.drawerIndex }}
-							{ ...navProps } />
-						{ handle }
+							{...navProps} />
+						{handle}
 					</View>
 				</Interactable.View>
 			</Animated.View>
 		)
 	}
-	
-	updateLayout( e ){
-		let {layout} = e.nativeEvent;
+
+	updateLayout(e) {
+		let { layout } = e.nativeEvent;
 
 		this.layoutUpdated = true;
-		this.animatedStyles = animatedStyles(this.props.transition, this.props.indexes, layout );
-		this.drawerWidth = Math.max( 0, layout.width - handleWidth );
+		this.animatedStyles = animatedStyles(this.props.transition, this.props.indexes, layout);
+		this.drawerWidth = Math.max(0, layout.width - handleWidth);
 		this.calculateDrawerIndex();
 		this.forceUpdate();
 	}
 
 	componentDidUpdate(prevProps) {
-		if( prevProps.collapsible !== this.props.collapsible ){
+		if (prevProps.collapsible !== this.props.collapsible) {
 			this.drawerPos.setValue(0);
 		}
-		if( prevProps.breakPoint !== this.props.breakPoint ){
-			this.refs.layout.measure( (dx, dy, width, height, x, y) => {
-				this.updateLayout({ nativeEvent: {layout: {width, height, x, y}}});
+		if (prevProps.breakPoint !== this.props.breakPoint) {
+			this.refs.layout.measure((dx, dy, width, height, x, y) => {
+				this.updateLayout({ nativeEvent: { layout: { width, height, x, y } } });
 			})
 		}
 	}
 
-	calculateDrawerIndex(){
+	calculateDrawerIndex() {
 		let di = this.drawerIndex;
 
-		if( this.state.open ){
-			this.drawerPos.setValue( this.drawerWidth );
+		if (this.state.open) {
+			this.drawerPos.setValue(this.drawerWidth);
 		}
 
 		let index = this.drawerPos.interpolate({
-			inputRange: [0, this.drawerWidth ],
+			inputRange: [0, this.drawerWidth],
 			outputRange: [0, 1]
 		})
 
-		if( di ){
+		if (di) {
 			di._config = index._config;
 			di._interpolation = index._interpolation;
 		}
@@ -134,30 +136,30 @@ export default class DrawerWrapper extends Component {
 		}
 	}
 
-	openDrawer(){
-		if( !this.props.collapsible || this.state.open ) return;
+	openDrawer() {
+		if (!this.props.collapsible || this.state.open) return;
 
 		let drawer = this.refs.drawer
-		this.setState({open: true})
-		drawer && drawer.setVelocity({x: 3000})
+		this.setState({ open: true })
+		drawer && drawer.setVelocity({ x: 3000 })
 	}
 
-	closeDrawer(){
-		if( !this.props.collapsible || !this.state.open ) return;
+	closeDrawer() {
+		if (!this.props.collapsible || !this.state.open) return;
 
 		let drawer = this.refs.drawer
-		this.setState({open: false})
-		drawer && drawer.setVelocity({x: -3000})
+		this.setState({ open: false })
+		drawer && drawer.setVelocity({ x: -3000 })
 	}
 
-	onDrag( e ){
-		if( e.nativeEvent ) e = e.nativeEvent
-		
-		if( e.state === 'start' ){
-			this.setState({open: true})
+	onDrag(e) {
+		if (e.nativeEvent) e = e.nativeEvent
+
+		if (e.state === 'start') {
+			this.setState({ open: true })
 		}
-		else if( e.state === 'end' && e.targetSnapPointId === 'closed' ){
-			this.setState({open: false})
+		else if (e.state === 'end' && e.targetSnapPointId === 'closed') {
+			this.setState({ open: false })
 		}
 	}
 }
@@ -167,20 +169,20 @@ let styles = StyleSheet.create({
 		flexDirection: 'row'
 	},
 	collapsibleContainer: {
-    position: 'absolute',
+		position: 'absolute',
 		top: 0, bottom: 0,
 		zIndex: 10,
 	},
 	drawer: {
-    // position: 'absolute',
+		// position: 'absolute',
 		top: 0, left: 0,
 		height: '100%', width: '100%',
 		flex: 1
 	},
 	collapsibleDrawer: {
-    left: 0,
-    width: '100%',
-    flex: 1,
+		left: 0,
+		width: '100%',
+		flex: 1,
 		position: 'relative',
 		zIndex: 20000,
 		paddingRight: handleWidth

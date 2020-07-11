@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { StyleSheet, Alert, Animated, View } from 'react-native';
-import { ScrollScreen, Text, Panel, Bg, Button, SettingItem, TopBar, Modal, ModalContent } from '../../components';
+import { StyleSheet, Alert, Animated } from 'react-native';
+import { ScrollScreen, Text, Panel, Bg, SettingItem, TopBar, Modal, ModalContent } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
 import notifications from '../../utils/notifications';
 import storeService from '../../state/store.service';
