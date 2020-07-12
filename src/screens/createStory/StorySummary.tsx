@@ -192,7 +192,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 		// console.log( story.selectedFriends );
 
 		let payload = {
-			accountId: this.props.store.account.id,
+			ownerId: this.props.store.user.id,
 			...story.location,
 			discoverDistance: story.discoveryRadius,
 			content: { type: 'text', text: story.content },
@@ -200,6 +200,8 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 			status: isDraft ? 'draft' : 'published',
 			place: story.place
 		}
+
+		console.log( payload );
 
 		if( isDraft ){
 			this.setState({savingDraft: true});

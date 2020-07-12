@@ -30,7 +30,7 @@ export const dataService = {
 		Promise.all( promises )
 			.then( results => {
 				env = results[0];
-				apiClient = createAPIClient( env );
+				apiClient = createAPIClient( env, store.user );
 				actions = initActions( apiClient );
 				services.init( actions, store );
 			})
@@ -69,7 +69,7 @@ export const dataService = {
 // on the first import
 dataService.init();
 
-function createAPIClient( env ){
+function createAPIClient( env, currentUser ){
 	if( !env ) return;
 
 	let endpoint = env.apiUrl;
@@ -80,11 +80,15 @@ function createAPIClient( env ){
 
 	store.endpoint = endpoint;
 	
-	return new ApiClient({
+	let apiClient = new ApiClient({
 		graphql_endpoint: endpoint,
 		useCognito: env.useCognito,
 		storage: MemoryStorageNew
 	});
+
+	console.log('CURRENT USER', currentUser );
+
+	return apiClient;
 }
 
 function updateStatus( status ){
@@ -108,7 +112,7 @@ function updateStatus( status ){
 	else {
 		authStatus = 'OUT';
 		// Clear the current apiClient and stores
-		apiClient = createAPIClient( env );
+		apiClient = createAPIClient( env, false );
 		clearStores();
 	}
 

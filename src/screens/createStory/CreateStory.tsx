@@ -293,7 +293,11 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	_onSelectSearchPlace = place => {
 		console.log('Place selected!', place);
 		this._onSelectLocation({
-			place,
+			place: {
+				name: place.name,
+				type: 'place',
+				sourceId: place.sourceId
+			},
 			location: place.location
 		});
 		this._endSearch();

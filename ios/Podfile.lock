@@ -366,8 +366,6 @@ PODS:
     - TOCropViewController
   - RNLocalize (1.4.0):
     - React
-  - RNOpenAppSettings (1.0.0):
-    - React
   - RNSVG (11.0.1):
     - React
   - SDWebImage (5.7.2):
@@ -456,7 +454,6 @@ DEPENDENCIES:
   - "RNGoogleSignin (from `../node_modules/@react-native-community/google-signin`)"
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNLocalize (from `../node_modules/react-native-localize`)
-  - RNOpenAppSettings (from `../node_modules/react-native-app-settings`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - UMAppLoader (from `../node_modules/unimodules-app-loader/ios`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
@@ -600,8 +597,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-image-crop-picker"
   RNLocalize:
     :path: "../node_modules/react-native-localize"
-  RNOpenAppSettings:
-    :path: "../node_modules/react-native-app-settings"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMAppLoader:
@@ -700,7 +695,6 @@ SPEC CHECKSUMS:
   RNGoogleSignin: ccf71ee4b6cfd324fd788a41e457e2043838c0d9
   RNImageCropPicker: f0557a908758c4a3f83978894ec7227651529b45
   RNLocalize: fc27ee5878ce5a3af73873fb2d8e866e0d1e6d84
-  RNOpenAppSettings: 1169b90a275e9e18c5973e1608949f97d426e7f3
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
   SDWebImage: d9ea4959d99c52276dfada481987018fcaea3d58
   SDWebImageWebPCoder: 36f8f47bd9879a8aea6044765c1351120fd8e3a8

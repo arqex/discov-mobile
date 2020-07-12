@@ -30,7 +30,14 @@ class GqlApi extends gqlMethods_1.default {
         this.authorization = authorization;
     }
     async getAuthorizationHeader() {
-        return this.authorization || (await auth_1.default.currentSession()).getIdToken().getJwtToken();
+        try {
+            return this.authorization || (await auth_1.default.currentSession()).getIdToken().getJwtToken();
+        }
+        catch (err) {
+            console.log('Authorization header not available');
+            return '';
+        }
+        ;
     }
     makeRunnable(statement) {
         let paramName = statement.match((/\$([^:]+)/));

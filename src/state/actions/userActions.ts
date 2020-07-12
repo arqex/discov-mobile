@@ -30,7 +30,7 @@ export default function( store, api ){
 		loadRelationships(type: string) {
 			store.relationships[type].loading = true;
 			return api.methods.getRelationshipAccounts(`{${type} { items${simpleFields} hasMore lastKey total }}`)
-				.run({ accountId: store.account.id, type })
+				.run({ accountId: store.user.id, type })
 				.then(res => {
 					let data = res[type];
 					this.setUserData(data.items);
@@ -56,7 +56,7 @@ export default function( store, api ){
 			
 			store.relationships[type].loadingPage = true;
 			return api.methods.getRelationshipAccounts(`{${type} { items${simpleFields} hasMore lastKey total }}`)
-				.run({ accountId: store.account.id, type, startAt: rel.lastKey })
+				.run({ accountId: store.user.id, type, startAt: rel.lastKey })
 				.then( res => {
 					let data = res[type];
 					this.setUserData(data.items);

@@ -25,7 +25,14 @@ export default function( store, api ){
 			
 			console.log('autologining');
 			
-      return await handleLoginResponse( store, api, await api.autoLogin(), null	);
+			try {
+				let response = await handleLoginResponse(store, api, await api.autoLogin(), null);
+				console.log( response );
+				return response;
+			}
+      catch( err ){
+				console.log( err );
+			}
 		},
 
 		federatedLogin: async function () {

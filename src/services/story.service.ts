@@ -10,7 +10,7 @@ export const storyService = {
 	},
 
 	getAccountStories(){
-		let accountStories = store.storiesByOwner[ store.account.id ];
+		let accountStories = store.storiesByOwner[ store.user.id ];
 
 		if( !accountStories ) return false;
 		return accountStories;
@@ -19,7 +19,7 @@ export const storyService = {
 	loadAccountStories(){
 		return actions.story.loadStories()
 			.then( res => {
-				return store.storiesByOwner[store.account.id]
+				return store.storiesByOwner[store.user.id]
 			})
 		;
 	},
@@ -27,7 +27,7 @@ export const storyService = {
 	loadMoreAccountStories(){
 		return actions.story.loadMoreStories()
 			.then( res => {
-				return store.storiesByOwner[store.account.id]
+				return store.storiesByOwner[store.user.id]
 			})
 		;
 	},
