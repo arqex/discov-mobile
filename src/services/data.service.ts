@@ -14,8 +14,10 @@ let locationPermissions: boolean;
 let actions: any = false;
 let env;
 
+let initPromise;
 export const dataService = {
 	init() {
+		if( initPromise ) return initPromise;
 		authStatus = 'LOADING';
 		storeService.init(store);
 
@@ -27,7 +29,7 @@ export const dataService = {
 			MemoryStorageNew.sync()
 		];
 
-		Promise.all( promises )
+		initPromise = Promise.all( promises )
 			.then( results => {
 				env = results[0];
 				apiClient = createAPIClient( env, store.user );
@@ -39,6 +41,8 @@ export const dataService = {
 				updateStatus( store.loginStatus );
 			})
 		;
+
+		return initPromise;
 	},
 	getStatus() {
 		return authStatus;

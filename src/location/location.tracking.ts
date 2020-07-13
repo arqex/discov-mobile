@@ -11,6 +11,7 @@ import { dataService } from '../services/data.service';
 import * as TaskManager from 'expo-task-manager';
 import geofenceService from './geofence.service';
 import backgroundFetch from './backgroundFetch.service';
+import geolocation from '@react-native-community/geolocation';
 
 
 const LOCATION_TASK = 'DISCOV_LOCATION';
@@ -18,11 +19,11 @@ const GEOFENCING_TASK = 'DISCOV_GEOFENCE';
 
 let currentLoginStatus = isUserLoggedIn() ? 'IN' : 'OUT';
 let currentAppStatus: AppStateStatus = AppState.currentState;
-let currentTrackingMode: TrackingMode = 'active';
+let currentTrackingMode: TrackingMode;
 
 let initialized = false;
 function init(){
-  if( initialized ) return;
+  // if( initialized ) return;
   initialized = true;
   console.log('HEeEEEEETEY INIT!');
   locationService.setTaskName( LOCATION_TASK );
@@ -33,6 +34,7 @@ function init(){
   console.log('HEeEEEEETEY INIT FINISHED!');
 }
 init();
+
 
 // We need to register the task in the top level context
 // so this call can't be within the init function
@@ -89,7 +91,7 @@ function setTrackingMode( mode:TrackingMode ){
   return isLocationReady()
     .then( isReady => {
       // Not having the permissions will make no change
-      if( !isReady ) return;
+      // if( !isReady ) return;
 
       return locationService.setLocationMode( mode, isInForeground() );
     })
@@ -195,43 +197,71 @@ function updateCurrentLocation(){
   ;
 }
 
+function bgLog( str ){
+  console.log(`$$$ BG ${str}`);
+  storeService.addBGReport( str );
+}
+
 let bgFetchPromise: any;
 function onBgFetchEvent(){
-  console.log('$$$ BG fetch event');
+  // return Promise.resolve( bgLog('fetch event') );
 
-  if( !isUserLoggedIn() ) return Promise.resolve(false);
+  if (bgFetchPromise) return bgFetchPromise;
 
-  console.log('$$$ BG user logged in');
+  bgFetchPromise = dataService.init().then( () => {
+    if (!isUserLoggedIn()) return Promise.resolve(false);
 
-  if( bgFetchPromise ) return bgFetchPromise;
+    bgLog('user logged in');
 
-  console.log('$$$ BG fetch event is being handled');
+    bgLog('fetch event is being handled');
 
-  bgFetchPromise = isPermissionGranted()
-    .then( isGranted => {
-      if( !isGranted ) return console.log('$$$ Location permission not granted');;
-
-      console.log('$$$ BG fetch getting last location');
-      return locationService.getLastLocation()
-        .then(location => {
-          if (location) {
-            console.log('$$$ BG location received', location);
-            locationHandler.onLocation(location.coords, setTrackingMode, true);
-          }
-          else {
-            console.log('$$$ No location reveived');
-          }
-        })
-      ;
-    })
-    .catch(err => {
-      console.log('$$$ BG location error');
-      console.error(err);
-    })
-    .finally( () => {
-      bgFetchPromise = false;
-    })
-  ;
+    return isPermissionGranted()
+      .then(isGranted => {
+        // if( !isGranted ) return console.log('$$$ Location permission not granted');;
+        bgLog('fetch getting last location');
+        return locationService.getLastLocation()
+          .then(location => {
+            if (location) {
+              bgLog('location received');
+              locationHandler.onLocation(location.coords, setTrackingMode, true);
+            }
+            else {
+              bgLog('No location reveived');
+            }
+          })
+        ;
+      })
+      .catch(err => {
+        locationService.setLocationMode( 'active', false )
+        if( err.code === 'E_LOCATION_UNAUTHORIZED' ){
+          bgLog('Location unauthorized. Triggering fg location');
+          locationService.triggerForegroundLocation();
+          /*
+          return geolocation.getCurrentPosition(
+            position => {
+              // setTrackingMode('passive');
+              console.log( position );
+            },
+            error => {
+              // setTrackingMode('passive');
+              console.log( error );
+            }
+          );
+          */
+        }
+        else {
+          bgLog(err);
+        }
+      })
+    ; 
+  })
+  .catch( err => {
+    bgLog('Error initializing data');
+    console.log( err );
+  })
+  .finally(() => {
+    bgFetchPromise = false;
+  });
 
   return bgFetchPromise;
 }

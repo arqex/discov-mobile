@@ -4,7 +4,8 @@ import { Platform } from "react-native";
 let initialized = false;
 export default {
 	init( clbk: () => Promise<void> ){
-		if (initialized) return console.log('$$$ BG fetch already configured');
+		// if (initialized) return console.log('$$$ BG fetch already configured');
+
 		initialized = true;
 
 		const config = {
@@ -24,12 +25,13 @@ export default {
 			});
 		}
 
-		console.log('$$$ Configuring BG fetch - iOS');
+		console.log('$$$ Configuring BG fetch');
 
 		BackgroundFetch.configure(
 			config, onEvent, onError
 		);
-
+		
+		/*
 		// Optional: Query the authorization status.
 		BackgroundFetch.status((status) => {
 			switch (status) {
@@ -44,6 +46,7 @@ export default {
 					break;
 			}
 		});
+		*/
 
 		if( Platform.OS === 'android' ){
 			BackgroundFetch.registerHeadlessTask( e => {

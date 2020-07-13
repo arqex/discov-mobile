@@ -66,6 +66,9 @@ function stopTracking() {
       })
     ;
   })
+  .catch( err => {
+    console.log('Error stopping tracking', err );
+  })
 }
 
 function getPermissions() {
@@ -84,7 +87,7 @@ function getCurrentLocation() {
 type LocationTrackMode = 'active' | 'passive';
 let trackMode: LocationTrackMode;
 let trackingInForeground: boolean;
-function setLocationMode( mode: LocationTrackMode, inForeground: boolean ){
+function setLocationMode( mode: LocationTrackMode, inForeground: boolean, accuracy: Location.Accuracy = Location.Accuracy.High ){
   if( mode === trackMode && trackingInForeground === inForeground ){
     return console.log(`Location tracking already in mode ${mode}, ${inForeground ? 'in foreground' : 'in background'}`);
   }
@@ -95,7 +98,7 @@ function setLocationMode( mode: LocationTrackMode, inForeground: boolean ){
   trackingInForeground = inForeground;
 
   let options: any = {
-    accuracy: Location.Accuracy.High, // mode === 'active' ? Location.Accuracy.High : Location.Accuracy.Balanced,
+    accuracy, // mode === 'active' ? Location.Accuracy.High : Location.Accuracy.Balanced,
     // timeInterval: 5000,
     // distanceInterval: 20
   };
@@ -118,6 +121,25 @@ function getLastLocation() {
   return Location.getLastKnownPositionAsync();
 }
 
+function triggerForegroundLocation(){
+  console.log('~~~~~~Activating notification');
+  return setLocationMode( 'active', true, Location.Accuracy.Balanced )
+    .then( () => {
+      return new Promise( resolve => {
+        setTimeout( () => {
+          console.log('~~~~~~~Deactivating notification');
+          resolve( setLocationMode( 'passive', false ) );
+        }, 500 );
+      })
+    })
+    .catch( err => {
+      console.log(err);
+      console.log('~~~~~~~Deactivating notification after error');
+      setLocationMode('passive', false);
+    })
+  ;
+}
+
 
 export default {
   setTaskName,
@@ -128,5 +150,6 @@ export default {
   getPermissions,
   requestPermissions,
   getCurrentLocation,
-  getLastLocation
+  getLastLocation,
+  triggerForegroundLocation
 }

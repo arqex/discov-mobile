@@ -43,6 +43,8 @@ function getImageUrl( width, height, location ){
 		imageHeight = imageHeight / 2;
 	}
 
+	console.log('Widths', PixelRatio.get(), imageWidth, width, imageHeight, height )
+
 
 	return 'https://maps.googleapis.com/maps/api/staticmap?' + 
 		`center=${location.lat},${location.lng}` +

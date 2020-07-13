@@ -20,7 +20,6 @@ export default class Menu extends Component<ScreenProps> {
 
 		let user = this.props.store.user;
 		if( !user || !user.account ){
-			console.log('NO USER', user);
 			return (
 				<View style={ [styles.container, widthStyle] }>
 					<RootLoading finished={false} />

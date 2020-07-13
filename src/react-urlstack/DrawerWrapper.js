@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, Animated, View } from 'react-native'
 import { animatedStyles } from './utils/animatedStyles'
 import Interactable from 'react-interactable'
+import DeviceInfo from 'react-native-device-info'
 
 let handleWidth = 15
 
@@ -136,31 +137,55 @@ export default class DrawerWrapper extends Component {
 		}
 	}
 
-	openDrawer() {
-		if (!this.props.collapsible || this.state.open) return;
+	openDrawer(){
+		if( !this.props.collapsible || this.state.open ) return;
 
 		let drawer = this.refs.drawer
-		this.setState({ open: true })
-		drawer && drawer.setVelocity({ x: 3000 })
+		this.setState({open: true})
+
+		if( this.isAndroidEmulator() ){
+			return this.openEmulatorDrawer();
+		}
+		else {
+			drawer && drawer.setVelocity({x: 3000})
+		}
 	}
 
-	closeDrawer() {
-		if (!this.props.collapsible || !this.state.open) return;
+	closeDrawer(){
+		if( !this.props.collapsible || !this.state.open ) return;
 
 		let drawer = this.refs.drawer
-		this.setState({ open: false })
-		drawer && drawer.setVelocity({ x: -3000 })
+		this.setState({open: false})
+
+		if( this.isAndroidEmulator() ){
+			return this.closeEmulatorDrawer();
+		}
+		else {
+			drawer && drawer.setVelocity({x: -3000})
+		}
 	}
 
-	onDrag(e) {
-		if (e.nativeEvent) e = e.nativeEvent
+	onDrag( e ){
+		if( e.nativeEvent ) e = e.nativeEvent
+		
+		if( e.state === 'start' ){
+			this.setState({open: true})
+		}
+		else if( e.state === 'end' && e.targetSnapPointId === 'closed' ){
+			this.setState({open: false})
+		}
+	}
 
-		if (e.state === 'start') {
-			this.setState({ open: true })
-		}
-		else if (e.state === 'end' && e.targetSnapPointId === 'closed') {
-			this.setState({ open: false })
-		}
+	isAndroidEmulator() {
+		return DeviceInfo.isEmulatorSync() && Platform.OS === 'android';
+	}
+
+	openEmulatorDrawer(){
+		this.drawerPos.setValue( this.drawerWidth );
+	}
+
+	closeEmulatorDrawer(){
+		this.drawerPos.setValue( 0 );
 	}
 }
 
