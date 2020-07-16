@@ -1,9 +1,9 @@
 import { uuidTo64 } from "../../utils/uuid"
 
-export default function( store, api ){	
+export default function( store, api, auth ){	
 	if( store.account === undefined ){
 		console.log('Starting auth actions');
-		
+
 		store.account = false // User data will live here
 		store.loginStatus = 'INIT' // INIT, IN, OUT, REQUIRE_NEW_PASSWORD, VERIFY_CONTACT
 		store.loginLoading = true

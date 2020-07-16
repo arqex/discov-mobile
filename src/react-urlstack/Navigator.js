@@ -53,7 +53,10 @@ export default class Navigator extends Component {
 
 	render(){
 		let router = this.router;
-		if( !router ) return null;
+		if( !router ) {
+
+			return null;
+		}
 		
 		let { DrawerComponent, interceptor, routes, transitions, drawerInitiallyOpen, ...props } = this.props
 		let { layout, indexes } = this.state
@@ -61,7 +64,8 @@ export default class Navigator extends Component {
 		let transition = this.currentTransition
 		let breakPoint = this.currentBreakpoint
 		let modalTransition = this.getModalTransitions( transition )
-		let { stack, index } = this.getScreenStack( router.stack, router.activeIndex )
+		let { stack, index } = this.getScreenStack( router.stack, router.activeIndex );
+
 
 		return (
 			<KeyboardAvoidingView behavior={ this.getKBBehavior() } style={{ flex: 1 }}>
@@ -102,7 +106,8 @@ export default class Navigator extends Component {
 		if( !DrawerComponent ) return;
 
 		return (
-			<DrawerWrapper 
+			<DrawerWrapper
+				layout={ this.state.layout }
 				ref={component => this.drawerInstance = component}
 				router={ this.router }
 				transition={ this.getModalTransitions( this.currentTransition ).drawer }

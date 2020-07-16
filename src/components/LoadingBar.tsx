@@ -59,6 +59,7 @@ export default class LoadingBar extends React.Component<LoadingBarProps> {
         Animated.timing( this.barWidth, {
           toValue: .9,
           duration: 1500
+
         }),
         Animated.timing( this.barWidth, {
           toValue: .5,
@@ -73,7 +74,7 @@ export default class LoadingBar extends React.Component<LoadingBarProps> {
   componentDidUpdate( previousProps ){
     if( this.props.finished && !previousProps.finished ){
 
-      console.log('stopping animation', this.widthAnimation)
+      // console.log('stopping animation', this.widthAnimation)
       this.widthAnimation && this.widthAnimation.stop();
       this.positionAnimation && this.positionAnimation.stop();
 

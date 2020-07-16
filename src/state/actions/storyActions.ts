@@ -9,7 +9,7 @@ let promises = {
 export default function (store, api) {
 	let loader, batchLoader;
 	function initLoader() {
-		loader = api.methods.getMultipleStories(actionService.storyFields);
+		loader = api.gql.getMultipleStories(actionService.storyFields);
 		batchLoader = actionService.createBatchLoader(loader);
 	}
 
@@ -44,7 +44,7 @@ export default function (store, api) {
 				startAt
 			};
 
-			return promises.stories[startAt] = api.methods.getStoriesByOwner(actionService.storyPageFields)
+			return promises.stories[startAt] = api.gql.getStoriesByOwner(actionService.storyPageFields)
 				.run( payload )
 				.then( storyPage => {
 					let ids = [];
@@ -92,7 +92,7 @@ export default function (store, api) {
 		},
 
 		create( story ){
-			return api.methods.createStory( actionService.storyFields )
+			return api.gql.createStory( actionService.storyFields )
 				.run( story )
 				.then( item => {
 					storeService.storeStory(item);

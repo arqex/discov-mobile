@@ -15,7 +15,9 @@ export function animatedStyles( transition, indexes, layout ){
 	}
 	*/
 
-	animatedStyles.zIndex = indexes.screen;
+	if (indexes.screen !== undefined) {
+		animatedStyles.zIndex = indexes.screen;
+	}
 
 
 	Object.keys( styles ).forEach( key => {

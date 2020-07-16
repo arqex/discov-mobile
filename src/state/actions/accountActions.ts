@@ -5,13 +5,13 @@ import actionService from './action.service';
 export default function (store, api) {
 	let peerLoader, peerBatchLoader;
 	function initPeerLoader() {
-		peerLoader = api.methods.getMultiplePeerAccounts(actionService.peerAccountFields);
+		peerLoader = api.gql.getMultiplePeerAccounts(actionService.peerAccountFields);
 		peerBatchLoader = actionService.createBatchLoader(peerLoader);
 	}
 
 	let metaLoader, metaBatchLoader;
 	function initMetaLoader() {
-		metaLoader = api.methods.getMultiplePeerMeta(actionService.peerMetaFields);
+		metaLoader = api.gql.getMultiplePeerMeta(actionService.peerMetaFields);
 		metaBatchLoader = actionService.createBatchLoader(metaLoader);
 	}
 
@@ -22,7 +22,7 @@ export default function (store, api) {
 			};
 
 			console.log('Creating account....')
-			return api.methods.createAccount( actionService.userAccountFields )
+			return api.gql.createAccount( actionService.userAccountFields )
 				.run( payload )
 				.then( account => {
 					if (!account.error) {
@@ -49,7 +49,7 @@ export default function (store, api) {
 				id: storeService.getUserId()
 			};
 			
-			return api.methods.updateAccount( actionService.userAccountFields )
+			return api.gql.updateAccount( actionService.userAccountFields )
 				.run( payload )
 				.then( account => {
 					if (!account.error) {
@@ -61,7 +61,7 @@ export default function (store, api) {
 		},
 
 		loadUserAccount( ){
-			return api.methods.getAccount( actionService.userAccountFields )
+			return api.gql.getAccount( actionService.userAccountFields )
 				.run( storeService.getUserId() )
 				.then( account => {
 					if (!account.error) {
@@ -114,7 +114,7 @@ export default function (store, api) {
 			let startAt = storeService.getStartAt(store.accountsAround, loadMore);
 			let payload = { accountId: storeService.getUserId(), startAt };
 
-			api.methods.getAccountsAround( actionService.peerAccountPageFields )
+			api.gql.getAccountsAround( actionService.peerAccountPageFields )
 				.run( payload )
 				.then( res => {
 					let ids = [];
@@ -162,7 +162,7 @@ export default function (store, api) {
 		},
 
 		search( payload ){
-			return api.methods.searchAccount( actionService.peerAccountFields )
+			return api.gql.searchAccount( actionService.peerAccountFields )
 				.run( payload )
 				.then( peerAccounts => {
 					let ids = [];

@@ -7,7 +7,7 @@ let batchedErrors = [];
 let router;
 
 getEnv().then( env => {
-	console.log( 'URRLLL', env.errorUrl );
+	// console.log( 'URRLLL', env.errorUrl );
 	URL = env.errorUrl;
 
 	if( batchedErrors.length ){

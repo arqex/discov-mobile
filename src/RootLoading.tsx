@@ -15,6 +15,8 @@ export default class RootLoading extends React.Component<RootLoadingProps> {
       styles.loadingContainer,
       { transform: [{translateX: this.position}] }
     ];
+    
+    console.log('Root loading redering. Finished: ' + this.props.finished);
 
     return (
       <Animated.View style={ containerStyles }>
@@ -28,13 +30,16 @@ export default class RootLoading extends React.Component<RootLoadingProps> {
   }
 
   componentDidUpdate( prevProps ){
+    console.log('Root loading update');
+
     if( !prevProps.finished && this.props.finished ){
-      console.log('Finished signal received');
+      console.log(' ¬¬¬¬¬¬ Finished signal received');
       setTimeout( () => {
-        console.log('Moving loading out');
+        console.log(' ¬¬¬¬ Moving loading out');
         Animated.timing( this.position, {
           toValue: -2000,
-          duration: 300
+          duration: 300,
+          useNativeDriver: true
         }).start();
       }, 200)
     }

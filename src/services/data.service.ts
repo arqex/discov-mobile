@@ -1,6 +1,8 @@
 
 import { ApiClient } from '../../apiclient/apiClient';
-import { MemoryStorageNew } from '../utils/StorageHelper';
+import { AuthClient } from '../../apiclient/authClient';
+import authStore from '../utils/authStore';
+import { MemoryStorage } from '../utils/StorageHelper';
 import { getEnv } from '../../environment';
 import { initActions, store } from '../state/appState';
 import storeService from '../state/store.service';
@@ -9,6 +11,7 @@ import services from '.';
 
 let statusChangeClbks = [];
 let apiClient: ApiClient;
+let authClient: AuthClient;
 let authStatus: string = 'INIT';
 let locationPermissions: boolean;
 let actions: any = false;
@@ -24,20 +27,19 @@ export const dataService = {
 		store.off('state', storeListener );
 		store.on('state', storeListener );
 
+		authClient = new AuthClient({ authStore });
+
 		let promises = [
 			getEnv(),
-			MemoryStorageNew.sync()
+			authClient.getCachedCredentials()
 		];
 
 		initPromise = Promise.all( promises )
 			.then( results => {
 				env = results[0];
-				apiClient = createAPIClient( env, store.user );
+				apiClient = createAPIClient( env, results[1] );
 				actions = initActions( apiClient );
 				services.init( actions, store );
-			})
-			.then( () => actions.auth.autoLogin() )
-			.then( () => {
 				updateStatus( store.loginStatus );
 			})
 		;
@@ -61,6 +63,9 @@ export const dataService = {
 	getAPIClient() {
 		return apiClient;
 	},
+	getAuthClient() {
+		return authClient;
+	},
 	getStore() {
 		return store; 
 	},
@@ -73,7 +78,7 @@ export const dataService = {
 // on the first import
 dataService.init();
 
-function createAPIClient( env, currentUser ){
+function createAPIClient( env, credentials ){
 	if( !env ) return;
 
 	let endpoint = env.apiUrl;
@@ -85,12 +90,12 @@ function createAPIClient( env, currentUser ){
 	store.endpoint = endpoint;
 	
 	let apiClient = new ApiClient({
-		graphql_endpoint: endpoint,
-		useCognito: env.useCognito,
-		storage: MemoryStorageNew
+		endpoint,
+		test_endpoint: endpoint + '-ci',
+		credentials
 	});
 
-	console.log('CURRENT USER', currentUser );
+	console.log('CURRENT USER', credentials );
 
 	return apiClient;
 }
@@ -113,7 +118,7 @@ function updateStatus( status ){
 	else if (status === 'INIT') {
 		authStatus = status;
 	}
-	else {
+	else if( authStatus !== 'OUT' ) {
 		authStatus = 'OUT';
 		// Clear the current apiClient and stores
 		apiClient = createAPIClient( env, false );
@@ -144,7 +149,7 @@ function backupStore(){
 	// Throttle the backup to save stable data
 	backupTimer = setTimeout( () => {
 		backupTimer = false;
-		MemoryStorageNew.setItem(BACKUP_KEY, JSON.stringify( store ) );
+		MemoryStorage.setItem(BACKUP_KEY, JSON.stringify( store ) );
 	}, 2000);
 }
 
@@ -152,7 +157,7 @@ let backupRestored = false;
 function restoreStore(){
 	if( backupRestored ) return;
 
-	let strBackup = MemoryStorageNew.getItem( BACKUP_KEY );
+	let strBackup = MemoryStorage.getItem( BACKUP_KEY );
 	if( strBackup ){
 		try {	
 			let backup = JSON.parse( strBackup );
@@ -174,7 +179,7 @@ function clearStores() {
 	clearTimeout(backupTimer);
 
 	backupRestored = false;
-	MemoryStorageNew.removeItem(BACKUP_KEY);
+	MemoryStorage.removeItem(BACKUP_KEY);
 	Object.keys( store ).forEach( key => {
 		if( typeof store[key] === 'object' ){
 			store[key] = {};

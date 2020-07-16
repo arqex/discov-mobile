@@ -9,7 +9,7 @@ export default function (store, api) {
 
 	return {
 		loadPlacesNearby(location, radius = 200) {
-			return api.methods.getPlacesNearby(actionService.placeFields)
+			return api.gql.getPlacesNearby(actionService.placeFields)
 				.run({ location, radius })
 				.then(response => {
 					storeService.storePlacesNearby( location, response );
@@ -19,7 +19,7 @@ export default function (store, api) {
 		},
 
 		loadLocationAddress(location) {
-			return api.methods.getLocationAddress(actionService.locationAddressFields)
+			return api.gql.getLocationAddress(actionService.locationAddressFields)
 				.run( location )
 				.then(response => {
 					// console.log('Address', response);
@@ -55,13 +55,13 @@ export default function (store, api) {
 
 			console.log( position, payload );
 
-			return api.methods.searchPlaces( actionService.placeSearchResults )
+			return api.gql.searchPlaces( actionService.placeSearchResults )
 				.run( payload )
 			;
 		},
 
 		getSinglePlace( sourceId: string ){
-			return api.methods.getSinglePlace( actionService.placeFields )
+			return api.gql.getSinglePlace( actionService.placeFields )
 				.run( sourceId )
 			;
 		}

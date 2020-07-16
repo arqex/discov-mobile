@@ -18,11 +18,11 @@ let actionNames = {
   story: storyActions
 }
 
-export default function actionLoader( store, apiClient ){
+export default function actionLoader( store, apiClient, authClient ){
   let actions = {}
 
   Object.keys( actionNames ).forEach( ac => {
-    actions[ac] = actionNames[ac]( store, apiClient );
+    actions[ac] = actionNames[ac]( store, apiClient, authClient );
   });
 
   return actions;

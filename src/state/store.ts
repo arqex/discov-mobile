@@ -1,6 +1,7 @@
 import onstate from 'onstate'
 
 let store = onstate({
+	status: 'INIT',
 	user: {},
 	discoveries: {},
 	stories: {},

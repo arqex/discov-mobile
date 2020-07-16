@@ -1,7 +1,7 @@
 
 /// <reference path="../types/custom.d.ts" />
 import React, {Component} from 'react';
-import { StyleSheet, View, BackHandler, StatusBar, Platform } from 'react-native';
+import { StyleSheet, View, BackHandler, StatusBar, Platform, AppState } from 'react-native';
 import codePush from "react-native-code-push";
 import { dataService } from './services/data.service';
 import { Navigator, router } from './react-urlstack';
@@ -47,10 +47,21 @@ class Root extends Component {
 
 		if ( this.state.showingLoading ) {
 			loadingLayer = this.renderLoading( store );
-			if( this.isLoading( store ) ){
-				return loadingLayer;
+
+			if (this.isLoading(store)) {
+				return (
+					<View style={styles.container}>
+						<StatusBar animated barStyle={this.getStatusBarStyle()} />
+						{loadingLayer}
+					</View>
+				);
 			}
 		}
+		else {
+			console.log('Not showing loading anymore');
+		}
+
+		// console.log( '^*^*^*^*^ ACTIONS', this.actions.story );
 
     return (
       <View style={ styles.container }>
@@ -134,12 +145,14 @@ class Root extends Component {
 		let status = dataService.getStatus();
 
 		if( status === 'INIT' || status === 'LOADING' ){
+			console.log('Loading because of status');
 			return true;
 		}
 
 		let account = store.user.account;
 
-		if( status === 'IN' && (!account || !account.createdAt) ) {
+		if (status === 'IN' && (!account || !account.createdAt)) {
+			console.log('Loading because lack of account', account);
 			return true;
 		}
 
@@ -164,6 +177,8 @@ class Root extends Component {
 			this.discoveriesPopulated = false;
 			this.populateMethodsFromService();
 		}
+
+		this.forceUpdate();
 	}
 
 	_onModalOpen = () => {
@@ -209,18 +224,16 @@ class Root extends Component {
 	}
 
 	componentDidMount() {
-		setTimeout( () => {
-			this.forceUpdate()
-		}, 3000)
 	}
 
 	componentDidUpdate(){
 		if( !this.loadingTimer && this.state.showingLoading && !this.isLoading( dataService.getStore() ) ){
-
-			console.log('Loading finished');
+			console.log('### Loading finished');
+			
 			this.loadingTimer = setTimeout( () => {
-				console.log('Stop showing loading');
+				console.log('### Stop showing loading');
 				this.setState({ showingLoading: false });
+				this.loadingTimer = false;
 			}, 500);
 		}
 	}
@@ -237,12 +250,25 @@ class Root extends Component {
 	}
 }
 
-const codePushOptions = {
-  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
-  installMode: codePush.InstallMode.ON_NEXT_RESUME,
-  minimumBackgroundDuration: 5*60 // 5 minutes
+let toExport;
+if (AppState.currentState === 'active') {
+	// Only activate codepush when the app is being opened by the user
+	const codePushOptions = {
+		checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+		installMode: codePush.InstallMode.ON_NEXT_RESUME,
+		minimumBackgroundDuration: 5 * 60 // 5 minutes
+	}
+	toExport = codePush(codePushOptions)(Root);
+
+	console.log('Starting app with codepush');
 }
-export default codePush(codePushOptions)(Root);
+else {
+	// If the app has been open by a background process, don't use codepush
+	toExport = Root;
+	console.log('Starting app without codepush');
+}
+
+export default Root; // toExport;
 
 const styles = StyleSheet.create({
   container: {

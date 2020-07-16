@@ -15,11 +15,18 @@ export default class DrawerWrapper extends Component {
 		};
 
 		// This will be true when we know the real width of the drawer
-		this.layoutUpdated = false;
-		this.drawerWidth = 300;
+		this.layoutUpdated = true;
+		let layout = props.layout;
 
-		this.drawerPos = new Animated.Value(props.initiallyOpen ? this.drawerWidth : 0);
+		this.drawerWidth = Math.max(0, layout.width - handleWidth);
+		this.drawerPos = new Animated.Value(props.initiallyOpen ? this.drawerWidth + handleWidth : 0);
 		this.calculateDrawerIndex();
+
+		
+
+		this.animatedStyles = animatedStyles(props.transition, props.indexes, props.layout);
+
+		
 
 		this.overlayAnimStyle = {
 			transform: [{
@@ -44,6 +51,7 @@ export default class DrawerWrapper extends Component {
 	render() {
 		let { Drawer, router, collapsible, navProps } = this.props
 		let handle, overlay
+
 		if (collapsible) {
 			handle = <View style={styles.handle} />
 			overlay = (
@@ -54,13 +62,16 @@ export default class DrawerWrapper extends Component {
 		}
 
 		let width = this.state.open ? this.drawerWidth * 2 : this.drawerWidth + handleWidth;
-		let left = this.layoutUpdated ? - this.drawerWidth : -3000;
+		let left = this.layoutUpdated ? (0-this.drawerWidth) : -3000;
+
+		
 
 		let containerStyles = [
 			styles.container,
 			styles.collapsibleContainer,
-			{ width, left },
-			this.animatedStyles
+			{ width, left }
+
+			// this.animatedStyles
 		]
 
 		let drawerStyles = [
@@ -73,14 +84,14 @@ export default class DrawerWrapper extends Component {
 		];
 
 		return (
-			<Animated.View style={containerStyles}>
+			<View style={containerStyles}>
 				{overlay}
-				<Interactable.View dragEnabled={!!collapsible}
+				<Interactable.View dragEnabled={!!collapsible }
 					ref="drawer"
 					horizontalOnly={true} snapPoints={snapPoints}
 					boundaries={{ right: this.drawerWidth, bounce: 0 }}
 					onDrag={e => this.onDrag(e)}
-					animatedValueX={this.drawerPos}>
+					animatedValueX={ this.drawerPos }>
 					<View style={drawerStyles} ref="layout" onLayout={e => this.updateLayout(e)}>
 						<Drawer router={router}
 							drawer={this._drawerMethods}
@@ -91,16 +102,20 @@ export default class DrawerWrapper extends Component {
 						{handle}
 					</View>
 				</Interactable.View>
-			</Animated.View>
+			</View>
 		)
 	}
 
 	updateLayout(e) {
 		let { layout } = e.nativeEvent;
 
+		
+		
 		this.layoutUpdated = true;
 		this.animatedStyles = animatedStyles(this.props.transition, this.props.indexes, layout);
 		this.drawerWidth = Math.max(0, layout.width - handleWidth);
+
+		
 		this.calculateDrawerIndex();
 		this.forceUpdate();
 	}
@@ -116,12 +131,20 @@ export default class DrawerWrapper extends Component {
 		}
 	}
 
+	componentDidMount() {
+		this.updateLayout({ nativeEvent: {layout: this.props.layout}});
+	}
+
 	calculateDrawerIndex() {
 		let di = this.drawerIndex;
 
 		if (this.state.open) {
-			this.drawerPos.setValue(this.drawerWidth);
+			
+			this.drawerPos.setValue( this.drawerWidth );
 		}
+
+
+		
 
 		let index = this.drawerPos.interpolate({
 			inputRange: [0, this.drawerWidth],

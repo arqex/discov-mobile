@@ -14,7 +14,7 @@ export default function( store, api ){
 	var userLoader = createEntityLoader({
 		store,
 		storeAttribute: 'users',
-		loadAction: api.methods.getMultiplePeerAccounts( fullFields )
+		loadAction: api.gql.getMultiplePeerAccounts( fullFields )
 	});
 	
 	return {
@@ -29,7 +29,7 @@ export default function( store, api ){
 
 		loadRelationships(type: string) {
 			store.relationships[type].loading = true;
-			return api.methods.getRelationshipAccounts(`{${type} { items${simpleFields} hasMore lastKey total }}`)
+			return api.gql.getRelationshipAccounts(`{${type} { items${simpleFields} hasMore lastKey total }}`)
 				.run({ accountId: store.user.id, type })
 				.then(res => {
 					let data = res[type];
@@ -55,7 +55,7 @@ export default function( store, api ){
 			if( !rel || !rel.hasMore ) return;
 			
 			store.relationships[type].loadingPage = true;
-			return api.methods.getRelationshipAccounts(`{${type} { items${simpleFields} hasMore lastKey total }}`)
+			return api.gql.getRelationshipAccounts(`{${type} { items${simpleFields} hasMore lastKey total }}`)
 				.run({ accountId: store.user.id, type, startAt: rel.lastKey })
 				.then( res => {
 					let data = res[type];

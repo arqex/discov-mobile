@@ -21,7 +21,7 @@ const MEMORY_KEY_PREFIX = '@StorageService:'
 let dataMemory: any = {}
 
 /** @class */
-export class MemoryStorageNew {
+export class MemoryStorage {
   static syncPromise: Promise<any> | null = null
   /**
    * This is used to set a specific item in storage
@@ -71,8 +71,8 @@ export class MemoryStorageNew {
    * @returns {void}
    */
   static sync() {
-    if (!MemoryStorageNew.syncPromise) {
-      MemoryStorageNew.syncPromise = new Promise((res, rej) => {
+    if (!MemoryStorage.syncPromise) {
+      MemoryStorage.syncPromise = new Promise((res, rej) => {
         AsyncStorage.getAllKeys((errKeys, keys) => {
           if (errKeys) rej(errKeys)
           const memoryKeys = keys!.filter(key =>
@@ -91,7 +91,7 @@ export class MemoryStorageNew {
         })
       })
     }
-    return MemoryStorageNew.syncPromise
+    return MemoryStorage.syncPromise
   }
 }
 
@@ -103,8 +103,8 @@ export default class StorageHelper {
    * @returns {object} the storage
    */
   constructor() {
-    MemoryStorageNew.sync();
-    this.storageWindow = MemoryStorageNew
+    MemoryStorage.sync();
+    this.storageWindow = MemoryStorage
   }
 
   /**

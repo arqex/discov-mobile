@@ -11,15 +11,14 @@ import { dataService } from '../services/data.service';
 import * as TaskManager from 'expo-task-manager';
 import geofenceService from './geofence.service';
 import backgroundFetch from './backgroundFetch.service';
-import geolocation from '@react-native-community/geolocation';
-
+// import geolocation from '@react-native-community/geolocation';
 
 const LOCATION_TASK = 'DISCOV_LOCATION';
 const GEOFENCING_TASK = 'DISCOV_GEOFENCE';
 
 let currentLoginStatus = isUserLoggedIn() ? 'IN' : 'OUT';
 let currentAppStatus: AppStateStatus = AppState.currentState;
-let currentTrackingMode: TrackingMode;
+let currentTrackingMode: TrackingMode = 'active';
 
 let initialized = false;
 function init(){
@@ -202,14 +201,36 @@ function bgLog( str ){
   storeService.addBGReport( str );
 }
 
-let bgFetchPromise: any;
-function onBgFetchEvent(){
+let bgFetchPromise: any; 
+async function onBgFetchEvent() {
+  bgLog('fetch event');
+
+  let store = dataService.getStore();
+  bgLog('Getting store');
+  if( store.status === 'INIT' ){
+    bgLog('User is in place');
+  }
+  else {
+    bgLog('User is NOT in place');
+  }
+}
+
+function onBgFetchEventOld(){
   // return Promise.resolve( bgLog('fetch event') );
 
-  if (bgFetchPromise) return bgFetchPromise;
+  
+  
+  bgLog('fetch event') 
+  if (bgFetchPromise) {
+    bgLog('promise already pending')
+    return bgFetchPromise;
+  }
 
   bgFetchPromise = dataService.init().then( () => {
-    if (!isUserLoggedIn()) return Promise.resolve(false);
+    if ( !isUserLoggedIn() ) {
+      bgLog('user NOT logged in');
+      return Promise.resolve(false);
+    }
 
     bgLog('user logged in');
 

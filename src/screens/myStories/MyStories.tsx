@@ -46,10 +46,26 @@ export default class MyStories extends Component<ScreenProps> {
 		return this.props.store.user.stories;
 	}
 
-	componentDidMount(){
+	componentDidMount() {
+		console.log('ACtions received', this.props.actions.story);
 		if( !this.getStories() ){
-			this.props.actions.story.loadUserStories();
+			this.waitForActions().then(() => {
+				this.props.actions.story.loadUserStories();
+			})
 		}
+	}
+
+	waitForActions() {
+		let actions = this.props.actions || {};
+		if( actions && actions.story && actions.story.loadUserStories ){
+			return Promise.resolve();
+		}
+
+		return new Promise( resolve => {
+			setTimeout( () => {
+				resolve( this.waitForActions() )
+			}, 500 );
+		})
 	}
 
 	_renderItem = ({item}) => {

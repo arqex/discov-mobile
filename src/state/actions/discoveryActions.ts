@@ -21,7 +21,7 @@ export default function (store, api) {
 				startAt
 			};
 
-			return promises.discoveries[startAt] = api.methods
+			return promises.discoveries[startAt] = api.gql
 				.getDiscoveriesByDiscoverer(actionService.userDiscoveryPageFields)
 				.run(payload)
 				.then(discoveryPage => {
@@ -51,7 +51,7 @@ export default function (store, api) {
 				return Promise.resolve({});
 			}
 			
-			return api.methods.discoverAround(`{ closestDiscoveryDistance discoveries ${actionService.userDiscoveryFieldsWithOwner} }`)
+			return api.gql.discoverAround(`{ closestDiscoveryDistance discoveries ${actionService.userDiscoveryFieldsWithOwner} }`)
 				.run( location )
 				.then( res => {
 					store.user.closestDiscoveryDistance = res.closestDiscoveryDistance;
@@ -80,7 +80,7 @@ export default function (store, api) {
 				id,
 				extra: JSON.stringify(extra)
 			};
-			return api.methods.updateDiscoveryExtra( actionService.userDiscoveryFields )
+			return api.gql.updateDiscoveryExtra( actionService.userDiscoveryFields )
 				.run( payload )
 				.then( discovery => {
 					storeService.storeDiscovery( discovery )

@@ -69,10 +69,8 @@ export default class ScreenStack extends Component {
 	}
 	
 	renderScreens( router, stack ){
-		let { layout, indexes } = this.state
-		
-		// Wait for the layout to be drawn
-		if( !layout ) return;
+		let { indexes } = this.state
+		let layout = this.props.layout;
 
 		let screens = [];
 		let isShowing = this.props.stackIndexes.showing;

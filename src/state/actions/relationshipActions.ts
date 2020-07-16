@@ -19,7 +19,7 @@ export default function (store, api) {
 				startAt
 			};
 
-			return promises.followers[startAt] = api.methods.getFollowers( actionService.followerPageFields )
+			return promises.followers[startAt] = api.gql.getFollowers( actionService.followerPageFields )
 				.run( payload )
 				.then( followerPage => {
 					let lastUpdatedAt = Date.now();
@@ -74,7 +74,7 @@ export default function (store, api) {
 				startAt
 			};
 
-			return promises.following[startAt] = api.methods.getFollowing(actionService.followingPageFields)
+			return promises.following[startAt] = api.gql.getFollowing(actionService.followingPageFields)
 				.run(payload)
 				.then(followingPage => {
 					let lastUpdatedAt = Date.now();
@@ -114,7 +114,7 @@ export default function (store, api) {
 			;
 		},
 		follow( accountId ) {
-			return api.methods.follow( '{success}' )
+			return api.gql.follow( '{success}' )
 				.run( accountId )
 				.then( () => {
 					let storedMeta = store.peerMeta[ accountId ];
@@ -129,7 +129,7 @@ export default function (store, api) {
 			;
 		},
 		unfollow( accountId ) {
-			return api.methods.unfollow( '{success}' )
+			return api.gql.unfollow( '{success}' )
 				.run( accountId )
 				.then( () => {
 

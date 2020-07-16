@@ -10,7 +10,7 @@ export default function (store, api) {
 	let loader, batchLoader;
 
 	function initLoader() {
-		loader = api.methods.getMultipleFollowerGroups(actionService.followerGroupFields);
+		loader = api.gql.getMultipleFollowerGroups(actionService.followerGroupFields);
 		batchLoader = actionService.createBatchLoader(loader);
 	}
 
@@ -26,7 +26,7 @@ export default function (store, api) {
 				startAt
 			};
 
-			return promises.userFGs[startAt] = api.methods
+			return promises.userFGs[startAt] = api.gql
 				.getFollowerGroupsByOwner(actionService.followerGroupPageFields)
 				.run(payload)
 				.then(fgPage => {
