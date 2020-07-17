@@ -2,8 +2,8 @@ import store from './store'
 import actionsLoader from './actionsLoader';
 
 let actions;
-function initActions( apiClient ){
-	actions = actionsLoader( store, apiClient );
+function initActions( apiClient, authClient ){
+	actions = actionsLoader( store, apiClient, authClient );
 	return actions;
 }
 

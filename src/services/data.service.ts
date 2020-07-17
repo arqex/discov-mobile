@@ -13,7 +13,6 @@ let statusChangeClbks = [];
 let apiClient: ApiClient;
 let authClient: AuthClient;
 let authStatus: string = 'INIT';
-let locationPermissions: boolean;
 let actions: any = false;
 let env;
 
@@ -38,10 +37,16 @@ export const dataService = {
 			.then( results => {
 				env = results[0];
 				apiClient = createAPIClient( env, results[1] );
-				actions = initActions( apiClient );
+				actions = initActions( apiClient, authClient );
 				services.init( actions, store );
-				updateStatus( store.loginStatus );
+				if( results[1] ){
+					setAuthenticatedUser( store, results[1] );
+				}
+				updateStatus( authClient.status );
 			})
+			.catch( error => {
+				console.log( error );
+			})	
 		;
 
 		return initPromise;
@@ -102,7 +107,6 @@ function createAPIClient( env, credentials ){
 
 function updateStatus( status ){
 	if( status === 'IN' ){
-		authStatus = status;
 		restoreStore();
 		if ( !store.user.account ){
 			actions.account.loadUserAccount()
@@ -115,23 +119,19 @@ function updateStatus( status ){
 			;
 		}
 	}
-	else if (status === 'INIT') {
-		authStatus = status;
-	}
-	else if( authStatus !== 'OUT' ) {
-		authStatus = 'OUT';
+	else if (status === 'OUT') {
 		// Clear the current apiClient and stores
 		apiClient = createAPIClient( env, false );
 		clearStores();
 	}
 
+	authStatus = status;
 	statusChangeClbks.forEach( clbk => clbk( authStatus ) );
 }
 
 function storeListener() {
-	let currentPermissions = store.locationPermissions && store.locationPermissions.granted;
-	if (store.loginStatus !== authStatus || currentPermissions !== locationPermissions ){
-		locationPermissions = currentPermissions;
+	if( store.loginStatus !== authStatus ) {
+		authStatus = store.loginStatus;
 		updateStatus( store.loginStatus );
 	}
 
@@ -185,4 +185,9 @@ function clearStores() {
 			store[key] = {};
 		}
 	});
+}
+
+function setAuthenticatedUser( store, credentials ){
+	store.user.email = credentials.email;
+	store.user.id = credentials.id;
 }

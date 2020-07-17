@@ -1,5 +1,3 @@
-import { uuidTo64 } from "../../utils/uuid"
-
 export default function( store, api, auth ){	
 	if( store.account === undefined ){
 		console.log('Starting auth actions');
@@ -7,65 +5,48 @@ export default function( store, api, auth ){
 		store.account = false // User data will live here
 		store.loginStatus = 'INIT' // INIT, IN, OUT, REQUIRE_NEW_PASSWORD, VERIFY_CONTACT
 		store.loginLoading = true
-		store.autologinLoading = false
 		store.federatedLoginLoading = false
 	}
 
 	const authActions = {
     login: async function(email, password) {
 			store.loginLoading = true;
-			let result = await handleLoginResponse( store, api, await api.login( email, password ), {email,password} );
-			console.log( 'login', result );
-			return result;
+			return auth.login( email, password ).then( credentials => {
+				return handleLoginResponse( store, api, auth, credentials, {email, password} );
+			});
     },
-
-    autoLogin: async function () {
-      store.loginLoading = true
-			store.autologinLoading = true
-			
-			console.log('autologining');
-			
-			try {
-				let response = await handleLoginResponse(store, api, await api.autoLogin(), null);
-				console.log( response );
-				return response;
-			}
-      catch( err ){
-				console.log( err );
-			}
-		},
 
 		federatedLogin: async function () {
 			store.loginLoading = true
 			store.federatedLoginLoading = true;
 
-			return await handleLoginResponse(store, api, await api.auth.federatedLogin(), null);
+			return await handleLoginResponse(store, api, auth, await auth.federatedLogin(), null);
 		},
 		
 		register: async function register( email, password ){
 			store.loginLoading = true;
-      return await handleLoginResponse( store, api, await api.auth.register( email, password ), {email,password}	);
+      return await handleLoginResponse( store, api, auth, await auth.register( email, password ), {email,password}	);
 		},
 
 		verifyAccount: async function verifyAccount( email, code ){
 			store.loginLoading = true;
 			const password = store.pendingVerifyUser && store.pendingVerifyUser.password;
-			return await handleLoginResponse( store, api, await api.auth.verifyAccount( email, password, code ), store.pendingVerifyUser );
+			return await handleLoginResponse( store, api, auth, await auth.verifyAccount( email, password, code ), store.pendingVerifyUser );
 		},
 
-		resendVerificationEmail: async function resendVerificationEmail( email ){
-			return await api.auth.resendVerificationEmail( email );
+		resendVerificationEmail: function resendVerificationEmail( email ){
+			return auth.resendVerificationEmail( email );
 		},
 
-		requestPasswordReset: async function requestPasswordReset( email ){
-			return await api.auth.requestPasswordReset( email );
+		requestPasswordReset: function requestPasswordReset( email ){
+			return auth.requestPasswordReset( email );
 		},
 
 		resetPassword: async function resetPassword( email, code, newPassword ){
 			store.loginLoading = true;
-			return api.auth.resetPassword( email, code, newPassword )
+			return auth.resetPassword( email, code, newPassword )
 				.then( () => api.login( email, newPassword ) )
-				.then( loginRes => handleLoginResponse( store, api, loginRes, {email, newPassword} ) )
+				.then( loginRes => handleLoginResponse( store, api, auth, loginRes, {email, newPassword} ) )
 				.catch( err => {
 					console.error( err );
 				})
@@ -74,14 +55,14 @@ export default function( store, api, auth ){
 
 		completeNewPassword: async function completeNewPassword( newPassword ){
 			store.loginLoading = true;
-			return api.auth.completeNewPassword( api.auth.pendingPasswordUser, newPassword )
+			return auth.completeNewPassword( auth.pendingPasswordUser, newPassword )
 				.then( response => {
 					let credentials = {
-						email: api.auth.pendingPasswordUser.challengeParam.userAttributes.email,
+						email: auth.pendingPasswordUser.challengeParam.userAttributes.email,
 						password: newPassword
 					};
-					delete api.auth.pendingPasswordUser;
-					return handleLoginResponse( store, api, response, credentials )
+					delete auth.pendingPasswordUser;
+					return handleLoginResponse( store, api, auth, response, credentials )
 				})
 				.catch( err => {
 					console.error( err );
@@ -90,7 +71,7 @@ export default function( store, api, auth ){
 		},
 		
 		logout: async function logout() {
-			return await api.logout()
+			return await auth.logout()
 				.then( () => {
 					store.account = false;
 					store.loginStatus = 'OUT';
@@ -103,83 +84,49 @@ export default function( store, api, auth ){
 	return authActions;
 }
 
-
 /**
  * Receives the response from a login request and updates the store accordingly.
  * @param {*} store The app reactive store
  * @param {*} response The response data from a login request
  * @returns `true` if the login succeeded, the error object otherwise
  */
-async function handleLoginResponse( store, api, response, credentials ){
-	if( !response ){
+async function handleLoginResponse(store, api, auth, result, credentials) {
+	if (!result) {
 		store.user = false;
 		endLogin(store, 'OUT');
 		return;
 	}
 
-	if( response.error ){
+	if (result.error) {
 		store.user = false;
 		endLogin(store, 'OUT');
 
-		let code = response.error.code;
-
 		// Not confirmed coming from login
-		if (code === "UserNotConfirmedException" ){
+		if (result.error === "UserNotConfirmedException") {
 			store.pendingVerifyUser = credentials;
 		}
-
-		return {
-			error: response.error,
-			email: credentials && credentials.email
-		};
-	}
-
-	if( response.user.challengeName === 'NEW_PASSWORD_REQUIRED' ){
-		endLogin(store, 'OUT');
-		// The user object has methods that would be lost if we keep it
-		// in the store. Add it directly to the api that know how to use it
-		api.auth.pendingPasswordUser = response.user;
-		return {
-			error: { code: 'NewPasswordRequired' },
-			email: credentials.email
+		else if (result.error === 'NewPasswordRequired' ) {
+			auth.pendingPasswordUser = credentials.email;
 		}
+
+		return result;
 	}
-	// Not confirmed coming from register
-	else if( response.user.userConfirmed === false ){
-		endLogin(store, 'OUT');
-		store.pendingVerifyUser = credentials;
-		return {
-			error: {code: 'UserNotConfirmedException'},
-			email: credentials.email
-		}
-	}
-	
-	const account = {
-		id: getAccountId( response.user.attributes.sub ),
-    email: response.user.attributes.email
-	}
-  
-	store.user = account;
 
 	endLogin(store, 'IN');
-	return account;
+
+	api.setCredentials( result );
+
+	store.user = {
+		id: result.id,
+		email: result.email
+	}
+
+	return store.user;
 }
 
 function endLogin( store, loginStatus ){
 	console.log('endLogin', loginStatus);
 	store.loginStatus = loginStatus;
 	store.loginLoading = false;
-  store.autologinLoading = false;
 	store.federatedLoginLoading = false;
-}
-
-
-function getAccountId( sub ){
-	// Test users already have the real id
-	if( sub.startsWith('acTU') ){
-		return sub;
-	}
-
-	// We need to transform cognito ones
-	return 'ac' + uuidTo64( sub );
 }

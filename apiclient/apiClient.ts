@@ -1,6 +1,7 @@
 import { GqlApi } from './gql/gqlAPI';
 
 interface ApiClientCredentials {
+	id: string
 	email: string
 	isTestUser: boolean
 	authHeader: string

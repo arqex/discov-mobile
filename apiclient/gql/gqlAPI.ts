@@ -81,6 +81,7 @@ export class GqlApi extends GqlMethods {
           
           if( glob.gql_debug ){
             console.log({
+              endpoint: config.endpoint,
               'gql request': body,
               'gql response': res.data,
               'authorizer': getAuthorizerType( config.authHeader )
@@ -95,6 +96,8 @@ export class GqlApi extends GqlMethods {
           
           if( glob.gql_debug ){
             console.log({
+              endpoint: config.endpoint,
+              authorization: config.authHeader,
               'gql request': body,
               'gql error': err,
               'authorizer': getAuthorizerType( config.authHeader )

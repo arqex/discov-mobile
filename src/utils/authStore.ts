@@ -6,7 +6,23 @@ export default {
 	storage: MemoryStorage,
 
 	getCachedCredentials() {
-		return MemoryStorage.sync().then( () => MemoryStorage.getItem(TEST_CREDENTIALS_KEY) );
+		return MemoryStorage.sync().then( () => {
+			let cached = MemoryStorage.getItem(TEST_CREDENTIALS_KEY);
+			if( cached ){
+				try {
+					let credentials = JSON.parse(cached);
+					// This will clean up old sessions. DELETE when old version login get deprecated
+					if( !credentials.authToken ){
+						this.clearCache();
+						return;
+					}
+					return credentials;
+				}
+				catch( err ){
+					this.clearCache();
+				}
+			}
+		});
 	},
 
 	cacheCredentials( credentials ) {

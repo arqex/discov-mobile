@@ -1,6 +1,21 @@
 import Auth from '@aws-amplify/auth';
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
 import { Hub } from '@aws-amplify/core';
+import { uuidTo64 } from "./uuid";
+
+interface AuthClientCredentials {
+	id: string,
+	email: string,
+	isTestUser: boolean,
+	authHeader: string,
+	status?: string
+}
+
+interface AuthClientError {
+	error: any
+}
+
+type AuthClientLoginResponse = AuthClientCredentials | AuthClientError | undefined;
 
 // This promise is set when login by google
 let federatedLoginPromise: any = false;
@@ -36,64 +51,73 @@ export class AuthClient {
 
 		this.status = 'LOADING';
 		this.getCachedCredentials().then( credentials => {
-			if( !credentials ){
-				this.status = 'OUT'
-			}
-			else if( credentials.status ){
-				this.status = credentials.status;
-			}
-			else {
-				this.status = 'IN';
-			}
+			this.status = credentials ? 'IN' : 'OUT';
 		});
 	}
 
-	async getCachedCredentials() {
+	getCachedCredentials(): Promise<AuthClientCredentials | undefined> {
 		// Try credentials from test users
-		const testCredentials = await this.config.authStore.getCachedCredentials();
-		if( testCredentials ){
-			return testCredentials;
-		}
+		return this.config.authStore.getCachedCredentials()
+			.then( testCredentials => {
+				if (testCredentials) {
+					return testCredentials;
+				}
 
-		// Try from amplify
-		let idToken = (await Auth.currentSession()).getIdToken();
-		if( idToken ){
-			return {
-				email: idToken.payload.email,
-				authHeader: await idToken.getJwtToken()
-			}
-		}
+				// Try from amplify
+				return Auth.currentSession()
+					.then( session => {
+						if( !session ) return;
+
+						let idToken = session.getIdToken();
+						if (idToken) {
+							return {
+								id: 'ac' + uuidTo64(idToken.payload.sub),
+								email: idToken.payload.email,
+								authHeader: idToken.getJwtToken(),
+								isTestUser: false
+							}
+						}
+					})
+					.catch( error => {
+						if( error !== 'No current user' ){
+							throw error;
+						}
+					})
+				;
+			})
+		;
 	}
 
-	async login( email, password ){
+	login( email, password ): Promise<AuthClientLoginResponse> {
 		this.status = 'LOADING';
 
-    if ( isTestUser(email, password) ) {
+		if ( isTestUser(email, password) ) {
 			this.status = 'IN';
 			
 			let credentials = {
+				id: 'ac' + password.replace('ApiToken', ''),
 				email,
 				authHeader: `Bearer ${password}`,
 				isTestUser: true
 			}
+
 			this.config.authStore.cacheCredentials( credentials );
-			return credentials;
+			return Promise.resolve(credentials);
 		}
 
-		try {
-			let user = await Auth.signIn( email, password );
-			if( user ){
+		return Auth.signIn( email, password )
+			.then( response => {
+				let error = getLoginResponseError(response);
+
+				if( error ){
+					this.status = 'OUT';
+					return error;
+				}
+
 				this.status = 'IN';
-				return await this.getCachedCredentials();
-			}
-			else {
-				this.status = 'OUT';
-			}
-		}
-		catch (error) {
-			this.status = 'OUT';
-			return {error};
-		}
+				return this.getCachedCredentials();
+			})
+		;
 	}
 
 	async register(email, password) {
@@ -124,27 +148,29 @@ export class AuthClient {
 		});
 	}
 
-	async logout() {
-		let credentials = await this.getCachedCredentials();
-		
-		this.status = 'OUT';
+	logout() {
+		return this.getCachedCredentials()
+			.then( credentials => {
+				if (!credentials) {
+					this.status = 'OUT';
+					return { error: false };
+				}
 
-		if( !credentials ){
-			return { error: false };
-		}
+				if (credentials.isTestUser) {
+					this.status = 'OUT';
+					this.config.authStore.clearCache();
+					return { error: false };
+				}
 
-		if( credentials.isTestUser ){
-			this.config.authStore.clearCache();
-			return { error: false };
-		}
-
-		try {
-			await Auth.signOut();
-			return { error: false };
-		}
-		catch( error ) {
-			return {error};
-		}
+				return Auth.signOut().then( () => {
+					this.status = 'OUT';
+					return { error: false };
+				})
+			})
+			.catch( error => {
+				return { error };
+			})
+		;
 	}
 
 	async resendVerificationEmail(email) {
@@ -256,4 +282,22 @@ async function getAttributes(user) {
 	}
 
 	return {};
+}
+
+function getLoginResponseError( response ): AuthClientError | undefined {
+	if( !response ) return {error: 'No user'};
+
+	if( response.error ){
+		return { error: response.error.code };
+	}
+
+	if (response.user) {
+		if (response.user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+			return { error: 'NewPasswordRequired' };
+		}
+
+		if (response.user.userConfirmed === false) {
+			return { error: 'UserNotConfirmedException' }
+		}
+	}
 }

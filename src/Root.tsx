@@ -16,7 +16,7 @@ import locationTracking from  './location/location.tracking';
 import storeService from './state/store.service';
 import { Modal } from './components';
 
-globalThis.gql_debug = false;
+globalThis.gql_debug = true;
 
 class Root extends Component {
   state = {
