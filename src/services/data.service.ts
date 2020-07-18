@@ -1,8 +1,6 @@
 
 import { ApiClient } from '../../apiclient/apiClient';
-import { AuthClient } from '../../apiclient/authClient';
 import authStore from '../utils/authStore';
-import { MemoryStorage } from '../utils/StorageHelper';
 import { getEnv } from '../../environment';
 import { initActions, store } from '../state/appState';
 import storeService from '../state/store.service';
@@ -11,48 +9,39 @@ import services from '.';
 
 let statusChangeClbks = [];
 let apiClient: ApiClient;
-let authClient: AuthClient;
-let authStatus: string = 'INIT';
 let actions: any = false;
-let env;
-
+let lastLoginStatus;
 let initPromise;
 export const dataService = {
 	init() {
 		if( initPromise ) return initPromise;
-		authStatus = 'LOADING';
+
+		restoreStore(store);
 		storeService.init(store);
 
 		store.off('state', storeListener );
 		store.on('state', storeListener );
 
-		authClient = new AuthClient({ authStore });
-
-		let promises = [
-			getEnv(),
-			authClient.getCachedCredentials()
-		];
-
-		initPromise = Promise.all( promises )
-			.then( results => {
-				env = results[0];
-				apiClient = createAPIClient( env, results[1] );
-				actions = initActions( apiClient, authClient );
+		initPromise = createApiClient()
+			.then( client => {
+				apiClient = client;
+				return apiClient.init();
+			})
+			.then( initResult => {
+				actions = initActions( apiClient );
 				services.init( actions, store );
-				if( results[1] ){
-					setAuthenticatedUser( store, results[1] );
+
+				if (initResult.user) {
+					console.log('CURRENT USER', initResult.user);
+					setAuthenticatedUser( store, initResult.user );
 				}
-				updateStatus( authClient.status );
 			})
 			.catch( error => {
-				console.log( error );
-			})	
+				console.log( 'DATA INIT ERROR', error );
+			})
 		;
 
 		return initPromise;
-	},
-	getStatus() {
-		return authStatus;
 	},
 	addStatusListener( clbk ) {
 		statusChangeClbks.push( clbk );
@@ -65,17 +54,28 @@ export const dataService = {
 			}
 		}
 	},
-	getAPIClient() {
+	getApiClient() {
 		return apiClient;
-	},
-	getAuthClient() {
-		return authClient;
 	},
 	getStore() {
 		return store; 
 	},
 	getActions() {
 		return actions;
+	},
+	getLoginStatus() {
+		if( !apiClient ) return 'LOADING';
+		
+		const authStatus = apiClient.getAuthStatus();
+
+		if (authStatus !== 'IN') {
+			lastLoginStatus = authStatus;
+		}
+		else {
+			lastLoginStatus = store.user.account ? 'IN' : 'LOADING';
+		}
+
+		return lastLoginStatus;
 	}
 }
 
@@ -83,59 +83,32 @@ export const dataService = {
 // on the first import
 dataService.init();
 
-function createAPIClient( env, credentials ){
-	if( !env ) return;
-
-	let endpoint = env.apiUrl;
-	if( endpoint.includes('/localhost') && Platform.OS === 'android' ){
-		// Localhost doesn't work on android emulator
-		endpoint = endpoint.replace('localhost', '10.0.2.2');
-	}
-
-	store.endpoint = endpoint;
-	
-	let apiClient = new ApiClient({
-		endpoint,
-		test_endpoint: endpoint + '-ci',
-		credentials
-	});
-
-	console.log('CURRENT USER', credentials );
-
-	return apiClient;
-}
-
-function updateStatus( status ){
-	if( status === 'IN' ){
-		restoreStore();
-		if ( !store.user.account ){
-			actions.account.loadUserAccount()
-				.then(account => {
-					if( account && account.error && account.error.name === 'not_found' ){
-						// New user, create an account
-						actions.account.createAccount();
-					} 
-				})
-			;
+function createApiClient() {
+	return getEnv().then( env => {
+		let endpoint = env.apiUrl;
+		if (endpoint.includes('/localhost') && Platform.OS === 'android') {
+			// Localhost doesn't work on android emulator
+			endpoint = endpoint.replace('localhost', '10.0.2.2');
 		}
-	}
-	else if (status === 'OUT') {
-		// Clear the current apiClient and stores
-		apiClient = createAPIClient( env, false );
-		clearStores();
-	}
 
-	authStatus = status;
-	statusChangeClbks.forEach( clbk => clbk( authStatus ) );
+		store.endpoint = endpoint;
+
+		let apiClient = new ApiClient({
+			endpoint,
+			test_endpoint: endpoint + 'ci',
+			authStore
+		});
+
+		return apiClient;
+	});
 }
 
 function storeListener() {
-	if( store.loginStatus !== authStatus ) {
-		authStatus = store.loginStatus;
-		updateStatus( store.loginStatus );
-	}
-
 	backupStore();
+	if( lastLoginStatus === 'IN' && !store.user.account ){
+		dataService.getLoginStatus(); // This will refresh lastLoginStatus
+		clearStores();
+	}
 }
 
 const BACKUP_KEY = 'userData';
@@ -149,29 +122,34 @@ function backupStore(){
 	// Throttle the backup to save stable data
 	backupTimer = setTimeout( () => {
 		backupTimer = false;
-		MemoryStorage.setItem(BACKUP_KEY, JSON.stringify( store ) );
+		authStore.storage.setItem(BACKUP_KEY, JSON.stringify( store ) );
 	}, 2000);
 }
 
 let backupRestored = false;
-function restoreStore(){
+function restoreStore( store ){
 	if( backupRestored ) return;
 
-	let strBackup = MemoryStorage.getItem( BACKUP_KEY );
-	if( strBackup ){
-		try {	
-			let backup = JSON.parse( strBackup );
-			if(backup.user && store.user && backup.user.id === store.user.id){
-				Object.keys(backup).forEach(key => {
-					store[key] = backup[key];
-				});
+	authStore.storage.sync()
+		.then( () => {
+			const strBackup = authStore.storage.getItem( BACKUP_KEY );
+			
+			if( strBackup ){
+				try {	
+					let backup = JSON.parse( strBackup );
+					if(backup.user && store.user && backup.user.id === store.user.id){
+						Object.keys(backup).forEach(key => {
+							store[key] = backup[key];
+						});
+					}
+					backupRestored = true;
+				}
+				catch ( err ) {
+					console.error('Cant parse data backup');
+				}
 			}
-			backupRestored = true;
-		}
-		catch ( err ) {
-			console.error('Cant parse data backup');
-		}
-	}
+		});
+	;
 }
 
 function clearStores() {
@@ -179,15 +157,10 @@ function clearStores() {
 	clearTimeout(backupTimer);
 
 	backupRestored = false;
-	MemoryStorage.removeItem(BACKUP_KEY);
-	Object.keys( store ).forEach( key => {
-		if( typeof store[key] === 'object' ){
-			store[key] = {};
-		}
-	});
+	authStore.storage.removeItem( BACKUP_KEY );
 }
 
-function setAuthenticatedUser( store, credentials ){
-	store.user.email = credentials.email;
-	store.user.id = credentials.id;
+function setAuthenticatedUser( store, user ){
+	store.user.email = user.email;
+	store.user.id = user.id;
 }

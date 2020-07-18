@@ -16,7 +16,6 @@ import backgroundFetch from './backgroundFetch.service';
 const LOCATION_TASK = 'DISCOV_LOCATION';
 const GEOFENCING_TASK = 'DISCOV_GEOFENCE';
 
-let currentLoginStatus = isUserLoggedIn() ? 'IN' : 'OUT';
 let currentAppStatus: AppStateStatus = AppState.currentState;
 let currentTrackingMode: TrackingMode = 'active';
 
@@ -27,10 +26,13 @@ function init(){
   console.log('HEeEEEEETEY INIT!');
   locationService.setTaskName( LOCATION_TASK );
   geofenceService.setTaskName( GEOFENCING_TASK );
-  setTrackingMode(currentTrackingMode);
   backgroundFetch.init(onBgFetchEvent);
   addEventListeners();
-  console.log('HEeEEEEETEY INIT FINISHED!');
+
+  dataService.init().then( () => {
+    setTrackingMode(currentTrackingMode);
+    console.log('HEeEEEEETEY INIT FINISHED!');
+  });
 }
 init();
 
@@ -140,26 +142,11 @@ function isInForeground(){
 }
 
 function isUserLoggedIn(){
-  // Logged in and with the account ready
-  if( dataService.getStatus() !== 'IN') return false;
-  return !!dataService.getStore().user.account;
+  let apiClient = dataService.getApiClient();
+  return apiClient.getAuthStatus() === 'IN';
 }
 
 function addEventListeners(){
-  // This will start/stop tracking when the user logs in/out
-  dataService.addStatusListener( status => {
-    if( status === currentLoginStatus ) return;
-    currentLoginStatus = status;
-
-    if( status === 'IN' ){
-      setTrackingMode( currentTrackingMode );
-    } 
-    else {
-      locationHandler.resetFence();
-      locationService.stopTracking();
-    }
-  });
-
   // This will activate/deactivate the foreground notification
   // if needed, when the app goes in background/foreground
   AppState.addEventListener('change', status => {
@@ -205,14 +192,18 @@ let bgFetchPromise: any;
 async function onBgFetchEvent() {
   bgLog('fetch event');
 
-  let store = dataService.getStore();
-  bgLog('Getting store');
-  if( store.status === 'INIT' ){
+  return dataService.init().then( () => {
+    let apiClient = dataService.getApiClient();
+
+    // We use the api status instead of the dataService's one
+    // because we just need the client to be authenticated
+    // not the account data to be loaded
+    if( apiClient.getAuthStatus() !== 'IN' ){
+      return bgLog('User not logged in');
+    }
+
     bgLog('User is in place');
-  }
-  else {
-    bgLog('User is NOT in place');
-  }
+  });
 }
 
 function onBgFetchEventOld(){

@@ -6,17 +6,17 @@ const openRoutes = [
 const DEFAULT_IN_ROUTE = '/myStories'
 const DEFAULT_OUT_ROUTE = '/auth'
 
-export default function createInterceptor( environment, store ){
+export default function createInterceptor( environment, dataService ){
 	return function( nextLocation ){
 
-		let path = nextLocation.pathname;
+		const path = nextLocation.pathname;
+		const store = dataService.getStore();
+		const loginStatus = dataService.getLoginStatus();
 
 		// Never redirect when we are logging in
-		if( store.loginLoading ){
+		if ( loginStatus === 'LOADING' ){
 			return nextLocation;
 		}
-		
-		let loginStatus = store.loginStatus;
 
 		let isOpenRoute = openRoutes.indexOf( path ) !== -1;
 		if( path === '/componentGallery'){

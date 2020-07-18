@@ -1,12 +1,16 @@
 import Auth from '@aws-amplify/auth';
 import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
 import { Hub } from '@aws-amplify/core';
-import { uuidTo64 } from "./uuid";
+import { uuidTo64 } from "../uuid";
 
-interface AuthClientCredentials {
+interface AuthClientUser {
 	id: string,
 	email: string,
-	isTestUser: boolean,
+	isTestUser: boolean
+}
+
+interface AuthClientCredentials {
+	user: AuthClientUser,
 	authHeader: string,
 	status?: string
 }
@@ -15,7 +19,10 @@ interface AuthClientError {
 	error: any
 }
 
-type AuthClientLoginResponse = AuthClientCredentials | AuthClientError | undefined;
+type AuthClientLoginResponse = {
+	credentials?: AuthClientCredentials,
+	error?: any
+}
 
 // This promise is set when login by google
 let federatedLoginPromise: any = false;
@@ -71,10 +78,12 @@ export class AuthClient {
 						let idToken = session.getIdToken();
 						if (idToken) {
 							return {
-								id: 'ac' + uuidTo64(idToken.payload.sub),
-								email: idToken.payload.email,
-								authHeader: idToken.getJwtToken(),
-								isTestUser: false
+								user: {
+									id: 'ac' + uuidTo64(idToken.payload.sub),
+									email: idToken.payload.email,
+									isTestUser: false
+								},
+								authHeader: idToken.getJwtToken()
 							}
 						}
 					})
@@ -95,14 +104,16 @@ export class AuthClient {
 			this.status = 'IN';
 			
 			let credentials = {
-				id: 'ac' + password.replace('ApiToken', ''),
-				email,
-				authHeader: `Bearer ${password}`,
-				isTestUser: true
+				user: {
+					id: 'ac' + password.replace('ApiToken', ''),
+					email,
+					isTestUser: true,
+				},
+				authHeader: `Bearer ${password}`
 			}
 
 			this.config.authStore.cacheCredentials( credentials );
-			return Promise.resolve(credentials);
+			return Promise.resolve({credentials});
 		}
 
 		return Auth.signIn( email, password )
@@ -115,7 +126,9 @@ export class AuthClient {
 				}
 
 				this.status = 'IN';
-				return this.getCachedCredentials();
+				return this.getCachedCredentials().then( credentials => {
+					return {credentials};
+				});
 			})
 		;
 	}
@@ -156,7 +169,7 @@ export class AuthClient {
 					return { error: false };
 				}
 
-				if (credentials.isTestUser) {
+				if (credentials.user.isTestUser) {
 					this.status = 'OUT';
 					this.config.authStore.clearCache();
 					return { error: false };

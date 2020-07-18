@@ -17,9 +17,14 @@ interface RunnableStatement {
   then: (params: any ) => any,
 }
 
-interface GqlConfig {
+export interface GqlCredentials {
+  user?: any,
+  authHeader: string
+}
+
+export interface GqlConfig {
   endpoint?: string
-  authHeader?: string
+  credentials?: GqlCredentials
 }
 
 export class GqlApi extends GqlMethods {
@@ -34,8 +39,16 @@ export class GqlApi extends GqlMethods {
     if( options.endpoint ){
       this.config.endpoint = options.endpoint;
     }
-    if( options.authHeader ){
-      this.config.authHeader = options.authHeader;
+    if( options.credentials ){
+      this.config.credentials = options.credentials;
+    }
+  }
+
+  getCurrentUser(){
+    if( !this.config.credentials ) return {user: false};
+
+    return {
+      user: this.config.credentials.user
     }
   }
 
@@ -72,7 +85,7 @@ export class GqlApi extends GqlMethods {
         API.configure({
           graphql_endpoint: config.endpoint,
           graphql_headers: async () => ({
-            Authorization: config.authHeader
+            Authorization: config.credentials.authHeader
           })
         });
         
@@ -84,7 +97,7 @@ export class GqlApi extends GqlMethods {
               endpoint: config.endpoint,
               'gql request': body,
               'gql response': res.data,
-              'authorizer': getAuthorizerType( config.authHeader )
+              'authorizer': getAuthorizerType( config.credentials.authHeader )
             });
           }
 
@@ -97,10 +110,10 @@ export class GqlApi extends GqlMethods {
           if( glob.gql_debug ){
             console.log({
               endpoint: config.endpoint,
-              authorization: config.authHeader,
+              authorization: config.credentials.authHeader,
               'gql request': body,
               'gql error': err,
-              'authorizer': getAuthorizerType( config.authHeader )
+              'authorizer': getAuthorizerType( config.credentials.authHeader )
             });
           }
 

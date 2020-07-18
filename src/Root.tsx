@@ -48,7 +48,7 @@ class Root extends Component {
 		if ( this.state.showingLoading ) {
 			loadingLayer = this.renderLoading( store );
 
-			if (this.isLoading(store)) {
+			if(this.isLoading(store)) {
 				return (
 					<View style={styles.container}>
 						<StatusBar animated barStyle={this.getStatusBarStyle()} />
@@ -117,7 +117,7 @@ class Root extends Component {
 		// Listen to status changes
 		dataService.addStatusListener( this._onAuthChange );
 		
-		this.interceptor = createInterceptor(null, store);
+		this.interceptor = createInterceptor(null, dataService);
 
 		if (Platform.OS === 'android') {
 			StatusBar.setBackgroundColor("rgba(0,0,0,0)")
@@ -142,21 +142,19 @@ class Root extends Component {
 	}
 
 	isLoading( store ) {
-		let status = dataService.getStatus();
+		let status = dataService.getLoginStatus();
 
-		if( status === 'INIT' || status === 'LOADING' ){
-			console.log('Loading because of status');
+		if( status === 'OUT' ){
+			return false;
+		}
+
+		if( status === 'LOADING' ){
+			console.log('Loading because of loging in');
 			return true;
 		}
 
-		let account = store.user.account;
-
-		if (status === 'IN' && (!account || !account.createdAt)) {
-			console.log('Loading because lack of account', account);
-			return true;
-		}
-
-		return false;
+		const account = store.user.account;
+		return !account;
 	}
 
 	_onAuthChange = status => {
@@ -189,21 +187,6 @@ class Root extends Component {
 		this.setState({modalOpen: false});
 	}
 
-	/*
-	initializeUserData() {
-		if (!dataService.getStore().user.account) {
-			this.actions.account.loadUserAccount()
-				.then( res => {
-					if( res && res.error === 'not_found' ){
-						return this.actions.account.createAccount();
-					}
-					return res;
-				})
-			;
-		}
-	}
-	*/
-
 	isDrawerInitiallyOpen() {
 		let path = router.location && router.location.pathname;
 		return (
@@ -214,16 +197,13 @@ class Root extends Component {
 	}
 
 	populateMethodsFromService(){
-		this.api = dataService.getAPIClient();
+		this.api = dataService.getApiClient();
 		this.actions = dataService.getActions();
 	}
 
 	componentDidCatch(error, errorInfo) {
 		console.log( errorInfo );
 		errorHandler(error, true);
-	}
-
-	componentDidMount() {
 	}
 
 	componentDidUpdate(){

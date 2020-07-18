@@ -1,4 +1,4 @@
-export default function( store, api, auth ){	
+export default function( store, api ){	
 	if( store.account === undefined ){
 		console.log('Starting auth actions');
 
@@ -11,8 +11,8 @@ export default function( store, api, auth ){
 	const authActions = {
     login: async function(email, password) {
 			store.loginLoading = true;
-			return auth.login( email, password ).then( credentials => {
-				return handleLoginResponse( store, api, auth, credentials, {email, password} );
+			return api.login( email, password ).then( response => {
+				return handleLoginResponse( store, api, response, {email, password} );
 			});
     },
 
@@ -20,33 +20,33 @@ export default function( store, api, auth ){
 			store.loginLoading = true
 			store.federatedLoginLoading = true;
 
-			return await handleLoginResponse(store, api, auth, await auth.federatedLogin(), null);
+			return await handleLoginResponse(store, api, await api.auth.federatedLogin(), null);
 		},
 		
 		register: async function register( email, password ){
 			store.loginLoading = true;
-      return await handleLoginResponse( store, api, auth, await auth.register( email, password ), {email,password}	);
+      return await handleLoginResponse( store, api, await api.auth.register( email, password ), {email,password}	);
 		},
 
 		verifyAccount: async function verifyAccount( email, code ){
 			store.loginLoading = true;
 			const password = store.pendingVerifyUser && store.pendingVerifyUser.password;
-			return await handleLoginResponse( store, api, auth, await auth.verifyAccount( email, password, code ), store.pendingVerifyUser );
+			return await handleLoginResponse( store, api, await api.auth.verifyAccount( email, password, code ), store.pendingVerifyUser );
 		},
 
 		resendVerificationEmail: function resendVerificationEmail( email ){
-			return auth.resendVerificationEmail( email );
+			return api.auth.resendVerificationEmail( email );
 		},
 
 		requestPasswordReset: function requestPasswordReset( email ){
-			return auth.requestPasswordReset( email );
+			return api.auth.requestPasswordReset( email );
 		},
 
 		resetPassword: async function resetPassword( email, code, newPassword ){
 			store.loginLoading = true;
-			return auth.resetPassword( email, code, newPassword )
+			return api.auth.resetPassword( email, code, newPassword )
 				.then( () => api.login( email, newPassword ) )
-				.then( loginRes => handleLoginResponse( store, api, auth, loginRes, {email, newPassword} ) )
+				.then( loginRes => handleLoginResponse( store, api, loginRes, {email, newPassword} ) )
 				.catch( err => {
 					console.error( err );
 				})
@@ -55,14 +55,14 @@ export default function( store, api, auth ){
 
 		completeNewPassword: async function completeNewPassword( newPassword ){
 			store.loginLoading = true;
-			return auth.completeNewPassword( auth.pendingPasswordUser, newPassword )
+			return api.auth.completeNewPassword( api.auth.pendingPasswordUser, newPassword )
 				.then( response => {
 					let credentials = {
-						email: auth.pendingPasswordUser.challengeParam.userAttributes.email,
+						email: api.auth.pendingPasswordUser.challengeParam.userAttributes.email,
 						password: newPassword
 					};
-					delete auth.pendingPasswordUser;
-					return handleLoginResponse( store, api, auth, response, credentials )
+					delete api.auth.pendingPasswordUser;
+					return handleLoginResponse( store, api, response, credentials )
 				})
 				.catch( err => {
 					console.error( err );
@@ -71,11 +71,13 @@ export default function( store, api, auth ){
 		},
 		
 		logout: async function logout() {
-			return await auth.logout()
+			return await api.auth.logout()
 				.then( () => {
-					store.account = false;
-					store.loginStatus = 'OUT';
-					store.loginLoading = false;
+					Object.keys( store ).forEach( key => {
+						if( typeof store[key] === 'object' ){
+							store[key] = {};
+						}
+					});
 				})
 			;
 		}
@@ -90,7 +92,7 @@ export default function( store, api, auth ){
  * @param {*} response The response data from a login request
  * @returns `true` if the login succeeded, the error object otherwise
  */
-async function handleLoginResponse(store, api, auth, result, credentials) {
+async function handleLoginResponse(store, api, result, credentials) {
 	if (!result) {
 		store.user = false;
 		endLogin(store, 'OUT');
@@ -106,7 +108,7 @@ async function handleLoginResponse(store, api, auth, result, credentials) {
 			store.pendingVerifyUser = credentials;
 		}
 		else if (result.error === 'NewPasswordRequired' ) {
-			auth.pendingPasswordUser = credentials.email;
+			api.auth.pendingPasswordUser = credentials.email;
 		}
 
 		return result;
@@ -114,11 +116,9 @@ async function handleLoginResponse(store, api, auth, result, credentials) {
 
 	endLogin(store, 'IN');
 
-	api.setCredentials( result );
-
 	store.user = {
-		id: result.id,
-		email: result.email
+		id: result.user.id,
+		email: result.user.email
 	}
 
 	return store.user;
