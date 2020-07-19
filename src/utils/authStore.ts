@@ -12,7 +12,7 @@ export default {
 				try {
 					let credentials = JSON.parse(cached);
 					// This will clean up old sessions. DELETE when old version login get deprecated
-					if( !credentials.authToken ){
+					if( !credentials.authHeader ){
 						this.clearCache();
 						return;
 					}

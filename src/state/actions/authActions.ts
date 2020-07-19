@@ -1,4 +1,4 @@
-export default function( store, api ){	
+export default function (store, api, actions ){	
 	if( store.account === undefined ){
 		console.log('Starting auth actions');
 
@@ -12,7 +12,7 @@ export default function( store, api ){
     login: async function(email, password) {
 			store.loginLoading = true;
 			return api.login( email, password ).then( response => {
-				return handleLoginResponse( store, api, response, {email, password} );
+				return handleLoginResponse( store, api, actions, response, {email, password} );
 			});
     },
 
@@ -20,18 +20,18 @@ export default function( store, api ){
 			store.loginLoading = true
 			store.federatedLoginLoading = true;
 
-			return await handleLoginResponse(store, api, await api.auth.federatedLogin(), null);
+			return await handleLoginResponse(store, api, actions, await api.auth.federatedLogin(), null);
 		},
 		
 		register: async function register( email, password ){
 			store.loginLoading = true;
-      return await handleLoginResponse( store, api, await api.auth.register( email, password ), {email,password}	);
+      return await handleLoginResponse( store, api, actions, await api.auth.register( email, password ), {email,password}	);
 		},
 
 		verifyAccount: async function verifyAccount( email, code ){
 			store.loginLoading = true;
 			const password = store.pendingVerifyUser && store.pendingVerifyUser.password;
-			return await handleLoginResponse( store, api, await api.auth.verifyAccount( email, password, code ), store.pendingVerifyUser );
+			return await handleLoginResponse( store, api, actions, await api.auth.verifyAccount( email, password, code ), store.pendingVerifyUser );
 		},
 
 		resendVerificationEmail: function resendVerificationEmail( email ){
@@ -46,7 +46,7 @@ export default function( store, api ){
 			store.loginLoading = true;
 			return api.auth.resetPassword( email, code, newPassword )
 				.then( () => api.login( email, newPassword ) )
-				.then( loginRes => handleLoginResponse( store, api, loginRes, {email, newPassword} ) )
+				.then( loginRes => handleLoginResponse( store, api, actions, loginRes, {email, newPassword} ) )
 				.catch( err => {
 					console.error( err );
 				})
@@ -62,7 +62,7 @@ export default function( store, api ){
 						password: newPassword
 					};
 					delete api.auth.pendingPasswordUser;
-					return handleLoginResponse( store, api, response, credentials )
+					return handleLoginResponse( store, api, actions, response, credentials )
 				})
 				.catch( err => {
 					console.error( err );
@@ -92,7 +92,7 @@ export default function( store, api ){
  * @param {*} response The response data from a login request
  * @returns `true` if the login succeeded, the error object otherwise
  */
-async function handleLoginResponse(store, api, result, credentials) {
+async function handleLoginResponse(store, api, actions, result, credentials) {
 	if (!result) {
 		store.user = false;
 		endLogin(store, 'OUT');
@@ -114,14 +114,21 @@ async function handleLoginResponse(store, api, result, credentials) {
 		return result;
 	}
 
-	endLogin(store, 'IN');
+	console.log('ACTIONS', actions);
 
-	store.user = {
+	let user = {
 		id: result.user.id,
 		email: result.user.email
 	}
 
-	return store.user;
+	// We are in, load account
+	return actions.account.loadUserAccount( user )
+		.then( () => {
+			endLogin(store, 'IN');
+			store.user = user;
+			return store.user;
+		})
+	;	
 }
 
 function endLogin( store, loginStatus ){

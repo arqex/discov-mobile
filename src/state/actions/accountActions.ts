@@ -60,11 +60,22 @@ export default function (store, api) {
 			;
 		},
 
-		loadUserAccount( ){
+		loadUserAccount( user? ){
+			store.accountStatus = {
+				loading: true,
+				error: false
+			};
+
+			let userId = user ? user.id : storeService.getUserId();
+
 			return api.gql.getAccount( actionService.userAccountFields )
-				.run( storeService.getUserId() )
+				.run( userId )
 				.then( account => {
 					if (!account.error) {
+						store.accountStatus = {
+							loading: false,
+							error: false
+						}
 						storeUserAccount(store, account);
 					}
 					else if( account.error.name !== 'not_found' ){
@@ -73,6 +84,11 @@ export default function (store, api) {
 							on: 'loadUserAccount',
 							userId: storeService.getUserId(),
 							...account.error
+						};
+
+						store.accountStatus = {
+							loading: false,
+							error: account.error
 						};
 
 						throw error;

@@ -1,6 +1,6 @@
 
 /// <reference path="../types/custom.d.ts" />
-import React, {Component} from 'react';
+import * as React from 'react';
 import { StyleSheet, View, BackHandler, StatusBar, Platform, AppState } from 'react-native';
 import codePush from "react-native-code-push";
 import { dataService } from './services/data.service';
@@ -18,9 +18,9 @@ import { Modal } from './components';
 
 globalThis.gql_debug = true;
 
-class Root extends Component {
+class Root extends React.Component {
   state = {
-		showingLoading: this.isLoading( dataService.getStore() ),
+		showingLoading: this.isLoading(),
 		authenticated: false,
 		isLogin: true,
 		isVerify: false,
@@ -34,65 +34,59 @@ class Root extends Component {
 	federatedLoginLoading = false;
 	loadingTimer: any = false;
 	discoveriesPopulated: any = false;
+	unmounted: boolean = false;
 
 	constructor(props) {
 		super(props);
-		this.initialize();
 		this.navigator = React.createRef();
 	}
 
-  render() {   
-		let store = dataService.getStore();
-		let loadingLayer;
+	render() {
+		return (
+			<View style={styles.container}>
+				<StatusBar animated barStyle={this.getStatusBarStyle()} />
+				{ this.renderLoadingLayer() }
+				{ this.renderNavigator() }
+				<Modal onOpen={this._onModalOpen} onClose={this._onModalClose} />
+			</View>
+		);
+	}
 
-		if ( this.state.showingLoading ) {
-			loadingLayer = this.renderLoading( store );
-
-			if(this.isLoading(store)) {
-				return (
-					<View style={styles.container}>
-						<StatusBar animated barStyle={this.getStatusBarStyle()} />
-						{loadingLayer}
-					</View>
-				);
-			}
+	renderLoadingLayer() {
+		if( this.state.showingLoading ) {
+			return <RootLoading finished={ !this.isLoading() } />
 		}
 		else {
-			console.log('Not showing loading anymore');
+			console.log('Stop renderng');
 		}
+	}
 
-		// console.log( '^*^*^*^*^ ACTIONS', this.actions.story );
+	renderNavigator() {
+		if( this.state.showingLoading && this.isLoading() ) return;
 
-    return (
-      <View style={ styles.container }>
-				<StatusBar animated barStyle={ this.getStatusBarStyle() } />
-				{ loadingLayer }
-        <Navigator store={ store }
-          actions={ this.actions }
-					ref={ this.navigator }
-					routes={ routes }
-					interceptor={ this.interceptor }
-					strategy="node"
-					DrawerComponent={ this.getDrawerComponent() }
-					drawerInitiallyOpen={ this.isDrawerInitiallyOpen() }
-          transitions={{0: screenTransition}} />
-				<Modal onOpen={ this._onModalOpen } onClose={ this._onModalClose } />
-      </View>
-    );
-  }
+		return (
+			<Navigator store={ dataService.getStore() }
+				actions={dataService.getActions()}
+				ref={this.navigator}
+				routes={routes}
+				interceptor={this.interceptor}
+				strategy="node"
+				DrawerComponent={ this.getDrawerComponent() }
+				drawerInitiallyOpen={ this.canSeeDrawer() }
+				transitions={{ 0: screenTransition }} />
+		)
+	}
 
-  renderLoading( store ) {
-    return (
-			<RootLoading finished={ !this.isLoading( store ) } />
-    );
+	canSeeDrawer() {
+		let can = this.isLoggedIn() && !storeService.needOnboarding();
+		console.log( 'Can drawer', can );
+		return can;
 	}
 	
 	getDrawerComponent() {
-		if (!this.isLoggedIn()) return;
-
-		if( storeService.needOnboarding() ) return;
-
-		return Menu;
+		if( this.canSeeDrawer() ){
+			return Menu;
+		}
 	}
 
 	isOnboarding() {
@@ -104,10 +98,8 @@ class Root extends Component {
 		initErrorHandler(router);
 
     let update = () => {
-      this.forceUpdate();
+			if( !this.unmounted ) this.forceUpdate();
 		}
-
-		this.populateMethodsFromService();
 
 		let store = dataService.getStore();
 
@@ -141,31 +133,18 @@ class Root extends Component {
 		});
 	}
 
-	isLoading( store ) {
-		let status = dataService.getLoginStatus();
-
-		if( status === 'OUT' ){
-			return false;
-		}
-
-		if( status === 'LOADING' ){
-			console.log('Loading because of loging in');
-			return true;
-		}
-
-		const account = store.user.account;
-		return !account;
+	isLoading() {
+		return dataService.getLoginStatus() === 'LOADING';
 	}
 
 	_onAuthChange = status => {
 		if (status === 'IN') {
-			this.populateMethodsFromService();
-
+	
 			// We are poblating discoveries to show the
 			// unseen counter in the menu
 			if ( !this.discoveriesPopulated ){
 				this.discoveriesPopulated = true;
-				this.actions.discovery.loadUserDiscoveries();
+				dataService.getActions().discovery.loadUserDiscoveries();
 			}
 
 			// We need to know if we have access to the location
@@ -173,7 +152,7 @@ class Root extends Component {
 		}
 		else if( status === 'OUT' ) {
 			this.discoveriesPopulated = false;
-			this.populateMethodsFromService();
+	
 		}
 
 		this.forceUpdate();
@@ -196,18 +175,21 @@ class Root extends Component {
 		);
 	}
 
-	populateMethodsFromService(){
-		this.api = dataService.getApiClient();
-		this.actions = dataService.getActions();
-	}
-
 	componentDidCatch(error, errorInfo) {
 		console.log( errorInfo );
 		errorHandler(error, true);
 	}
 
-	componentDidUpdate(){
-		if( !this.loadingTimer && this.state.showingLoading && !this.isLoading( dataService.getStore() ) ){
+	componentDidMount() {
+		this.initialize();
+	}
+
+	componentDidUpdate( prevProps, prevState ){
+		this.checkAccountLoaded();
+
+		this.checkResetLoading( prevState );
+
+		if( !this.loadingTimer && this.state.showingLoading && !this.isLoading() ){
 			console.log('### Loading finished');
 			
 			this.loadingTimer = setTimeout( () => {
@@ -218,8 +200,27 @@ class Root extends Component {
 		}
 	}
 
+	componentWillUnmount() {
+		this.unmounted = true;
+	}
+
+	checkAccountLoaded() {
+		if ( this.isLoading() && dataService.getAuthStatus() === 'IN' ) {
+			const { loading, error } = dataService.getStore().accountStatus;
+			if ( !loading && !error ) {
+				dataService.getActions().account.loadUserAccount()
+			}
+		}
+	}
+
+	checkResetLoading( prevState ) {
+		if( !prevState.showingLoading && dataService.getLoginStatus() === 'LOADING' ){
+			this.setState({showingLoading: true});
+		}
+	}
+
 	isLoggedIn() {
-		return dataService.getStore().loginStatus === 'IN';
+		return dataService.getLoginStatus() === 'IN';
 	}
 
 	getStatusBarStyle() {

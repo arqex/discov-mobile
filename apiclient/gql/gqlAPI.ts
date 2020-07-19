@@ -80,6 +80,11 @@ export class GqlApi extends GqlMethods {
       },
 
       run: async function( param: any ){
+        if (!config.endpoint || !config.endpoint.startsWith('http')) {
+          console.log('GQL ENDPOINT NOT SET', statement);
+          return Promise.reject('GQL ENDPOINT NOT SET');
+        }
+
         let body = this.getBody(param);
 
         API.configure({

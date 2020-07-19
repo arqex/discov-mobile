@@ -3,7 +3,6 @@ import { View, StyleSheet, Dimensions, ViewPagerAndroidBase } from 'react-native
 import { Bg, Logo, Button, Avatar, Text, Wrapper, styleVars, Touchable } from '../components'
 import { ScreenProps } from '../utils/ScreenProps';
 import { getStatusbarHeight } from '../components/utils/getStatusbarHeight';
-import RootLoading from '../RootLoading';
 import storeService from '../state/store.service';
 import '../utils/i18n';
 
@@ -14,15 +13,15 @@ export default class Menu extends Component<ScreenProps> {
 	}
 
 	render() {
-		let widthStyle = {
-			width: Dimensions.get('window').width
-		};
+		let containerStyles = [
+			styles.container,
+			{ width: Dimensions.get('window').width }
+		];
 
 		let user = this.props.store.user;
 		if( !user || !user.account ){
 			return (
-				<View style={ [styles.container, widthStyle] }>
-					<RootLoading finished={false} />
+				<View style={ containerStyles }>
 				</View>
 			);
 		}
@@ -33,7 +32,7 @@ export default class Menu extends Component<ScreenProps> {
 
 		return (
 			<Bg type="red">
-				<Wrapper screenPadding style={ [styles.container, widthStyle] }>
+				<Wrapper screenPadding style={ containerStyles }>
 					<View style={ [styles.topBar, {paddingTop: getStatusbarHeight()}] }>
 						<Logo textColor={ styleVars.colors.blueText } />
 						<Button type="icon" icon="more-horiz" color="secondary"

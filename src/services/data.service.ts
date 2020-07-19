@@ -35,6 +35,9 @@ export const dataService = {
 					console.log('CURRENT USER', initResult.user);
 					setAuthenticatedUser( store, initResult.user );
 				}
+
+				console.log('DATA INIT FINISHED');
+				store.apiInitialized = true;
 			})
 			.catch( error => {
 				console.log( 'DATA INIT ERROR', error );
@@ -63,10 +66,12 @@ export const dataService = {
 	getActions() {
 		return actions;
 	},
+	getAuthStatus() {
+		if (!apiClient) return 'LOADING';
+		return apiClient.getAuthStatus();
+	},
 	getLoginStatus() {
-		if( !apiClient ) return 'LOADING';
-		
-		const authStatus = apiClient.getAuthStatus();
+		const authStatus = this.getAuthStatus();
 
 		if (authStatus !== 'IN') {
 			lastLoginStatus = authStatus;

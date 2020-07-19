@@ -22,7 +22,7 @@ export default function actionLoader( store, apiClient ){
   let actions = {}
 
   Object.keys( actionNames ).forEach( ac => {
-    actions[ac] = actionNames[ac]( store, apiClient );
+    actions[ac] = actionNames[ac]( store, apiClient, actions );
   });
 
   return actions;

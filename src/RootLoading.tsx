@@ -10,11 +10,18 @@ interface RootLoadingProps {
 export default class RootLoading extends React.Component<RootLoadingProps> {
   position = new Animated.Value(0);
 
+  constructor(props) {
+    super(props);
+    console.log('Mounting');
+  }
+
   render() {
     let containerStyles = [
       styles.loadingContainer,
       { transform: [{translateX: this.position}] }
     ];
+
+    console.log(this._reactInternalFiber.return.tag);
     
     console.log('Root loading redering. Finished: ' + this.props.finished);
 
@@ -43,6 +50,10 @@ export default class RootLoading extends React.Component<RootLoadingProps> {
         }).start();
       }, 200)
     }
+  }
+
+  componentWillUnmount() {
+    console.log('Unmounting loading');
   }
 }
 

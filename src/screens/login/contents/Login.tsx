@@ -93,12 +93,12 @@ export default class Login extends React.Component<ScreenProps> {
 		Keyboard.dismiss();
 		this.setState({ loading: true });
 
-		this.props.actions.auth.login(this.state.email, this.state.password, this._afterLogin)
+		this.props.actions.auth.login(this.state.email, this.state.password )
 			.then(this._onLoginEnd)
 			.catch(err => {
 				console.error(err)
 			})
-			;
+		;
 	}
 
 	_federatedLogin = () => {
@@ -111,7 +111,7 @@ export default class Login extends React.Component<ScreenProps> {
 			.catch(err => {
 				console.error(err)
 			})
-			;
+		;
 	}
 
 	_onLoginEnd = res => {

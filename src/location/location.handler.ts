@@ -9,7 +9,7 @@
 
 import { getDistance } from '../utils/maps';
 import storeService from '../state/store.service';
-import { actions } from '../state/appState';
+import { dataService } from '../services/data.service';
 import notifications from '../utils/notifications';
 import geofenceService from './geofence.service';
 
@@ -28,7 +28,13 @@ export default {
     storeService.storeCurrentPosition( location );
 
     // Check if we have new discoveries
-    checkDiscoveries( location, setTrackingMode );
+    let apiClient = dataService.getApiClient();
+    if (apiClient && apiClient.getAuthStatus() === 'IN') {
+      checkDiscoveries(location, setTrackingMode);
+    }
+    else {
+      console.log('----- API client not authenticated on location');
+    }
   },
 
   resetFence(){
@@ -80,7 +86,7 @@ function checkDiscoveries( location, setTrackingMode ){
   // in some time
   bufferLocation = location;
 
-  return actions.discovery.discoverAround( location )
+  return dataService.getActions().discovery.discoverAround( location )
     .then( res => onDiscoveryResponse( res, location, setTrackingMode ) )
     .then( () => {
       // No more updates in some time
