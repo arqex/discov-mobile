@@ -1,7 +1,6 @@
 let actions, store;
 
 export const loginService = {
-
 	init(ac, st) {
 		actions = ac;
 		store = st;

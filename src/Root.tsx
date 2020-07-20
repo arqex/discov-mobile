@@ -37,6 +37,7 @@ class Root extends React.Component {
 	constructor(props) {
 		super(props);
 		this.navigator = React.createRef();
+		this.interceptor = createInterceptor(null, dataService);
 	}
 
 	render() {
@@ -57,7 +58,7 @@ class Root extends React.Component {
 	}
 
 	renderNavigator() {
-		if( this.state.showingLoading && this.isLoading() ) return;
+		// if( this.state.showingLoading && this.isLoading() ) return;
 
 		return (
 			<Navigator store={ dataService.getStore() }
@@ -73,7 +74,19 @@ class Root extends React.Component {
 	}
 
 	canSeeDrawer() {
-		return this.isLoggedIn() && !storeService.needOnboarding();
+		let can = (
+			this.isLoggedIn() &&
+			!storeService.needOnboarding() &&
+			!this.isOnboardingRoute()
+		);
+
+		console.log( can );
+		return can;
+	}
+
+	isOnboardingRoute() {
+		let path = router.location && router.location.pathname;
+		return path && path.startsWith('/onboarding');
 	}
 	
 	getDrawerComponent() {
@@ -85,6 +98,8 @@ class Root extends React.Component {
 	initialize(){
 		initErrorHandler(router);
 
+		dataService.init().then( this.firstNavigation );
+
     let update = () => {
 			if( !this.unmounted ) this.forceUpdate();
 		}
@@ -93,8 +108,6 @@ class Root extends React.Component {
 
 		// Refresh on data change
 		store.on('state', update);
-		
-		this.interceptor = createInterceptor(null, dataService);
 
 		if (Platform.OS === 'android') {
 			StatusBar.setBackgroundColor("rgba(0,0,0,0)")
@@ -144,8 +157,8 @@ class Root extends React.Component {
 	}
 
 	componentDidUpdate( prevProps, prevState ){
-		this.checkAccountLoaded();
 
+		this.checkAccountLoaded();
 		this.checkResetLoading( prevState );
 
 		if( !this.loadingTimer && this.state.showingLoading && !this.isLoading() ){
@@ -165,13 +178,15 @@ class Root extends React.Component {
 		if ( this.isLoading() && dataService.getAuthStatus() === 'IN' ) {
 			const { loading, error } = dataService.getStore().accountStatus;
 			if ( !loading && !error ) {
-				dataService.getActions().account.loadUserAccount()
+				dataService.getActions().account.loadOrCreateAccount()
+					.then( this.firstNavigation )
+				;
 			}
 		}
 	}
 
 	checkResetLoading( prevState ) {
-		if( !prevState.showingLoading && dataService.getLoginStatus() === 'LOADING' ){
+		if (!prevState.showingLoading && dataService.getLoginStatus() === 'LOADING') {
 			this.setState({showingLoading: true});
 		}
 	}
@@ -185,6 +200,11 @@ class Root extends React.Component {
 			"dark-content" :
 			"light-content"
 		;
+	}
+
+	firstNavigation() {
+		// Let the interceptor get the user to the proper route
+		router.navigate('/');
 	}
 }
 

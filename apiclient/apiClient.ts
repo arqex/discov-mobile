@@ -4,7 +4,8 @@ import { GqlApi, GqlConfig } from './gql/gqlAPI';
 interface ApiUser {
 	id: string
 	email: string
-	isTestUser: boolean
+	isTestUser: boolean,
+	userConfirmed: boolean
 }
 interface ApiClientCredentials {
 	user: ApiUser
@@ -76,15 +77,19 @@ export class ApiClient {
 	login( username, password ): Promise<ApiLoginResult> {
 		if( this.loginPromise ) return this.loginPromise;
 
+		// log the gql api out
+		this.gql.setConfig(this._getGqlConfig());
+
 		this.loginPromise = this.auth.login( username, password )
 			.then( result => {
 				delete this.loginPromise;
 
-				if( !result.credentials ){
+				// This might authenticate the gql or clean the credentials on error
+				this.gql.setConfig( this._getGqlConfig(result.credentials) );
+
+				if(!result.credentials){
 					return result;
 				}
-
-				this.gql.setConfig( this._getGqlConfig(result.credentials) );
 				return {
 					user: result.credentials.user
 				}
@@ -92,6 +97,43 @@ export class ApiClient {
 		;
 
 		return this.loginPromise;
+	}
+
+	register( email, password ) {
+		// log the gql api out
+		this.gql.setConfig(this._getGqlConfig());
+		return this.auth.register(email, password)
+			.then(result => {
+				// This might authenticate the gql or clean the credentials on error
+				this.gql.setConfig(this._getGqlConfig(result.credentials));
+				return result;
+			})
+		;
+	}
+
+	verifyAccount(email, password, code) {
+
+		// log the gql api out
+		this.gql.setConfig(this._getGqlConfig());
+		return this.auth.verifyAccount( email, password, code )
+			.then(result => {
+				// This might authenticate the gql or clean the credentials on error
+				this.gql.setConfig( this._getGqlConfig(result.credentials) );
+				return result;
+			})
+		;
+	}
+
+	resetPassword(email, code, newPassword) {
+		// log the gql api out
+		this.gql.setConfig(this._getGqlConfig());
+		return this.auth.resetPassword(email, code, newPassword)
+			.then( result => {
+				// This might authenticate the gql or clean the credentials on error
+				this.gql.setConfig(this._getGqlConfig(result.credentials));
+				return result;
+			})
+		;
 	}
 
 	logout(){

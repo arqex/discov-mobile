@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { KeyboardAvoidingView, View, StyleSheet, Animated, Dimensions, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, Animated, Text } from 'react-native';
 import { Bg, Logo } from '../../components';
 import Welcome from './contents/Welcome';
 import Login from './contents/Login';

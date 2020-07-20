@@ -97,6 +97,18 @@ export default function (store, api) {
 			;
 		},
 
+		loadOrCreateAccount(){
+			return this.loadUserAccount()
+				.then( response => {
+					if( !response.error ) return response;
+
+					if( response.error.name === 'not_found' ){
+						return this.createAccount();
+					}
+				})
+			;
+		},
+
 		load( accountId ){
 			if( !peerBatchLoader ){
 				initPeerLoader();

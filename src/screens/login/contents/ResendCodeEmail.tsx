@@ -69,7 +69,7 @@ export default class ResendCodeEmail extends React.Component<ScreenProps> {
     this.props.actions.auth.resendVerificationEmail( email )
       .then( res => {
 				this.setState({loading: false});
-        this.props.router.navigate('/completeRegistration&email=' + email);
+        this.props.router.navigate('/auth?content=completeRegistration&email=' + email);
       })
     ;
 	}

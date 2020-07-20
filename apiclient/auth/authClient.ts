@@ -6,7 +6,8 @@ import { uuidTo64 } from "../uuid";
 interface AuthClientUser {
 	id: string,
 	email: string,
-	isTestUser: boolean
+	isTestUser: boolean,
+	userConfirmed: boolean
 }
 
 interface AuthClientCredentials {
@@ -81,7 +82,8 @@ export class AuthClient {
 								user: {
 									id: 'ac' + uuidTo64(idToken.payload.sub),
 									email: idToken.payload.email,
-									isTestUser: false
+									isTestUser: false,
+									userConfirmed: idToken.payload.email_verified
 								},
 								authHeader: idToken.getJwtToken()
 							}
@@ -108,6 +110,7 @@ export class AuthClient {
 					id: 'ac' + password.replace('ApiToken', ''),
 					email,
 					isTestUser: true,
+					userConfirmed: true
 				},
 				authHeader: `Bearer ${password}`
 			}
@@ -129,6 +132,10 @@ export class AuthClient {
 				return this.getCachedCredentials().then( credentials => {
 					return {credentials};
 				});
+			})
+			.catch( error => {
+				this.status = 'OUT';
+				return getLoginResponseError({error});
 			})
 		;
 	}
@@ -207,13 +214,14 @@ export class AuthClient {
 	}
 
 	async resetPassword(email, code, newPassword) {
-		try {
-			let user = await Auth.forgotPasswordSubmit(email, code, newPassword);
-			return { error: false, user };
-		}
-		catch (error) {
-			return { error }
-		}
+		return Auth.forgotPasswordSubmit(email, code, newPassword)
+			.then( () => {
+				return this.login(email, newPassword);
+			})
+			.catch (error => {
+				return { error }
+			})
+		;
 	}
 
 	updateUserAttribute(attributes) {
@@ -239,14 +247,7 @@ export class AuthClient {
 			})
 			.then( () => {
 				this.status = 'IN';
-
-				// We are coming from the login flow, and the user is out
-				if( password ){
-					return this.login( email, password );
-				}
-
-				// User is logged in because we come from the register flow
-				return this.getCachedCredentials();
+				return this.login( email, password );
 			})
 			.catch( error => {
 				this.status = 'OUT';

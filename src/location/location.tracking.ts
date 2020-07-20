@@ -24,13 +24,13 @@ function init(){
   // if( initialized ) return;
   initialized = true;
   console.log('HEeEEEEETEY INIT!');
-  backgroundFetch.init(onBgFetchEvent);
+  // backgroundFetch.init(onBgFetchEvent);
   addEventListeners();
 
   dataService.init().then( () => {
     // locationService.setTaskName( LOCATION_TASK );
     // geofenceService.setTaskName( GEOFENCING_TASK );
-    setTrackingMode(currentTrackingMode);
+    // setTrackingMode(currentTrackingMode);
     console.log('HEeEEEEETEY INIT FINISHED!');
   });
 }

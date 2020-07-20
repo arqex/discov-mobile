@@ -25,13 +25,17 @@ export default function (store, api, actions ){
 		
 		register: async function register( email, password ){
 			store.loginLoading = true;
-      return await handleLoginResponse( store, api, actions, await api.auth.register( email, password ), {email,password}	);
+      return await handleLoginResponse( store, api, actions, await api.register( email, password ), {email,password}	);
 		},
 
 		verifyAccount: async function verifyAccount( email, code ){
 			store.loginLoading = true;
 			const password = store.pendingVerifyUser && store.pendingVerifyUser.password;
-			return await handleLoginResponse( store, api, actions, await api.auth.verifyAccount( email, password, code ), store.pendingVerifyUser );
+			return api.verifyAccount( email, password, code )
+				.then( result => {
+					return handleLoginResponse(store, api, actions, result.credentials || result, store.pendingVerifyUser);
+				})
+			;
 		},
 
 		resendVerificationEmail: function resendVerificationEmail( email ){
@@ -44,9 +48,9 @@ export default function (store, api, actions ){
 
 		resetPassword: async function resetPassword( email, code, newPassword ){
 			store.loginLoading = true;
-			return api.auth.resetPassword( email, code, newPassword )
+			return api.resetPassword( email, code, newPassword )
 				.then( () => api.login( email, newPassword ) )
-				.then( loginRes => handleLoginResponse( store, api, actions, loginRes, {email, newPassword} ) )
+				.then( loginRes => handleLoginResponse( store, api, actions, loginRes.credentials || loginRes, {email, newPassword} ) )
 				.catch( err => {
 					console.error( err );
 				})
@@ -104,17 +108,18 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 		endLogin(store, 'OUT');
 
 		// Not confirmed coming from login
-		if(result.error === "UserNotConfirmedException" ) {
+		if (result.error === "UserNotConfirmedException") {
 			store.pendingVerifyUser = credentials;
 		}
-		else if (result.error === 'NewPasswordRequired' ) {
+		else if (result.error === 'NewPasswordRequired') {
 			api.auth.pendingPasswordUser = credentials.email;
 		}
 
-		return result;
+		return {
+			...result,
+			email: credentials.email
+		};
 	}
-
-	
 
 	store.user = {
 		id: result.user.id,
@@ -122,7 +127,7 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 	};
 
 	if ( result.user.userConfirmed ) {
-		return actions.account.loadUserAccount()
+		return actions.account.loadOrCreateAccount()
 			.then( () => {
 				endLogin(store, 'IN');
 				return store.user;
@@ -130,7 +135,11 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 		;	
 	}
 	else {
-		store.pendingVerifyUser = credentials;
+		store.pendingVerifyUser = {...credentials};
+		return {
+			error: 'UserNotConfirmedException',
+			email: credentials.email
+		};
 	}
 }
 
