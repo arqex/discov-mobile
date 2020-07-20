@@ -60,16 +60,14 @@ export default function (store, api) {
 			;
 		},
 
-		loadUserAccount( user? ){
+		loadUserAccount(){
 			store.accountStatus = {
 				loading: true,
 				error: false
 			};
 
-			let userId = user ? user.id : storeService.getUserId();
-
 			return api.gql.getAccount( actionService.userAccountFields )
-				.run( userId )
+				.run( storeService.getUserId() )
 				.then( account => {
 					if (!account.error) {
 						store.accountStatus = {

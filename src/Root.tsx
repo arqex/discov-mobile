@@ -11,8 +11,6 @@ import Menu from './screens/Menu';
 import RootLoading from './RootLoading';
 import notifications from './utils/notifications';
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
-
-import locationTracking from  './location/location.tracking';
 import storeService from './state/store.service';
 import { Modal } from './components';
 
@@ -56,9 +54,6 @@ class Root extends React.Component {
 		if( this.state.showingLoading ) {
 			return <RootLoading finished={ !this.isLoading() } />
 		}
-		else {
-			console.log('Stop renderng');
-		}
 	}
 
 	renderNavigator() {
@@ -78,20 +73,13 @@ class Root extends React.Component {
 	}
 
 	canSeeDrawer() {
-		let can = this.isLoggedIn() && !storeService.needOnboarding();
-		console.log( 'Can drawer', can );
-		return can;
+		return this.isLoggedIn() && !storeService.needOnboarding();
 	}
 	
 	getDrawerComponent() {
 		if( this.canSeeDrawer() ){
 			return Menu;
 		}
-	}
-
-	isOnboarding() {
-		// console.log( router.location );
-		// return router.location.pathname === '/onboarding';
 	}
 	
 	initialize(){
@@ -105,9 +93,6 @@ class Root extends React.Component {
 
 		// Refresh on data change
 		store.on('state', update);
-
-		// Listen to status changes
-		dataService.addStatusListener( this._onAuthChange );
 		
 		this.interceptor = createInterceptor(null, dataService);
 
@@ -137,27 +122,6 @@ class Root extends React.Component {
 		return dataService.getLoginStatus() === 'LOADING';
 	}
 
-	_onAuthChange = status => {
-		if (status === 'IN') {
-	
-			// We are poblating discoveries to show the
-			// unseen counter in the menu
-			if ( !this.discoveriesPopulated ){
-				this.discoveriesPopulated = true;
-				dataService.getActions().discovery.loadUserDiscoveries();
-			}
-
-			// We need to know if we have access to the location
-			locationTracking.isPermissionGranted();
-		}
-		else if( status === 'OUT' ) {
-			this.discoveriesPopulated = false;
-	
-		}
-
-		this.forceUpdate();
-	}
-
 	_onModalOpen = () => {
 		this.setState({modalOpen: true});
 	}
@@ -167,12 +131,7 @@ class Root extends React.Component {
 	}
 
 	isDrawerInitiallyOpen() {
-		let path = router.location && router.location.pathname;
-		return (
-			this.isLoggedIn() &&
-			!storeService.needOnboarding() &&
-			(!path || !path.startsWith('/onboarding') )
-		);
+		return this.isLoggedIn() && !storeService.needOnboarding();
 	}
 
 	componentDidCatch(error, errorInfo) {
@@ -190,10 +149,8 @@ class Root extends React.Component {
 		this.checkResetLoading( prevState );
 
 		if( !this.loadingTimer && this.state.showingLoading && !this.isLoading() ){
-			console.log('### Loading finished');
-			
+			// Stop rendering the loading layer after is animated out
 			this.loadingTimer = setTimeout( () => {
-				console.log('### Stop showing loading');
 				this.setState({ showingLoading: false });
 				this.loadingTimer = false;
 			}, 500);

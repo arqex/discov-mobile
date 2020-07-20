@@ -71,7 +71,7 @@ export default function (store, api, actions ){
 		},
 		
 		logout: async function logout() {
-			return await api.auth.logout()
+			return await api.logout()
 				.then( () => {
 					Object.keys( store ).forEach( key => {
 						if( typeof store[key] === 'object' ){
@@ -104,7 +104,7 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 		endLogin(store, 'OUT');
 
 		// Not confirmed coming from login
-		if (result.error === "UserNotConfirmedException") {
+		if(result.error === "UserNotConfirmedException" ) {
 			store.pendingVerifyUser = credentials;
 		}
 		else if (result.error === 'NewPasswordRequired' ) {
@@ -114,21 +114,24 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 		return result;
 	}
 
-	console.log('ACTIONS', actions);
+	
 
-	let user = {
+	store.user = {
 		id: result.user.id,
 		email: result.user.email
-	}
+	};
 
-	// We are in, load account
-	return actions.account.loadUserAccount( user )
-		.then( () => {
-			endLogin(store, 'IN');
-			store.user = user;
-			return store.user;
-		})
-	;	
+	if ( result.user.userConfirmed ) {
+		return actions.account.loadUserAccount()
+			.then( () => {
+				endLogin(store, 'IN');
+				return store.user;
+			})
+		;	
+	}
+	else {
+		store.pendingVerifyUser = credentials;
+	}
 }
 
 function endLogin( store, loginStatus ){

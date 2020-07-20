@@ -16,6 +16,7 @@ export default class Login extends React.Component<ScreenProps> {
 	}
 
 	secondInput: any = false
+	unmounted: boolean = false
 
 	render() {
 		return (
@@ -115,7 +116,9 @@ export default class Login extends React.Component<ScreenProps> {
 	}
 
 	_onLoginEnd = res => {
-		this.setState({ loading: false, googleLoading: false });
+		if( !this.unmounted ){
+			this.setState({ loading: false, googleLoading: false });
+		}
 		let redirected = loginService.redirectOnLogin(res, this.props.router);
 		if (!redirected && res && res.error) {
 			this.alert(res.error.message);
@@ -159,6 +162,10 @@ export default class Login extends React.Component<ScreenProps> {
 		}
 
 		return false;
+	}
+
+	componentWillUnmount() {
+		this.unmounted = true;
 	}
 }
 
