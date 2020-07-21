@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageBackground, StyleSheet, Dimensions } from 'react-native';
+import { ImageBackground, StyleSheet } from 'react-native';
 
 const bgs = {
 	blue: require('./img/map-blue.png'),
@@ -14,7 +14,6 @@ interface BgProps {
 }
 
 const Bg = (props: BgProps) => {
-	let win = Dimensions.get('window');
 	let styles = [
 		{flex: 1}
 	];
@@ -42,5 +41,8 @@ Bg.defaultProps = {
 export default Bg;
 
 const styles = StyleSheet.create({
-	container: {}
+	container: {
+		flex: 1,
+		backgroundColor: '#fff'
+	}
 });

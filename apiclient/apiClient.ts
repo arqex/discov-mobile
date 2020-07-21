@@ -1,3 +1,15 @@
+/* 
+	The apiClient is the entry point to the API for the app.
+	It acts as a coordinator between:
+	- The authClient, the responsible to authenticate the user and get
+		the authentication header for making request to the graphql server.
+	- The gqlClient, the responsible to manage the user data from the 
+		graphql server.
+	The apiClient wrap the authentication methods from the authClient,
+	and pass the credentials to the gqlClient. It always return the current user
+	in their successful authentication calls
+*/
+
 import { AuthClient } from './auth/authClient';
 import { GqlApi, GqlConfig } from './gql/gqlAPI';
 
@@ -156,7 +168,7 @@ export class ApiClient {
 	// HELPERS
 	//////
 	_getGqlConfig( credentials?: ApiClientCredentials ): GqlConfig{
-		if( !credentials ){
+		if( !credentials || !credentials.authHeader || !credentials.user ){
 			return {
 				endpoint: 'NO_CREDENTIALS_SET',
 				credentials: {
