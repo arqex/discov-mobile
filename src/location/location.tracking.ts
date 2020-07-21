@@ -11,84 +11,88 @@ import { dataService } from '../services/data.service';
 import * as TaskManager from 'expo-task-manager';
 import geofenceService from './geofence.service';
 import backgroundFetch from './backgroundFetch.service';
+import store from '../state/store';
 // import geolocation from '@react-native-community/geolocation';
 
 const LOCATION_TASK = 'DISCOV_LOCATION';
 const GEOFENCING_TASK = 'DISCOV_GEOFENCE';
 
-let currentAppStatus: AppStateStatus = AppState.currentState;
-let currentTrackingMode: TrackingMode = 'active';
-
-let initialized = false;
-function init(){
-  // if( initialized ) return;
-  initialized = true;
-  console.log('HEeEEEEETEY INIT!');
-  // backgroundFetch.init(onBgFetchEvent);
-  addEventListeners();
-
-  dataService.init().then( () => {
-    // locationService.setTaskName( LOCATION_TASK );
-    // geofenceService.setTaskName( GEOFENCING_TASK );
-    // setTrackingMode(currentTrackingMode);
-    console.log('HEeEEEEETEY INIT FINISHED!');
-  });
-}
-init();
-
-
 // We need to register the task in the top level context
 // so this call can't be within the init function
 // The location service is the one how call this task when there is
 // a location available.
-TaskManager.defineTask( LOCATION_TASK, locationUpdate => {
+TaskManager.defineTask(LOCATION_TASK, locationUpdate => {
   console.log('Tracking location');
-  if( locationUpdate.error ) return console.log( locationUpdate.error );
+  if (locationUpdate.error) return console.log(locationUpdate.error);
 
   let locations = locationUpdate.data.locations;
-  console.log(`**** ${locations.length} NEW LOCATIONS` );
+  console.log(`**** ${locations.length} NEW LOCATIONS`);
 
   let location = locations[0];
-  if( !location ) return;
+  if (!location) return;
 
-  locationHandler.onLocation( location.coords, setTrackingMode );
+  locationHandler.onLocation(location.coords, setTrackingMode);
 });
 
 // We need also to register the geofence task
 let exiting = false;
-let exitingTimer:any = false;
-TaskManager.defineTask( GEOFENCING_TASK, event => {
+let exitingTimer: any = false;
+TaskManager.defineTask(GEOFENCING_TASK, event => {
   console.log('Geofence event', event.data);
-  if( event.error ) return console.warn( event.error );
+  if (event.error) return console.warn(event.error);
 
-  if( geofenceService.isExitEvent( event ) ){
+  if (geofenceService.isExitEvent(event)) {
     console.log('An exit event');
     exiting = true;
-    if( exitingTimer ){
-      clearTimeout( exitingTimer );
+    if (exitingTimer) {
+      clearTimeout(exitingTimer);
     }
-    setTimeout( () => {
+    setTimeout(() => {
       exitingTimer = false;
-      if( exiting ){
+      if (exiting) {
         exiting = false;
         console.log('destroying geofence');
         locationHandler.resetFence();
         setTrackingMode('active');
       }
-    }, 2000 );
+    }, 2000);
   }
   else {
     console.log('Not an exit event');
     // Cancel the exit if were exiting
     exiting = false;
   }
-}); 
+});
 
+locationService.setTaskName(LOCATION_TASK);
+geofenceService.setTaskName(GEOFENCING_TASK);
+
+function start() {
+  console.log('Starting backgound services');
+  isLocationReady().then( isReady => {
+    if( isReady ){
+      console.log('Location track start: OK');
+      backgroundFetch.init( onBgFetchEvent );
+      setTrackingMode('passive');
+    }
+    else {
+      let permissions = dataService.getStore().locationPermissions;
+      console.log('Location track start: NOT READY. Setting active mode', permissions);
+      locationService.setLocationMode('active', false);
+    }
+  });
+}
+// Try to start now
+start();
+
+function stop() {
+
+}
+
+let lastAppStatus = AppState.currentState;
 
 type TrackingMode = 'active' | 'passive';
 function setTrackingMode( mode:TrackingMode ){
-  currentTrackingMode = mode;
-  
   return isLocationReady()
     .then( isReady => {
       // Not having the permissions will make no change
@@ -100,19 +104,16 @@ function setTrackingMode( mode:TrackingMode ){
 }
 
 function isLocationReady() {
-  if( !isUserLoggedIn() ) return Promise.resolve(false);
+  return dataService.init().then( () => {
+    if (!isUserLoggedIn()) return false;
 
-  let promises = [
-    waitForBgTask(),
-    isPermissionGranted()
-  ];
-  
-  return Promise.all( promises ) 
-    .then( results => {
-      let permissionGranted = results[1];
-      return permissionGranted;
-    })
-  ;
+    return waitForBgTask().then( () => {
+      // We don't check real permissions here, because in
+      // the background task might not be granted
+      // If we had stored a position before, we are ok to continue
+      return storeService.getCurrentPosition().status === 'ok';
+    });
+  });
 }
 
 // If we are booting the app, there is a chance that the task is
@@ -152,12 +153,18 @@ function addEventListeners(){
   AppState.addEventListener('change', status => {
     console.log('---- APP GOES TO ' + (status === 'active' ? 'FOREGROUND' : 'BACKGROUND') );
 
-    if( status === currentAppStatus ) return;
-    currentAppStatus = status;
+    if( status === lastAppStatus || status === 'inactive' ) return;
 
-    setTrackingMode( currentTrackingMode );
+    let inFence = storeService.getFenceDistance() >= 0;
+    if( status === 'active' ){
+      setTrackingMode('passive');
+    }
+    else if( !inFence ){
+      setTrackingMode('active');
+    }
   });
 }
+addEventListeners();
 
 function requestPermissions(){
   return locationService.requestPermissions()

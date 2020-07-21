@@ -47,7 +47,6 @@ export default class MyStories extends Component<ScreenProps> {
 	}
 
 	componentDidMount() {
-		console.log('ACtions received', this.props.actions.story);
 		if( !this.getStories() ){
 			this.waitForActions().then(() => {
 				this.props.actions.story.loadUserStories();

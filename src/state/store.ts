@@ -12,7 +12,8 @@ let store = onstate({
 	followerGroups: {},
 	placesByLocation: {},
 	addressByLocation: {},
-	currentPosition: {}
+	currentPosition: {},
+	distanceFromOutOfFence: 0 // 0 means no discoveries
 })
 
 export default store;

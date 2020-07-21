@@ -12,7 +12,7 @@ export default class RootLoading extends React.Component<RootLoadingProps> {
 
   constructor(props) {
     super(props);
-    console.log('Mounting');
+    //console.log('Mounting');
   }
 
   render() {
@@ -20,10 +20,6 @@ export default class RootLoading extends React.Component<RootLoadingProps> {
       styles.loadingContainer,
       { transform: [{translateX: this.position}] }
     ];
-
-    console.log(this._reactInternalFiber.return.tag);
-    
-    console.log('Root loading redering. Finished: ' + this.props.finished);
 
     return (
       <Animated.View style={ containerStyles }>
@@ -37,12 +33,9 @@ export default class RootLoading extends React.Component<RootLoadingProps> {
   }
 
   componentDidUpdate( prevProps ){
-    console.log('Root loading update');
-
     if( !prevProps.finished && this.props.finished ){
-      console.log(' ¬¬¬¬¬¬ Finished signal received');
+      // Wait a bit to let the bar to fill, and then take the overlay out
       setTimeout( () => {
-        console.log(' ¬¬¬¬ Moving loading out');
         Animated.timing( this.position, {
           toValue: -2000,
           duration: 300,
@@ -53,7 +46,7 @@ export default class RootLoading extends React.Component<RootLoadingProps> {
   }
 
   componentWillUnmount() {
-    console.log('Unmounting loading');
+    // console.log('Unmounting loading');
   }
 }
 

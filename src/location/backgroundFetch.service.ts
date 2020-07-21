@@ -5,7 +5,6 @@ let initialized = false;
 export default {
 	init( clbk: () => Promise<void> ){
 		// if (initialized) return console.log('$$$ BG fetch already configured');
-
 		initialized = true;
 
 		const config = {

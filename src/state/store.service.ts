@@ -187,6 +187,14 @@ export default {
 		};
 	},
 
+	storeFenceDistance( distance ){
+		store.distanceFromOutOfFence = distance;
+	},
+
+	getFenceDistance() {
+		return store.distanceFromOutOfFence;
+	},
+
 	addLocationReport( loc, isBgFetch = false){
 		let locations = store.locationReport && store.locationReport.slice ? store.locationReport.slice() : [];
 

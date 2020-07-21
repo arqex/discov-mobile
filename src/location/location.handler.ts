@@ -16,7 +16,6 @@ import geofenceService from './geofence.service';
 let hasPendingDiscoveries = true;
 let lastUpdate = Date.now();
 let currentlyInFence = false;
-let distanceFromOutOfFence = -1;
 let passiveFence;
 
 export default {
@@ -44,7 +43,7 @@ export default {
   getFenceData() {
     return {
       passiveFence: passiveFence,
-      distanceFromOutOfFence: distanceFromOutOfFence
+      distanceFromOutOfFence: storeService.getFenceDistance()
     };
   }
 
@@ -58,7 +57,7 @@ let bufferLocation;
 function checkDiscoveries( location, setTrackingMode ){
   console.log('Location received');
 
-  if( !actions || !actions.discovery ){
+  if( !dataService.getActions() ){
     console.log('----- Actions not ready yet');
     return Promise.resolve( false );
   }
@@ -120,7 +119,7 @@ function onDiscoveryResponse( res, location, setTrackingMode ){
 
   if( !hasPendingDiscoveries ){
     // No discoveries around
-    distanceFromOutOfFence = -1;
+    storeService.storeFenceDistance(0);
     setTrackingMode('passive');
     return destroyFences();
   }
@@ -160,8 +159,8 @@ function startLocationTimer( lastLocation, setTrackingMode ){
 
 function updateFences( location, radius ){
   console.log('updateFences', radius);
-
-  distanceFromOutOfFence = radius;
+  
+  storeService.storeFenceDistance( radius );
 
   if( radius <= 0 ){
     // We are out of the fences

@@ -14,7 +14,7 @@ import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
 import { Modal } from './components';
 
-globalThis.gql_debug = true;
+globalThis.gql_debug = false;
 
 class Root extends React.Component {
   state = {
@@ -79,8 +79,7 @@ class Root extends React.Component {
 			!storeService.needOnboarding() &&
 			!this.isOnboardingRoute()
 		);
-
-		console.log( can );
+		
 		return can;
 	}
 
