@@ -196,6 +196,7 @@ export default {
 	},
 
 	addLocationReport( loc, isBgFetch = false){
+		console.log('##### Adding to location report', store.locationReport && store.locationReport.length );
 		let locations = store.locationReport && store.locationReport.slice ? store.locationReport.slice() : [];
 
 		locations.unshift({

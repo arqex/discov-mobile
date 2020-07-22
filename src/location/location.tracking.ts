@@ -3,7 +3,7 @@
 // these locations are received from the service and they are passed
 // to the handler
 
-import { AppState, AppStateStatus } from 'react-native';
+import { AppState } from 'react-native';
 import locationService from './location.service';
 import locationHandler from './location.handler';
 import storeService from '../state/store.service';
@@ -155,11 +155,13 @@ function addEventListeners(){
 
     if( status === lastAppStatus || status === 'inactive' ) return;
 
+    lastAppStatus = status;
+
     let inFence = storeService.getFenceDistance() >= 0;
-    if( status === 'active' ){
+    if( status === 'active' || inFence ){
       setTrackingMode('passive');
     }
-    else if( !inFence ){
+    else {
       setTrackingMode('active');
     }
   });
@@ -208,6 +210,12 @@ async function onBgFetchEvent() {
     if( apiClient.getAuthStatus() !== 'IN' ){
       return bgLog('User not logged in');
     }
+
+    storeService.addLocationReport({
+      latitude: 0,
+      longitude: 0,
+      accuracy: 0
+    }, true);
 
     bgLog('User is in place');
   });

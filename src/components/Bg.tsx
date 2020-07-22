@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ImageBackground, StyleSheet } from 'react-native';
+import { ImageBackground, StyleSheet, View } from 'react-native';
 
 const bgs = {
 	blue: require('./img/map-blue.png'),
@@ -14,22 +14,23 @@ interface BgProps {
 }
 
 const Bg = (props: BgProps) => {
-	let styles = [
-		{flex: 1}
+	let containerStyles = [
+		styles.container,
+		styles[ `bg_${props.type}` ]
 	];
 
 	if( props.style ){
 		if( props.style.splice ){
-			styles = styles.concat( props.style )
+			containerStyles = containerStyles.concat( props.style )
 		}
 		else {
-			styles.push( props.style );
+			containerStyles.push( props.style );
 		}
 	}
 	
 	return (
-		<ImageBackground style={styles} source={ bgs[props.type] }>
-			{ props.children }
+		<ImageBackground style={containerStyles} source={bgs[props.type]}>
+			{props.children}
 		</ImageBackground>
 	);
 };
@@ -43,6 +44,16 @@ export default Bg;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		alignItems: 'stretch',
 		backgroundColor: '#fff'
+	},
+	bg_red: {
+		backgroundColor: '#fff'
+	},
+	bg_blue: {
+		backgroundColor: '#fbfcfd',
+	},
+	bg_login: {
+		backgroundColor: '#334979'
 	}
 });

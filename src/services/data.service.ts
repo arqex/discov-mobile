@@ -16,7 +16,7 @@ export const dataService = {
 	init() {
 		if( initPromise ) return initPromise;
 
-		restoreStore(store);
+		restoreStore();
 		storeService.init(store);
 
 		store.off('state', storeListener );
@@ -32,8 +32,13 @@ export const dataService = {
 				services.init( actions, store );
 
 				if (initResult.user) {
-					console.log('CURRENT USER', initResult.user);
+					if( store.user.id && store.user.id !== initResult.user.id ){
+						clearStores();
+					}
 					setAuthenticatedUser( store, initResult.user );
+				}
+				else if( store.user.id ){
+					clearStores();
 				}
 
 				console.log('DATA INIT FINISHED');
@@ -110,10 +115,6 @@ function createApiClient() {
 
 function storeListener() {
 	backupStore();
-	if( lastLoginStatus === 'IN' && !store.user.account ){
-		dataService.getLoginStatus(); // This will refresh lastLoginStatus
-		clearStores();
-	}
 }
 
 const BACKUP_KEY = 'userData';
@@ -126,13 +127,18 @@ function backupStore(){
 
 	// Throttle the backup to save stable data
 	backupTimer = setTimeout( () => {
+		if( !backupRestored ){
+			return backupStore();
+		}
+
 		backupTimer = false;
 		authStore.storage.setItem(BACKUP_KEY, JSON.stringify( store ) );
+		console.log('####### Backup SAVED: ', store.locationReport &&  store.locationReport.length);
 	}, 2000);
 }
 
 let backupRestored = false;
-function restoreStore( store ){
+function restoreStore(){
 	if( backupRestored ) return;
 
 	authStore.storage.sync()
@@ -142,17 +148,21 @@ function restoreStore( store ){
 			if( strBackup ){
 				try {	
 					let backup = JSON.parse( strBackup );
-					if(backup.user && store.user && backup.user.id === store.user.id){
+					if(backup.user && backup.user.id){
 						Object.keys(backup).forEach(key => {
 							store[key] = backup[key];
 						});
 					}
-					backupRestored = true;
+
+					console.log(`###### Backup RESTORED: ${backup.locationReport && backup.locationReport.length}`);
+
 				}
 				catch ( err ) {
-					console.error('Cant parse data backup');
+					console.error('###### Backup restore ERROR: Cant parse data backup: ' + strBackup );
 				}
 			}
+
+			backupRestored = true;
 		});
 	;
 }
@@ -163,6 +173,7 @@ function clearStores() {
 
 	backupRestored = false;
 	authStore.storage.removeItem( BACKUP_KEY );
+	console.log(`###### Backup CLEARED`);
 }
 
 function setAuthenticatedUser( store, user ){

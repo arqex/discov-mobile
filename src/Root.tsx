@@ -12,7 +12,7 @@ import RootLoading from './RootLoading';
 import notifications from './utils/notifications';
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
-import { Modal } from './components';
+import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
 
 globalThis.gql_debug = false;
 
