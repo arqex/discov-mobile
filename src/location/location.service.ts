@@ -89,7 +89,8 @@ let trackMode: LocationTrackMode;
 let trackingInForeground: boolean;
 function setLocationMode( mode: LocationTrackMode, inForeground: boolean, accuracy: Location.Accuracy = Location.Accuracy.High ){
   if( mode === trackMode && trackingInForeground === inForeground ){
-    return console.log(`Location tracking already in mode ${mode}, ${inForeground ? 'in foreground' : 'in background'}`);
+    console.log(`Location tracking already in mode ${mode}, ${inForeground ? 'in foreground' : 'in background'}`);
+    return Promise.resolve();
   }
 
   console.log('Setting location mode', mode, inForeground ? 'foreground' : 'background');
@@ -125,12 +126,8 @@ function triggerForegroundLocation(){
   console.log('~~~~~~Activating notification');
   return setLocationMode( 'active', true, Location.Accuracy.Balanced )
     .then( () => {
-      return new Promise( resolve => {
-        setTimeout( () => {
-          console.log('~~~~~~~Deactivating notification');
-          resolve( setLocationMode( 'passive', false ) );
-        }, 500 );
-      })
+      console.log('~~~~~~~Deactivating notification');
+      return setLocationMode( 'passive', false );
     })
     .catch( err => {
       console.log(err);

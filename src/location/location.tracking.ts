@@ -218,6 +218,11 @@ async function onBgFetchEvent() {
     }, true);
 
     bgLog('User is in place');
+
+    if( AppState.currentState === 'background' ){
+      bgLog('setting it into active mode');
+      locationService.triggerForegroundLocation();
+    }
   });
 }
 

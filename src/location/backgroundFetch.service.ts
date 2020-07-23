@@ -67,6 +67,7 @@ export default {
 		});
 
 		if( Platform.OS === 'android' ){
+			console.log('BG FETCH starting headless...')
 			BackgroundFetch.registerHeadlessTask( e => {
 				return clbk()
 					.then(() => {
@@ -79,5 +80,14 @@ export default {
 					})
 			});
 		}
+
+		BackgroundFetch.start()
+			.then( status => {
+				console.log('BG FETCH started with status ' + status);
+			})
+			.catch( err => {
+				console.log('BG FETCH start failure', err );
+			})
+		;
 	}
 }
