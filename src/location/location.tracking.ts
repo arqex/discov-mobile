@@ -12,6 +12,7 @@ import * as TaskManager from 'expo-task-manager';
 import geofenceService from './geofence.service';
 import backgroundFetch from './backgroundFetch.service';
 import store from '../state/store';
+import { log } from '../utils/logger';
 // import geolocation from '@react-native-community/geolocation';
 
 const LOCATION_TASK = 'DISCOV_LOCATION';
@@ -193,7 +194,7 @@ function updateCurrentLocation(){
 }
 
 function bgLog( str ){
-  console.log(`$$$ BG ${str}`);
+  log(`$$$ BG ${str}`);
   storeService.addBGReport( str );
 }
 
