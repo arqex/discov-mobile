@@ -33,9 +33,11 @@ export default class RootLoading extends React.Component<RootLoadingProps> {
   }
 
   componentDidUpdate( prevProps ){
-    if( !prevProps.finished && this.props.finished ){
+    if (!prevProps.finished && this.props.finished) {
+      console.log('====== Finishing the loading');
       // Wait a bit to let the bar to fill, and then take the overlay out
       setTimeout( () => {
+        console.log('====== Getting the loading out');
         Animated.timing( this.position, {
           toValue: -2000,
           duration: 300,

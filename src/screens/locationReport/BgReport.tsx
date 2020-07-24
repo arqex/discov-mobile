@@ -22,7 +22,7 @@ export default class LocationReport extends Component<ScreenProps> {
 		return (
 			<View style={styles.line}>
 				<Text>{this.renderDate(line.time)}</Text>
-				<Text>{line.type}</Text>
+				<Text style={styles.type}>{line.type}</Text>
 				{ this.renderItems(line.items) }
 			</View>
 		);
@@ -58,7 +58,11 @@ const styles = StyleSheet.create({
 		marginBottom: 5,
 		justifyContent: 'space-between'
 	},
+	type: {
+		marginLeft: 5
+	},
 	items: {
+		flexGrow: 1,
 		marginLeft: 5
 	},
 	item: {
