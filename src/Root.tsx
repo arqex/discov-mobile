@@ -225,7 +225,7 @@ else {
 	console.log('Starting app without codepush');
 }
 
-export default Root; // toExport;
+export default toExport;
 
 const styles = StyleSheet.create({
   container: {

@@ -12,6 +12,7 @@ import storeService from '../state/store.service';
 import { dataService } from '../services/data.service';
 import notifications from '../utils/notifications';
 import geofenceService from './geofence.service';
+import { log } from '../utils/logger';
 
 let hasPendingDiscoveries = true;
 let lastUpdate = Date.now();
@@ -20,8 +21,7 @@ let passiveFence;
 
 export default {
   onLocation: function onLocation( location, setTrackingMode, isBackgroundLocation? ){
-    
-    console.log('----- Receiving location');
+    log('----- Receiving location');
     // Render location available in the store for the rest of the app
     storeService.addLocationReport( location, isBackgroundLocation);
     storeService.storeCurrentPosition( location );

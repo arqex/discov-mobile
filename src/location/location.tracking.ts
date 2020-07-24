@@ -27,7 +27,7 @@ TaskManager.defineTask(LOCATION_TASK, locationUpdate => {
   if (locationUpdate.error) return console.log(locationUpdate.error);
 
   let locations = locationUpdate.data.locations;
-  console.log(`**** ${locations.length} NEW LOCATIONS`);
+  log(`**** ${locations.length} NEW LOCATIONS`);
 
   let location = locations[0];
   if (!location) return;
@@ -39,11 +39,11 @@ TaskManager.defineTask(LOCATION_TASK, locationUpdate => {
 let exiting = false;
 let exitingTimer: any = false;
 TaskManager.defineTask(GEOFENCING_TASK, event => {
-  console.log('Geofence event', event.data);
+  log('Geofence event', event.data);
   if (event.error) return console.warn(event.error);
 
   if (geofenceService.isExitEvent(event)) {
-    console.log('An exit event');
+    log('An exit event');
     exiting = true;
     if (exitingTimer) {
       clearTimeout(exitingTimer);

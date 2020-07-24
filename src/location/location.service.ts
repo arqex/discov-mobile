@@ -3,6 +3,7 @@
 // will be configured by, and provided to, the location tracker.
 
 import * as Location from 'expo-location';
+import { log } from '../utils/logger';
 
 let LOCATION_TASK: string;
 function setTaskName( name ){
@@ -123,15 +124,15 @@ function getLastLocation() {
 }
 
 function triggerForegroundLocation(){
-  console.log('~~~~~~Activating notification');
+  log('~~~~Activating notification');
   return setLocationMode( 'active', true, Location.Accuracy.Balanced )
     .then( () => {
-      console.log('~~~~~~~Deactivating notification');
+      log('~~~~Deactivating notification');
       return setLocationMode( 'passive', false );
     })
     .catch( err => {
       console.log(err);
-      console.log('~~~~~~~Deactivating notification after error');
+      log('~~~~Deactivating notification after error');
       setLocationMode('passive', false);
     })
   ;
