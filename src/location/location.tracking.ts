@@ -11,7 +11,6 @@ import { dataService } from '../services/data.service';
 import * as TaskManager from 'expo-task-manager';
 import geofenceService from './geofence.service';
 import backgroundFetch from './backgroundFetch.service';
-import store from '../state/store';
 import { log } from '../utils/logger';
 // import geolocation from '@react-native-community/geolocation';
 
@@ -148,7 +147,7 @@ function isUserLoggedIn(){
   return apiClient.getAuthStatus() === 'IN';
 }
 
-function addEventListeners(){
+function addEventListeners() {
   // This will activate/deactivate the foreground notification
   // if needed, when the app goes in background/foreground
   AppState.addEventListener('change', status => {
@@ -162,7 +161,7 @@ function addEventListeners(){
     if( status === 'active' || inFence ){
       setTrackingMode('passive');
     }
-    else {
+    else if ( dataService.getApiClient().getAuthStatus() === 'IN' ){
       setTrackingMode('active');
     }
   });

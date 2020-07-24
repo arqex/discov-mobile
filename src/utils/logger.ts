@@ -16,7 +16,7 @@ const MAX_LENGTH = 300;
 function _saveLogLine( method, type, args ){
 	if (!store.apiInitialized ) return;
 
-	let logList = store.logList && store.logList.slice() || [];
+	let logList = store.logList && store.logList.slice && store.logList.slice() || [];
 
 	logList.unshift({
 		time: Date.now(),
