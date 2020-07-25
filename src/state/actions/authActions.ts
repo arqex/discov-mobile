@@ -96,11 +96,11 @@ export default function (store, api, actions ){
  * @param {*} response The response data from a login request
  * @returns `true` if the login succeeded, the error object otherwise
  */
-async function handleLoginResponse(store, api, actions, result, credentials) {
+function handleLoginResponse(store, api, actions, result, credentials) {
 	if (!result) {
 		store.user = false;
 		endLogin(store, 'OUT');
-		return;
+		return Promise.resolve(result);
 	}
 
 	if (result.error) {
@@ -115,10 +115,10 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 			api.auth.pendingPasswordUser = credentials.email;
 		}
 
-		return {
+		return Promise.resolve({
 			...result,
 			email: credentials.email
-		};
+		});
 	}
 
 	store.user = {
@@ -136,10 +136,10 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 	}
 	else {
 		store.pendingVerifyUser = {...credentials};
-		return {
+		return Promise.resolve({
 			error: 'UserNotConfirmedException',
 			email: credentials.email
-		};
+		});
 	}
 }
 

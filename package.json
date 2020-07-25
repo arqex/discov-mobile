@@ -1,7 +1,7 @@
 {
   "name": "@discov/mobile",
   "packagename": "discovmobile",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "scripts": {
     "start": "react-native start",
     "start:local": "expo start --host localhost --config app-local.json",
@@ -28,6 +28,7 @@
     "@react-native-community/google-signin": "^4.0.3",
     "@react-native-community/push-notification-ios": "1.1.0",
     "@react-native-community/slider": "^2.0.9",
+    "amazon-cognito-identity-js": "^4.3.3",
     "appcenter": "3.0.3",
     "appcenter-analytics": "3.0.3",
     "appcenter-crashes": "3.0.3",

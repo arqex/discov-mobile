@@ -9,8 +9,8 @@ import authContentStyles from './authContentStyles';
 
 export default class Login extends React.Component<ScreenProps> {
 	state = {
-		email: this.props.router.location.query.email || 'realTestLow@discov.net',
-		password: 'TUrealTestLowApiToken',
+		email: 'marquex@gmail.com', // this.props.router.location.query.email || 'realTestLow@discov.net',
+		password: 'Dledzep6', //  'TUrealTestLowApiToken',
 		loading: false,
 		googleLoading: false
 	}
