@@ -121,11 +121,17 @@ class Root extends React.Component {
 				return true;
 			}
 
+			let isBack = router.back();
+			if( isBack ){
+				return true;
+			}
+
 			let nav = this.navigator.current;
 			if( nav && !nav.drawerInstance.state.open ){
 				nav.drawer.open();
 				return true;
 			}
+
 			return false;
 		});
 	}

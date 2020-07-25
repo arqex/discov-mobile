@@ -3,11 +3,11 @@ import { View, StyleSheet } from 'react-native';
 import { MapScreen, Button, StoryHeader, Text, Wrapper, Bg } from '../../components';
 import MapPanel from '../createStory/MapPanel';
 import StoryMap from './StoryMap';
-import { lngToLocation } from '../../utils/maps';
 
 interface StoryScreenProps {
 	story: any,
 	layout: any,
+	router: any
 	onBack?: Function,
 	currentPosition?: any
 }
@@ -51,6 +51,7 @@ export default class StoryScreen extends Component<StoryScreenProps> {
 		return (
 			<View style={ styles.header }>
 				<StoryHeader accountId={story.ownerId}
+					router={ this.props.router }
 					story={story} />
 					<Wrapper textWidth>
 						<Text type="paragraph">

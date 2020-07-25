@@ -10,6 +10,7 @@ import desktopTransition from './defaultTransitions/desktopTransition'
 import mobileTransition from './defaultTransitions/mobileTransition'
 import modalTransition from './defaultTransitions/modalTransition'
 import {memoize} from './utils/utils'
+import augmentRouter from './utils/augmentRouter';
 
 const isWeb = Platform.OS === 'web'
 
@@ -178,6 +179,8 @@ export default class Navigator extends Component {
 		router.start();
 
 		this.router = router;
+
+		augmentRouter( router );
 
 		this.showingModal = this.detectModal();
 		this.updateModalIndexes( this.showingModal );
