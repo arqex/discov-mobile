@@ -489,7 +489,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		let places = storeService.getPlacesNearby(latLng);
 
 		if (!places) {
-			this.props.actions.map.loadPlacesNearby(latLng)
+			this.props.actions.map.loadPlacesNearby(latLng, this.getPlacesRadius(location.accuracy))
 				.then(() => {
 					let places = storeService.getPlacesNearby(latLng);
 					this.setState({ places });
@@ -498,6 +498,12 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		}
 
 		return places;
+	}
+
+	getPlacesRadius( accuracy ){
+		if( accuracy < 50 ) return 50;
+		if( accuracy > 200 ) return 200;
+		return accuracy;
 	}
 
 
