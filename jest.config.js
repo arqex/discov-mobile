@@ -3,6 +3,7 @@ module.exports = {
 	testEnvironment: 'node',
 	testRegex: '.*\\.(test|spec)?\\.(ts|tsx)$',
 	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+	preset: 'react-native',
 	testPathIgnorePatterns: [
 		'/node_modules/',
 		'/apiclient/gql/'

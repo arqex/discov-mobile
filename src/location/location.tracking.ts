@@ -172,6 +172,15 @@ function requestPermissions(){
   ;
 }
 
+function getPermissions() {
+  return locationService.getPermissions()
+    .then( permissions => {
+      storeService.setLocationPermissions(permissions);
+      return permissions;
+    })
+  ;
+}
+
 function updateCurrentLocation(){
   return isLocationReady()
     .then( isReady => {
@@ -296,6 +305,7 @@ function onBgFetchEventOld(){
 export default {
   setTrackingMode,
   requestPermissions,
+  getPermissions,
   updateCurrentLocation,
   isPermissionGranted
 }

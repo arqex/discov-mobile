@@ -7,8 +7,6 @@ import { lngToLocation } from '../../utils/maps';
 import StoryCircle from './StoryCircle';
 
 let windowWidth = Dimensions.get('window').width;
-
-const nofn = () => {};
 interface StoryMapProps extends MapViewProps {
 	showMarker?: boolean,
 	showCircle?: boolean,
@@ -141,6 +139,11 @@ export default class StoryMap extends React.Component<StoryMapProps, StoryMapSta
 		let propRegion = this.props.region;
 		if( propRegion && prevProps.region !== propRegion && this.currentRegion !== this.props.region ){
 			return this.moveToRegion( propRegion );
+		}
+
+		let storyLocation = this.props.storyLocation;
+		if( storyLocation && storyLocation.location !== prevProps.storyLocation.location ){
+			return this.moveToRegion( this.getRegion(this.props) );
 		}
 		
 		if ( this.props.trackCurrentPosition && prevProps.currentPosition !== this.props.currentPosition){

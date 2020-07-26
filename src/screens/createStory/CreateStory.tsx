@@ -12,7 +12,8 @@ import StoryMap from '../components/StoryMap';
 import NoLocationScreen from '../components/NoLocationScreen';
 import EditLocationModal from './EditLocationModal';
 import SearchPlacePanel from './SearchPlacePanel';
-
+import locationTracking from '../../location/location.tracking';
+import BackButtonHandler from '../../utils/BackButtonHandler';
 
 // Stores the temporal data in store.storyInProgress
 
@@ -41,6 +42,9 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	constructor( props ){
 		super(props);
 
+		// refresh permissions
+		locationTracking.getPermissions();
+
 		let story = this.getStory();
 		let location = story.location && lngToLocation(story.location) || this.props.position;
 
@@ -65,6 +69,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	}	
 	
 	componentDidMount() {
+		BackButtonHandler.addListener( this._onBackPress );
 		this.preloadFollowers();
 	}
 
@@ -409,6 +414,18 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		mapScreen && mapScreen.closeMap();
 	}
 
+	_onBackPress = () => {
+		if( this.isOnScreen() && this.state.locationSelected ){
+			this.setState({locationSelected: false});
+			return true;
+		}
+		return false;
+	}
+	
+	isOnScreen() {
+		return this.props.location.pathname === '/createStory';
+	}
+
 	getCustomPlace( customLocation? ){
 		let cl = customLocation || this.state.customLocation;
 		if( cl ){
@@ -545,6 +562,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	}
 
 	componentWillUnmount() {
+		BackButtonHandler.removeListener( this._onBackPress );
 		this.props.actions.story.clearStoryInProgress();
 	}
 
