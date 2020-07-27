@@ -68,8 +68,8 @@ const styles = StyleSheet.create({
 	panel: {
 		borderRadius: 10,
 		backgroundColor: '#fff',
-		marginLeft: 20,
-		marginRight: 20,
+		marginLeft: 10,
+		marginRight: 10,
 		overflow: 'hidden',
 		borderWidth: 1,
 		borderColor: styleVars.colors.borderBlue
