@@ -201,29 +201,37 @@ let bgFetchPromise: any;
 async function onBgFetchEvent() {
   bgLog('fetch event');
 
-  return dataService.init().then( () => {
-    let apiClient = dataService.getApiClient();
+  return dataService.init()
+    .then( () => {
+      let apiClient = dataService.getApiClient();
 
-    // We use the api status instead of the dataService's one
-    // because we just need the client to be authenticated
-    // not the account data to be loaded
-    if( apiClient.getAuthStatus() !== 'IN' ){
-      return bgLog('User not logged in');
-    }
+      bgLog('data init OK');
 
-    storeService.addLocationReport({
-      latitude: 0,
-      longitude: 0,
-      accuracy: 0
-    }, true);
+      // We use the api status instead of the dataService's one
+      // because we just need the client to be authenticated
+      // not the account data to be loaded
+      if( apiClient.getAuthStatus() !== 'IN' ){
+        return bgLog('User not logged in');
+      }
 
-    bgLog('User is in place');
+      storeService.addLocationReport({
+        latitude: 0,
+        longitude: 0,
+        accuracy: 0
+      }, true);
 
-    if( AppState.currentState === 'background' ){
-      bgLog('setting it into active mode');
-      locationService.triggerForegroundLocation();
-    }
-  });
+      bgLog('User is in place');
+
+      if( AppState.currentState === 'background' ){
+        bgLog('setting it into active mode');
+        locationService.triggerForegroundLocation();
+      }
+    })
+    .catch( err => {
+      console.log( err );
+      bgLog('Error in data init');
+    })
+  ;
 }
 
 function onBgFetchEventOld(){
