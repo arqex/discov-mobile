@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import AccountProvider from '../../providers/AccountProvider';
-import { Bg, ScrollScreen, Text, Button, Avatar, TopBar } from '../../components';
+import { Bg, ScrollScreen, Text, Avatar, TopBar } from '../../components';
 import storeService from '../../state/store.service';
 import FollowingCard from './FollowingCard';
 import FollowerCard from './FollowerCard';
@@ -68,14 +68,9 @@ class PeerAccount extends Component<PeerAccountProps> {
 			displayName: '', avatarPic: false, description: ''
 		};
 
-		let pre = (
-			<Button type="icon" icon="arrow-back" color="secondary"
-				onPress={this.props.onBackPress} />
-		);
-
 		return (
 			<TopBar
-				pre={pre}
+				onBack={ this.props.onBackPress }
 				animatedScrollValue={this.animatedScrollValue}
 				withSafeArea>
 				<View style={styles.avatar}>

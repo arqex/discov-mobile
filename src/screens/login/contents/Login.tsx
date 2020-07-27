@@ -28,7 +28,7 @@ export default class Login extends React.Component<ScreenProps> {
 							whiteText
 							onChangeText={this._onChangeEmail}
 							inputProps={{ returnKeyType: 'next', blurOnSubmit: false }}
-							onSubmitEditing={() => this.secondInput && this.secondInput.focus()}
+							onSubmitEditing={ () => this.secondInput && this.secondInput.focus() }
 							type="email"
 							value={this.state.email} />
 					</View>
@@ -38,8 +38,9 @@ export default class Login extends React.Component<ScreenProps> {
 							whiteText
 							onChangeText={this._onChangePassword}
 							type="password"
-							inputProps={{ textContentType: 'password', ref: secondInput => this.secondInput = secondInput }}
-							value={this.state.password} />
+							ref={ secondInput => this.secondInput = secondInput }
+							inputProps={{ textContentType: 'password'}}
+							value={ this.state.password } />
 						<View style={styles.right}>
 							<Button type="transparent" size="s" color="white" onPress={() => this.navigate('/auth?content=requestPasswordReset&email=' + this.state.email)}>
 								Forgot Password?

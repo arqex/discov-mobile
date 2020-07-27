@@ -16,16 +16,6 @@ export default class PeerAccountScreen extends Component<ScreenProps> {
 	}
 
 	_onBackPress = () => {
-		let path = this.props.location.pathname;
-		
-		if( path ){
-			let pathParts = path.split('/');
-			if( pathParts.length > 2 ){
-				path = pathParts.slice(0, pathParts.length - 1).join('/');
-				return this.props.router.navigate(path);
-			}
-		}
-
-		this.props.drawer.open();
+		return this.props.router.back();
 	}
 }

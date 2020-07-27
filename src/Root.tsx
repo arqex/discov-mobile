@@ -13,6 +13,8 @@ import notifications from './utils/notifications';
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
 import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
+import BackButtonHandler from './utils/BackButtonHandler';
+
 
 globalThis.gql_debug = false;
 
@@ -46,7 +48,9 @@ class Root extends React.Component {
 				<StatusBar animated barStyle={this.getStatusBarStyle()} />
 				{ this.renderLoadingLayer() }
 				{ this.renderNavigator() }
-				<Modal onOpen={this._onModalOpen} onClose={this._onModalClose} />
+				<Modal onOpen={this._onModalOpen}
+					onClose={this._onModalClose}
+					backHandler={ BackButtonHandler } />
 			</View>
 		);
 	}
@@ -58,8 +62,6 @@ class Root extends React.Component {
 	}
 
 	renderNavigator() {
-		// if( this.state.showingLoading && this.isLoading() ) return;
-
 		return (
 			<Navigator store={ dataService.getStore() }
 				actions={dataService.getActions()}
@@ -115,9 +117,10 @@ class Root extends React.Component {
 
 		notifications.init( router );
 
-		BackHandler.addEventListener('hardwareBackPress', () => {
-			if( this.state.modalOpen ){
-				Modal.close();
+		BackButtonHandler.init( BackHandler );
+		BackButtonHandler.addListener( () => {
+			let isBack = router.back();
+			if( isBack ){
 				return true;
 			}
 
@@ -126,6 +129,7 @@ class Root extends React.Component {
 				nav.drawer.open();
 				return true;
 			}
+
 			return false;
 		});
 	}

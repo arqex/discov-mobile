@@ -87,7 +87,7 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 	componentWillEnter() {
 		setTimeout(() => {
 			this.focusInput();
-		}, 300);
+		});
 	}
 
 	componentWillLeave() {

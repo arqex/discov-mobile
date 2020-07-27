@@ -1,9 +1,6 @@
 export default function (store, api, actions ){	
 	if( store.account === undefined ){
-		console.log('Starting auth actions');
-
 		store.account = false // User data will live here
-		store.loginStatus = 'INIT' // INIT, IN, OUT, REQUIRE_NEW_PASSWORD, VERIFY_CONTACT
 		store.loginLoading = true
 		store.federatedLoginLoading = false
 	}
@@ -11,9 +8,9 @@ export default function (store, api, actions ){
 	const authActions = {
     login: async function(email, password) {
 			store.loginLoading = true;
-			return api.login( email, password ).then( response => {
-				return handleLoginResponse( store, api, actions, response, {email, password} );
-			});
+			return api.login( email, password )
+				.then( response => handleLoginResponse( store, api, actions, response, {email, password} ) )
+			;
     },
 
 		federatedLogin: async function () {
@@ -25,7 +22,7 @@ export default function (store, api, actions ){
 		
 		register: async function register( email, password ){
 			store.loginLoading = true;
-      return await handleLoginResponse( store, api, actions, await api.register( email, password ), {email,password}	);
+			return await handleLoginResponse( store, api, actions, await api.register( email, password ), {email,password}	);
 		},
 
 		verifyAccount: async function verifyAccount( email, code ){
@@ -96,16 +93,15 @@ export default function (store, api, actions ){
  * @param {*} response The response data from a login request
  * @returns `true` if the login succeeded, the error object otherwise
  */
-async function handleLoginResponse(store, api, actions, result, credentials) {
+function handleLoginResponse(store, api, actions, result, credentials) {
 	if (!result) {
 		store.user = false;
-		endLogin(store, 'OUT');
-		return;
+		store.loginLoading = false;
+		return Promise.resolve(result);
 	}
 
 	if (result.error) {
 		store.user = false;
-		endLogin(store, 'OUT');
 
 		// Not confirmed coming from login
 		if (result.error === "UserNotConfirmedException") {
@@ -115,10 +111,12 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 			api.auth.pendingPasswordUser = credentials.email;
 		}
 
-		return {
+		store.loginLoading = false;
+
+		return Promise.resolve({
 			...result,
 			email: credentials.email
-		};
+		});
 	}
 
 	store.user = {
@@ -129,23 +127,17 @@ async function handleLoginResponse(store, api, actions, result, credentials) {
 	if ( result.user.userConfirmed ) {
 		return actions.account.loadOrCreateAccount()
 			.then( () => {
-				endLogin(store, 'IN');
+				store.loginLoading = false;
 				return store.user;
 			})
 		;	
 	}
 	else {
 		store.pendingVerifyUser = {...credentials};
-		return {
+		store.loginLoading = false;
+		return Promise.resolve({
 			error: 'UserNotConfirmedException',
 			email: credentials.email
-		};
+		});
 	}
-}
-
-function endLogin( store, loginStatus ){
-	console.log('endLogin', loginStatus);
-	store.loginStatus = loginStatus;
-	store.loginLoading = false;
-	store.federatedLoginLoading = false;
 }

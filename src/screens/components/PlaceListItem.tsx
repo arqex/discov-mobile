@@ -60,7 +60,7 @@ const placeIcons = {
 	food: 'local-dining',
 	fun: 'local-activity',
 	lodging: 'hotel',
-	money: 'locat-atm',
+	money: 'local-atm',
 	museum: 'account-balance',
 	official: 'account-balance',
 	plane: 'flight',

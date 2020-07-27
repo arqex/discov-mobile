@@ -2,7 +2,6 @@ import * as React from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 import Text from './Text';
 import Button from './Button';
-import { getStatusbarHeight } from './utils/getStatusbarHeight';
 import interpolations from './utils/scrollInterpolation';
 import layoutUtils from './utils/layout.utils';
 

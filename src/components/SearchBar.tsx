@@ -5,6 +5,7 @@ import Input from './Input';
 import styleVars from './styleVars';
 import interpolations from './utils/scrollInterpolation';
 import nofn from '../utils/nofn';
+import BackButtonHandler from '../utils/BackButtonHandler';
 
 const ANIM_DURATION = 300;
 
@@ -106,7 +107,8 @@ export default class SearchBar extends React.Component<SearchBarProps> {
   _startSearch = () => {
     if( this.state.searching ) return;
 
-    this.refs.input && this.refs.input.clear();
+    //@ts-ignore
+    this.refs.input && this.refs.input._clear();
     this.props.onOpen();
     this.setState({searching: true}, () => {
       this.searchOpen();
@@ -156,6 +158,22 @@ export default class SearchBar extends React.Component<SearchBarProps> {
       toValue: 0,
       duration: ANIM_DURATION
     }).start();
+  }
+  
+  _onBackPress = () => {
+		if( this.state.searching ){
+			this._endSearch();
+			return true;
+		}
+		return false;
+  }
+  
+  componentDidMount() {
+		BackButtonHandler.addListener( this._onBackPress );
+  }
+
+  componentWillUnmount() {
+		BackButtonHandler.removeListener( this._onBackPress );
   }
 }
 

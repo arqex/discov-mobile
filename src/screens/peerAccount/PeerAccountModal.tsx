@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import PeerAccount from './PeerAccount';
 
@@ -16,9 +15,6 @@ export default class PeerAccountModal extends Component<ScreenProps> {
 	}
 
 	_onBackPress = () => {
-		let {stack, activeIndex} = this.props.router;
-		let lastRoute = stack[ activeIndex ].path;
-
-		this.props.router.navigate( lastRoute );
+		this.props.router.back();
 	}
 }

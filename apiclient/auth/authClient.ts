@@ -37,7 +37,7 @@ Hub.listen("auth", async ({ payload: { event, data } }) => {
 
 export class AuthClient {
 	config: any
-	status: 'LOADING' | 'IN' | 'OUT' | 'REQUIRE_NEW_PASSWORD' | 'VERIFY_CONTACT'
+	status: 'LOADING' | 'IN' | 'OUT'
 
 	constructor( config: any ){
 		this.config = config;
@@ -120,6 +120,7 @@ export class AuthClient {
 		}
 
 		return Auth.signIn( email, password )
+			// @ts-ignore
 			.then( response => {
 				let error = getLoginResponseError(response);
 
@@ -135,7 +136,7 @@ export class AuthClient {
 			})
 			.catch( error => {
 				this.status = 'OUT';
-				return getLoginResponseError({error});
+				return {error};
 			})
 		;
 	}

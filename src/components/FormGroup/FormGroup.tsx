@@ -141,7 +141,7 @@ export default class FormGroup extends PureComponent<FormGroupProps, FormGroupSt
 		if( !this.needClearButton() ) return;
 
 		return (
-			<TouchableOpacity onPress={ () => this.clear() } style={ styles.clearButton }>
+			<TouchableOpacity onPress={ this._clear } style={ styles.clearButton }>
 				<MaterialIcons name="cancel" size={18} color={ this.props.color } />
 			</TouchableOpacity>
 		);
@@ -221,9 +221,9 @@ export default class FormGroup extends PureComponent<FormGroupProps, FormGroupSt
 		return {};
 	}
 
-	clear() {
+	_clear = () => {
 		this._onChangeText('');
-		this.input.current && this.input.current.focus();
+		this.focus();
 	}
 
 	_onFocus = e => {
@@ -248,6 +248,10 @@ export default class FormGroup extends PureComponent<FormGroupProps, FormGroupSt
 
 	_onSubmitEditing = e => {
 		this.props.onSubmitEditing && this.props.onSubmitEditing( e );
+	}
+
+	focus() {
+		this.input.current && this.input.current.focus();
 	}
 }
 

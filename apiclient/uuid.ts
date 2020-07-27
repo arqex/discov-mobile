@@ -14,7 +14,5 @@ export function uuidTo64( uuid ){
 		.substring(0, 22)
 	;
 
-	console.log('Before,after', uuid, id);
-
 	return id;
 }

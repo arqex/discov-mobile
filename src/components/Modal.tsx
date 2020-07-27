@@ -3,7 +3,8 @@ import { StyleSheet, Animated, Keyboard, Platform } from 'react-native';
 
 interface ModalProps {
 	onOpen: () => void,
-	onClose: () =>  void
+	onClose: () => void,
+	backHandler?: any
 }
 
 interface OpenModalOptions {
@@ -74,6 +75,9 @@ export default class Modal extends React.Component<ModalProps> {
 		this.setState( stateUpdate, () => {
 			this.animateIn()
 		});
+
+		this.addBackListener();
+
 		this.props.onOpen && this.props.onOpen();
 	}
 
@@ -83,7 +87,19 @@ export default class Modal extends React.Component<ModalProps> {
 			this.setState({inFront: false, keyboardOpen: false})
 		});
 
+		this.removeBackListener();
+
 		this.props.onClose && this.props.onClose();
+	}
+
+	addBackListener() {
+		let { backHandler } = this.props;
+		backHandler && backHandler.addListener( this._onBackPress );
+	}
+
+	removeBackListener( ) {
+		let { backHandler } = this.props;
+		backHandler && backHandler.removeListener( this._onBackPress );
 	}
 
 	animateIn() {
@@ -120,6 +136,14 @@ export default class Modal extends React.Component<ModalProps> {
 
 	_onKBClose = () => {
 		this.setState({keyboardOpen: false})
+	}
+
+	_onBackPress = () => {
+		if( this.state.inFront ){
+			this.startClosing();
+			return true;
+		}
+		return false;
 	}
 };
 

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Animated, View } from 'react-native'
+import { StyleSheet, Animated, View, Keyboard } from 'react-native'
 import { animatedStyles } from './utils/animatedStyles'
 import Interactable from 'react-interactable'
 import DeviceInfo from 'react-native-device-info'
@@ -22,11 +22,7 @@ export default class DrawerWrapper extends Component {
 		this.drawerPos = new Animated.Value(props.initiallyOpen ? this.drawerWidth + handleWidth : 0);
 		this.calculateDrawerIndex();
 
-		
-
 		this.animatedStyles = animatedStyles(props.transition, props.indexes, props.layout);
-
-		
 
 		this.overlayAnimStyle = {
 			transform: [{
@@ -70,8 +66,6 @@ export default class DrawerWrapper extends Component {
 			styles.container,
 			styles.collapsibleContainer,
 			{ width, left }
-
-			// this.animatedStyles
 		]
 
 		let drawerStyles = [
@@ -109,13 +103,10 @@ export default class DrawerWrapper extends Component {
 	updateLayout(e) {
 		let { layout } = e.nativeEvent;
 
-		
-		
 		this.layoutUpdated = true;
 		this.animatedStyles = animatedStyles(this.props.transition, this.props.indexes, layout);
 		this.drawerWidth = Math.max(0, layout.width - handleWidth);
 
-		
 		this.calculateDrawerIndex();
 		this.forceUpdate();
 	}
@@ -139,12 +130,8 @@ export default class DrawerWrapper extends Component {
 		let di = this.drawerIndex;
 
 		if (this.state.open) {
-			
 			this.drawerPos.setValue( this.drawerWidth );
 		}
-
-
-		
 
 		let index = this.drawerPos.interpolate({
 			inputRange: [0, this.drawerWidth],
@@ -164,7 +151,9 @@ export default class DrawerWrapper extends Component {
 		if( !this.props.collapsible || this.state.open ) return;
 
 		let drawer = this.refs.drawer
-		this.setState({open: true})
+		this.setState({open: true});
+
+		Keyboard.dismiss();
 
 		if( this.isAndroidEmulator() ){
 			return this.openEmulatorDrawer();
@@ -192,6 +181,7 @@ export default class DrawerWrapper extends Component {
 		if( e.nativeEvent ) e = e.nativeEvent
 		
 		if( e.state === 'start' ){
+			Keyboard.dismiss();
 			this.setState({open: true})
 		}
 		else if( e.state === 'end' && e.targetSnapPointId === 'closed' ){
