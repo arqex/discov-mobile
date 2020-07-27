@@ -46,11 +46,13 @@ export default class LocationReport extends Component<ScreenProps> {
     this.forceUpdate();
   }
   
-  formatDate( time ){
-    let d = new Date(time).toISOString();
-    d = d.split('-').slice(1).join('-');
-    d = d.split('.')[0];
-    return d.replace('T', ' ');
+  
+  formatDate(t) {
+    let d = new Date(t).toLocaleString();
+    let date = d.split('/').slice(0, 2).join('/');
+    let time = d.split(' ');
+
+    return `${date} ${time}`;
   }
 }
 

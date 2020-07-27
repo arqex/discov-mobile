@@ -3,6 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import Button from './Button';
 import Text from './Text';
 import styleVars from './styleVars';
+import { Wrapper } from '.';
 
 interface ModalContentProps {
 	title?: string,
@@ -14,10 +15,12 @@ export default class ModalContent extends React.Component<ModalContentProps> {
 	render() {
 		return (
 			<View style={ styles.panel }>
-				{ this.renderTitle() }
-				{ this.renderDescription() }
-				{ this.props.children }
-				{ this.renderControls() }
+				<Wrapper textWidth>
+					{this.renderTitle()}
+					{this.renderDescription()}
+					{this.props.children}
+					{this.renderControls()}
+				</Wrapper>
 			</View>
 		);
 	}

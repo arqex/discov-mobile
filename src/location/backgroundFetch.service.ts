@@ -1,5 +1,6 @@
 import BackgroundFetch from "react-native-background-fetch";
 import { Platform } from "react-native";
+import { log } from "../utils/logger";
 
 let initialized = false;
 export default {
@@ -21,11 +22,11 @@ export default {
 		function onEvent( taskId ){
 			return clbk()
 				.then(() => {
-					console.log('BG TASK FINISHED OK');
+					log('$$$ BG TASK FINISHED OK');
 					BackgroundFetch.finish( taskId );
 				})
 				.catch(err => {
-					console.log('BG TASK ERROR', err);
+					log('$$$ BG TASK ERROR', err);
 					BackgroundFetch.finish(taskId);
 				})
 			;
@@ -71,11 +72,11 @@ export default {
 			BackgroundFetch.registerHeadlessTask( e => {
 				return clbk()
 					.then(() => {
-						console.log('BG FETCH FINISHED OK');
+						log('$$$ BG FETCH FINISHED OK');
 						BackgroundFetch.finish( e.taskId );
 					})
 					.catch( err => {
-						console.log('BG FETCH TASK ERROR', err);
+						log('$$$ BG FETCH TASK ERROR', err);
 						BackgroundFetch.finish(e.taskId);
 					})
 			});

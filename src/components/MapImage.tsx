@@ -35,18 +35,18 @@ const styles = StyleSheet.create({
 
 function getImageUrl( width, height, location ){
 	let scale = PixelRatio.get() >= 2 ? 2 : 1;
+	let factor = width / height;
 	let imageWidth = PixelRatio.getPixelSizeForLayoutSize(width);
-	let imageHeight = PixelRatio.getPixelSizeForLayoutSize(height);
-
 	if( scale === 2 ){
 		imageWidth = imageWidth / 2;
-		imageHeight = imageHeight / 2;
+	}
+	if( imageWidth > 640 ){
+		imageWidth = 640;
 	}
 
-	console.log('Widths', PixelRatio.get(), imageWidth, width, imageHeight, height )
+	let imageHeight = Math.round( imageWidth / factor );
 
-
-	return 'https://maps.googleapis.com/maps/api/staticmap?' + 
+	let url = 'https://maps.googleapis.com/maps/api/staticmap?' + 
 		`center=${location.lat},${location.lng}` +
 		`&scale=${scale}` +
 		`&zoom=14` +
@@ -54,4 +54,8 @@ function getImageUrl( width, height, location ){
 		`&key=${GMAPS_KEY}` + 
 		`&style=feature:poi|visibility:off`
 	;
+
+	console.log( url );
+	
+	return url;
 }

@@ -229,10 +229,6 @@ async function onBgFetchEvent() {
         bgLog(`App is not in background mode: ${AppState.currentState}`);
       }
     })
-    .catch( err => {
-      console.log( err );
-      bgLog('Error in data init');
-    })
   ;
 }
 

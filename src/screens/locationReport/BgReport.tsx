@@ -28,11 +28,12 @@ export default class LocationReport extends Component<ScreenProps> {
 		);
 	}
 
-	renderDate( time ){
-		let d = new Date(time).toISOString();
-		d = d.split('-').slice(2).join('-');
-		d = d.split('.')[0];
-		return d.replace('T', ' ');
+	renderDate( t ){
+		let d = new Date(t).toLocaleString();
+		let date = d.split('/').slice(0, 2).join('/');
+		let time = d.split(' ');
+
+		return `${date} ${time}`;
 	}
 
 	renderItems( items ){

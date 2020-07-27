@@ -144,7 +144,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderTopLeftRadius: 10,
-		borderTopRightRadius: 10
+		borderTopRightRadius: 10,
+		backgroundColor: '#e8e8e8'
 	},
 	marker: {
 		position: 'absolute',
