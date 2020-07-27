@@ -156,12 +156,12 @@ class Root extends React.Component {
 	}
 
 	componentDidUpdate( prevProps, prevState ){
-
 		this.checkAccountLoaded();
 		this.checkResetLoading( prevState );
 
 		if( !this.loadingTimer && this.state.showingLoading && !this.isLoading() ){
 			// Stop rendering the loading layer after is animated out
+			StatusBar.setBarStyle( this.getStatusBarStyle() );
 			this.loadingTimer = setTimeout( () => {
 				this.setState({ showingLoading: false });
 				this.loadingTimer = false;

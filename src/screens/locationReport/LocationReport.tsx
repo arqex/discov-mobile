@@ -48,11 +48,8 @@ export default class LocationReport extends Component<ScreenProps> {
   
   
   formatDate(t) {
-    let d = new Date(t).toLocaleString();
-    let date = d.split('/').slice(0, 2).join('/');
-    let time = d.split(' ');
-
-    return `${date} ${time}`;
+    let d = new Date(t);
+    return `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
   }
 }
 
