@@ -79,8 +79,8 @@ function checkDiscoveries( location, setTrackingMode ){
     bufferLocation = location;
     return Promise.resolve( false );
   }
-
-  console.log('Getting discoveries!')
+  
+  log('----- Getting discoveries!');
   // Setting the buffer location we prevent asking for discoveries
   // in some time
   bufferLocation = location;

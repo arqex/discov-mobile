@@ -14,7 +14,7 @@ function logError( ...args: any[] ) {
 
 const MAX_LENGTH = 300;
 function _saveLogLine( method, type, args ){
-	if (!store.apiInitialized ) return;
+	if ( !store.apiInitialized ) return;
 
 	let logList = store.logList && store.logList.slice && store.logList.slice() || [];
 

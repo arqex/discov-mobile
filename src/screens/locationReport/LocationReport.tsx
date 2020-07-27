@@ -49,8 +49,15 @@ export default class LocationReport extends Component<ScreenProps> {
   
   formatDate(t) {
     let d = new Date(t);
-    return `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+    return `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
   }
+}
+
+function pad(n) {
+  if (n < 10) {
+    return `0${n}`;
+  }
+  return n;
 }
 
 const styles = StyleSheet.create({

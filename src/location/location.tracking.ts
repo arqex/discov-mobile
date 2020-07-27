@@ -198,7 +198,6 @@ function updateCurrentLocation(){
 
 function bgLog( str ){
   log(`$$$ BG ${str}`);
-  storeService.addBGReport( str );
 }
 
 async function onBgFetchEvent() {

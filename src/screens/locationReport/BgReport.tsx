@@ -30,7 +30,7 @@ export default class LocationReport extends Component<ScreenProps> {
 
 	renderDate( t ){
 		let d = new Date(t);
-		return `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`
+		return `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
 	}
 
 	renderItems( items ){
@@ -40,6 +40,13 @@ export default class LocationReport extends Component<ScreenProps> {
 			</View>
 		);
 	}
+}
+
+function pad( n ){
+	if( n < 10 ){
+		return `0${n}`;
+	}
+	return n;
 }
 
 const styles = StyleSheet.create({

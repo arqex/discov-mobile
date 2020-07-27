@@ -211,23 +211,6 @@ export default {
 		store.locationReport = locations;
 	},
 
-	addBGReport( str ){
-		function formatDate(time) {
-			let d = new Date(time).toISOString();
-			d = d.split('-').slice(1).join('-');
-			d = d.split('.')[0];
-			return d.replace('T', ' ');
-		}
-
-		let logs = store.bgLogs && store.bgLogs.slice() || [];
-
-		logs.unshift(
-			`${ formatDate(Date.now() ) } - ${str}`
-		);
-
-		store.bgLogs = logs;
-	},
-
 	setLocationPermissions( permissions ){
 		store.locationPermissions = permissions;
 	},
