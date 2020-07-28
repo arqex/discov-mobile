@@ -9,7 +9,7 @@ import OnboardingPeople from '../screens/onboarding/OnboardingPeople';
 
 import UnknownScreen from '../screens/UnknownScreen';
 import Gallery from '../components/gallery/Gallery';
-import Account from '../screens/account/Account';
+import MyAccount from '../screens/myAccount/MyAccount';
 import MyDiscoveries from '../screens/myDiscoveries/MyDiscoveries';
 import MyStories from '../screens/myStories/MyStories';
 import OwnStory from '../screens/ownStory/OwnStory';
@@ -44,7 +44,7 @@ export const routes = [
 		]}
 	]},
 
-	{ path: '/account', cb: Account},
+	{ path: '/myAccount', cb: MyAccount},
 	{ path: '/createStory', cb: CreateStory, children: [
 		{ path: '/addContent', cb: AddStoryContent, children: [
 			{ path: '/share', cb: ShareStory, children: [

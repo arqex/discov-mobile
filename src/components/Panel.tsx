@@ -4,12 +4,13 @@ import styleVars from './styleVars';
 
 interface PanelProps {
 	style?: any,
+	borderColor?: 'blue' | 'red',
 	children?: any,
 }
 
 const Panel = (props: PanelProps) => {
 	return (
-		<View style={[styles.container, props.style]}>
+		<View style={[styles.container, styles[`border_${props.borderColor}`], props.style]}>
 			{ props.children }
 		</View>
 	);
@@ -23,5 +24,8 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		borderWidth: 1,
 		borderColor: '#E6EAF2',
+	},
+	border_red: {
+		borderColor: '#fdeeee'
 	}
 });

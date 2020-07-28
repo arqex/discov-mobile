@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, ViewStyle } from 'react-native';
+import { styleVars } from '.';
 
 interface WrapperProps {
 	margin?: string,
@@ -16,7 +17,7 @@ export default class Wrapper extends React.Component<WrapperProps> {
 		let styles = [
 			this.getMargin(),
 			this.getPadding(),
-			this.props.textWidth && {width: 340, alignSelf: 'center'},
+			this.props.textWidth && {width: styleVars.textWidth, alignSelf: 'center'},
 			this.props.style
 		];
 

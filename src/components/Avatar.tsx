@@ -6,7 +6,8 @@ interface AvatarProps {
 	name: string,
 	pic?: string,
 	size?: number,
-	border?: number
+	border?: number,
+	borderColor?: number
 }
 
 export default class Avatar extends React.Component<AvatarProps> {

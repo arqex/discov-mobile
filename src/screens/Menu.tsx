@@ -41,7 +41,8 @@ export default class Menu extends Component<ScreenProps> {
 					</View>
 					<View style={ styles.account }>
 						<View style={ styles.accountTouchableWrapper }>
-							<Touchable onPress={ () => this.props.router.navigate('/account') } style={ styles.accountLink }>
+							<Touchable onPress={ this._goToMyAccount }
+								style={ styles.accountLink }>
 								<View style={{alignItems: 'center'}}>
 									<View style={ styles.avatar }>
 										<Avatar name={ account.displayName }
@@ -113,6 +114,11 @@ export default class Menu extends Component<ScreenProps> {
 			account.displayName = 'Ada López';
 			this.props.store.peerAccounts[ account.id ].displayName = 'Ada López';
 		}
+	}
+
+	_goToMyAccount = () => {
+		this.props.drawer.close();
+		this.props.router.navigate('/myAccount');
 	}
 }
 

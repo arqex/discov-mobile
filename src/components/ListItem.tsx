@@ -5,6 +5,7 @@ import Touchable from './Touchable';
 
 export interface ListItemProps {
 	title: string,
+	overtitle?: string,
 	subtitle?: string,
 	pre?: any,
 	post?: any,
@@ -14,7 +15,7 @@ export interface ListItemProps {
 }
 
 const ListItem = (props: ListItemProps) => {
-	let pre, post, subtitle;
+	let pre, post, overtitle, subtitle;
 	if( props.pre ){
 		pre = (
 			<View style={styles.pre}>
@@ -29,6 +30,7 @@ const ListItem = (props: ListItemProps) => {
 			</View>
 		);
 	}
+
 	if (props.subtitle) {
 		subtitle = (
 			<View style={styles.subtitle}>
@@ -39,10 +41,21 @@ const ListItem = (props: ListItemProps) => {
 		);
 	}
 
+	if( props.overtitle ){
+		overtitle = (
+			<View style={styles.overtitle}>
+				<Text type="subtitle">
+					{props.overtitle}
+				</Text>
+			</View>
+		);
+	}
+
 	let content = (
 		<View style={[styles.container].concat( props.style )}>
 			{ pre }
 			<View style={ styles.texts }>
+				{ overtitle }
 				<Text type="title" color={ props.titleColor }>{props.title}</Text>
 				{ subtitle }
 			</View>
@@ -82,4 +95,7 @@ const styles = StyleSheet.create({
 	subtitle: {
 		marginTop: 0	
 	},
+	overTitle: {
+		marginBottom: 4
+	}
 });

@@ -32,5 +32,6 @@ export default {
 		backgroundColor: '#fff',
 		borderWidth: 1,
 		borderColor: '#E6EAF2'
-	}
+	},
+	textWidth: 320
 }

@@ -41,6 +41,10 @@
 		"tapme": "Púlsame para descubrirla"
 	},
 
+	"myAccount": {
+		"title": "Mi cuenta",
+	},
+
 	"notifications": {
 		"singleTitle": "Tienes un nuevo descubrimiento!",
 		"singleMessage": "Has encontrado una historia de {{name}}.",

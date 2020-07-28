@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Avatar from '../../components/Avatar';
 import AccountProvider from '../../providers/AccountProvider';
 

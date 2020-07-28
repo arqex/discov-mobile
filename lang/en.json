@@ -48,6 +48,11 @@
 		"tapme": "Tap here to reveal it"
 	},
 
+	"myAccount": {
+		"title": "My account",
+
+	},
+
 	"notifications": {
 		"singleTitle": "You have a new discovery!",
 		"singleMessage": "You found a story from {{name}}.",

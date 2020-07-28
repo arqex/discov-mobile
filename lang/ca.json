@@ -41,6 +41,11 @@
 		"tapme": "Clica'm per descobrir-la"
 	},
 
+
+	"myAccount": {
+		"title": "El meu compte",
+	},
+
 	"notifications": {
 		"singleTitle": "Tens un nou descobriment!",
 		"singleMessage": "Has trobat una història de {{name}}.",
