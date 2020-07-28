@@ -1,13 +1,13 @@
 import { Platform } from 'react-native';
 import { getEnv } from '../../environment';
 import rejectionTracking from 'promise/setimmediate/rejection-tracking';
+import { log } from './logger';
 
 let URL;
 let batchedErrors = [];
 let router;
 
 getEnv().then( env => {
-	// console.log( 'URRLLL', env.errorUrl );
 	URL = env.errorUrl;
 
 	if( batchedErrors.length ){
@@ -26,7 +26,7 @@ export function errorHandler( e, isFatal ) {
 		errorMessage: e && e.message,
 		error: e
 	}
-
+	log( e && e.message || e );
 	console.warn( 'ERROR', e.body, payload );
 	sendErrorReport( payload );
 }

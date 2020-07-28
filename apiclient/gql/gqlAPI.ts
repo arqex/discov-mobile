@@ -144,15 +144,3 @@ export class GqlApi extends GqlMethods {
 function getAuthorizerType( header ){
   return header.length < 50 ? 'custom' : 'cognito'
 }
-
-
-
-
-
-
-
-
-
-
-
-

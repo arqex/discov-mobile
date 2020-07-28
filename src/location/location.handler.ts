@@ -106,6 +106,7 @@ function onDiscoveryResponse( res, location, setTrackingMode ){
 
   // Notify new discoveries 
   if( res.discoveries && res.discoveries.length ){
+    log('New discoveries: ' + res.discoveries.length);
     notifications.createDiscoveriesNofication( res.discoveries );
   }
   else {

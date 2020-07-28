@@ -92,7 +92,7 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 			<ScrollView style={ styles.placesWrapper }
 				nestedScrollEnabled={ true }
 				contentContainerStyle={styles.placesList}>
-					{ places.map( this._renderPlace )}
+					{ places.map( this._renderPlace ) }
 			</ScrollView>
 		)
 	}
@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
 	},
 
 	placesList: {
+		paddingBottom: 40
 	},
 
 	listItem: {
