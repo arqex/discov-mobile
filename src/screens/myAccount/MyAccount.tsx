@@ -3,6 +3,9 @@ import { StyleSheet, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, ScrollScreen, Text, TopBar, Panel, ListItem, Button, Wrapper, Modal, styleVars } from '../../components';
 import AccountAvatar from '../components/AccountAvatar';
+import DisplayNameModal from './DisplayNameModal';
+import DescriptionModal from './DescriptionModal';
+import HandleModal from './HandleModal';
 
 export default class Account extends Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
@@ -18,7 +21,7 @@ export default class Account extends Component<ScreenProps> {
 						{ this.renderAvatarPicker() }
 						{ this.renderDisplayName() }
 						{ this.renderDescription() }
-						{ this.renderHandler() }
+						{ this.renderHandle() }
 						{ this.renderDelete() }
 					</Panel>
 				</ScrollScreen>
@@ -28,7 +31,7 @@ export default class Account extends Component<ScreenProps> {
 
 	renderTopBar() {
 		return (
-			<TopBar title="Settings"
+			<TopBar title={__('myAccount.title')}
 				onBack={ () => this.props.drawer.open() }
 				animatedScrollValue={this.animatedScrollValue}
 				withSafeArea />
@@ -61,7 +64,6 @@ export default class Account extends Component<ScreenProps> {
 		return (
 			<Wrapper style={ styles.itemWrapper }>
 				<ListItem
-					onPress={ this._openDisplayNameModal }
 					titleColor={ styleVars.colors.text }
 					style={styles.listItem}
 					pre={avatar}
@@ -77,6 +79,7 @@ export default class Account extends Component<ScreenProps> {
 		return (
 			<Wrapper style={ styles.itemWrapper }>
 				<ListItem
+					onPress={ this._openDisplayNameModal }
 					titleColor={ styleVars.colors.text }
 					style={styles.listItem}
 					overtitle="My display name:"
@@ -91,6 +94,7 @@ export default class Account extends Component<ScreenProps> {
 		return (
 			<Wrapper style={ styles.itemWrapper }>
 				<ListItem
+					onPress={ this._openDescriptionModal }
 					titleColor={ styleVars.colors.text }
 					style={styles.listItem}
 					overtitle="My bio:"
@@ -101,10 +105,11 @@ export default class Account extends Component<ScreenProps> {
 		);
 	}
 
-	renderHandler() {
+	renderHandle() {
 		return (
 			<Wrapper style={ styles.itemWrapper }>
 				<ListItem
+					onPress={ this._openHandleModal }
 					titleColor={ styleVars.colors.text }
 					style={styles.listItem}
 					overtitle="My handle:"
@@ -129,9 +134,39 @@ export default class Account extends Component<ScreenProps> {
 		return <Wrapper style={ styles.separator } />;
 	}
 
-	_openDisplayNameModal() {
-		return console.log('Somenthi');
-		Modal.open( <DisplayNameModal /> );
+	_openDisplayNameModal = () => {
+		Modal.open(
+			<DisplayNameModal
+				initialDisplayName={ this.props.store.user.account.displayName }
+				onSave={ this._updateAccount }
+			/>
+		);
+	}
+
+	_openDescriptionModal = () => {
+		Modal.open(
+			<DescriptionModal
+				initialDescription={ this.props.store.user.account.description }
+				onSave={ this._updateAccount }
+			/>
+		);
+	}
+
+	_openHandleModal = () => {
+		Modal.open(
+			<HandleModal
+				initialHandle={this.props.store.user.account.handle}
+				onSave={this._updateAccount}
+			/>
+		);
+	}
+
+	_updateAccount = ( field, value ) => {
+		return this.props.actions.account.updateAccount({[field]: value})
+			.then( () => {
+				Modal.close();
+			})
+		;
 	}
 }
 

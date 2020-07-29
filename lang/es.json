@@ -3,6 +3,7 @@
 	"ok": "Ok",
 	"cancel": "Cancelar",
 	"allFollowers": "Todos mis seguidores",
+	"save": "Guardar",
 
 	"menu": {
 		"stories": "mis historias",
@@ -43,6 +44,15 @@
 
 	"myAccount": {
 		"title": "Mi cuenta",
+		"displayNameModalTitle": "Cambiar mi nombre",
+		"displayNameModalDesc": "Este es el nombre que tus amigos verán al lado de tu foto",
+		"displayNameModalError": "Tienes que escribir un nombre",
+		"descriptionModalTitle": "Cambiar mi estado",
+		"descriptionModalDesc": "Deja saber a tus amigos algo más sobre ti, o simplemente di algo bonito.",
+		"descriptionModalError": "Tienes que escribir algo en tu estado.",
+		"handleModalTitle": "Cambiar mi apodo",
+		"handleModalDesc": "Tus amigos te podrán buscar o mencionarte usando tu apodo.",
+		"handleModalError": "El apodo necesita tener 3 caracteres. Sólo números y letras."
 	},
 
 	"notifications": {

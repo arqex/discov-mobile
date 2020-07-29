@@ -34,11 +34,20 @@ export default class LocationReport extends Component<ScreenProps> {
 	}
 
 	renderItems( items ){
-		return (
-			<View style={ styles.items }>
-				{ items.map( it => <Text style={styles.item}>{it}</Text> ) }
-			</View>
-		);
+		if( items && items.map ){
+			return (
+				<View style={ styles.items }>
+					{ items.map( it => <Text style={styles.item}>{it}</Text> ) }
+				</View>
+			);
+		}
+		else {
+			return (
+				<View style={ styles.items }>
+					<Text>{ JSON.stringify( items ) }</Text>
+				</View>
+			)
+		}
 	}
 }
 

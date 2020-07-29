@@ -3,6 +3,7 @@
 	"ok": "Ok",
 	"cancel": "Cancel·la",
 	"allFollowers": "Tots els meus seguidors",
+	"save": "Desa",
 
 	"menu": {
 		"stories": "les meves històries",
@@ -44,6 +45,15 @@
 
 	"myAccount": {
 		"title": "El meu compte",
+		"displayNameModalTitle": "Cambiar el meu nom",
+		"displayNameModalDesc": "Aquest és el nom que els teus amics veuran a la banda de la teva foto",
+		"displayNameModalError": "Has d'escriure un nom",
+		"descriptionModalTitle": "Cambiar el meu estat",
+		"descriptionModalDesc": "Deixa saber als teus amics una mica més sobre tu, o simplement digues alguna cosa bonica.",
+		"descriptionModalError": "Tienes que escribir algo en tu estado.",
+		"handleModalTitle": "Cambiar el meu sobrenom",
+		"handleModalDesc": "Els teus amics podran trobar-te o ementar-te usant el sobrenom.",
+		"handleModalError": "El sobrenom necessita de tenir 3 caràcters. Només números i lletres."
 	},
 
 	"notifications": {

@@ -3,6 +3,7 @@
 	"ok": "Ok",
 	"cancel": "Cancel",
 	"allFollowers": "All my followers",
+	"save": "Save",
 
 	"menu": {
 		"stories": "my stories",
@@ -50,7 +51,15 @@
 
 	"myAccount": {
 		"title": "My account",
-
+		"displayNameModalTitle": "Update my display name",
+		"displayNameModalDesc": "This is the name that your friends will see beside your image.",
+		"displayNameModalError": "You need to write a name to display",
+		"descriptionModalTitle": "Update my bio",
+		"descriptionModalDesc": "Tell your friends something more about you, or just say something nice.",
+		"descriptionModalError": "You need to write something for your bio",
+		"handleModalTitle": "Update my user name",
+		"handleModalDesc": "Friends will be able to search for you or mention you by using your user name.",
+		"handleModalError": "The user name needs at least 3 characters. Only number and letters."
 	},
 
 	"notifications": {

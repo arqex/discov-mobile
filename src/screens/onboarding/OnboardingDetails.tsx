@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, Alert, Image } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
+import accountUtils from '../../utils/account.utils';
 import { Bg, Text, Input, Button } from '../../components';
 import onboardingStyles from './onboarding.styles';
+
 
 export default class Onboarding extends React.Component<ScreenProps> {
 	state = {
@@ -84,10 +86,10 @@ export default class Onboarding extends React.Component<ScreenProps> {
 		let displayName = this.state.displayName.trim();
 		let update: any = {};
 
-		if( !this.isValidHandle( handle ) ){
+		if (!accountUtils.isValidHandle( handle ) ){
 			errors.handle = 'The user name needs at least 3 characters. Only number and letters.'
 		}
-		if( !this.isValidDisplayName( displayName ) ){
+		if (!accountUtils.isValidDisplayName( displayName ) ){
 			errors.displayName = 'Need to write a display name.'
 		}
 
@@ -115,14 +117,6 @@ export default class Onboarding extends React.Component<ScreenProps> {
 
 	_showHelp = () => {
 		Alert.alert('Help not implemented yet');
-	}
-
-	isValidHandle( handle ){
-		return !!handle.match(/^[a-z0-9_]{3,30}$/);
-	}
-
-	isValidDisplayName( displayName ){
-		return !!displayName;
 	}
 
 	_onChangeHandle = text => {

@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { ModalContent, Modal, Input, styleVars } from '../../components';
+import accountUtils from '../../utils/account.utils';
 
-interface DisplayNameModalProps {
-	initialDisplayName: string
+interface HandleModalProps {
+	initialHandle: string
 	onSave: (field: string, value: string) => void
 }
 
-class DisplayNameModal extends React.Component<DisplayNameModalProps> {
+class HandleModal extends React.Component<HandleModalProps> {
 	state = {
-		displayName: this.props.initialDisplayName,
+		handle: '@' + this.props.initialHandle,
 		error: '',
 		saving: false
 	}
@@ -17,12 +18,12 @@ class DisplayNameModal extends React.Component<DisplayNameModalProps> {
 	render() {
 		return (
 			<ModalContent
-				title={ __('myAccount.displayNameModalTitle') }
-				description={ __('myAccount.displayNameModalDesc') }
+				title={ __('myAccount.handleModalTitle') }
+				description={ __('myAccount.handleModalDesc') }
 				controls={ this.renderControls() }>
 				<View style={ styles.inputWrapper }>
-					<Input value={this.state.displayName}
-						onChangeText={displayName => this.setState({ displayName })}
+					<Input value={this.state.handle}
+						onChangeText={ this._onChangeHandle }
 						inputProps={{autoFocus: true}}
 						color={ styleVars.colors.blueText }
 						onSubmitEditing={ this._onSave }
@@ -40,18 +41,27 @@ class DisplayNameModal extends React.Component<DisplayNameModalProps> {
 	}
 
 	_onSave = () => {
-		if( !this.state.displayName.trim() ){
+		let handle = this.state.handle.slice(1).toLowerCase();
+
+		if( !accountUtils.isValidHandle(handle) ) {
 			return this.setState({
-				error: __('myAccount.displayNameModalError')
+				error: __('myAccount.handleModalError')
 			});
 		}
 
 		this.setState({saving: true});
-		this.props.onSave('displayName', this.state.displayName);
+		this.props.onSave('handle', handle);
+	}
+
+	_onChangeHandle = text => {
+		let parts = text.split('@');
+		let handle = parts.length > 1 ? ('@' + parts[1]) : ('@' + text);
+
+		this.setState({ handle });
 	}
 };
 
-export default DisplayNameModal;
+export default HandleModal;
 
 const styles = StyleSheet.create({
 	container: {},

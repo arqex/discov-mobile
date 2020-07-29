@@ -40,7 +40,6 @@ export default {
 	input: {
 		opacity: .9,
 		borderBottomWidth: 1,
-		height: 38,
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
