@@ -2,6 +2,7 @@
 import storeService from '../store.service';
 import actionService from './action.service';
 import { locationToLng } from '../../utils/maps';
+import { log } from '../../utils/logger';
 
 let promises = {
 	discoveries: {}
@@ -56,13 +57,16 @@ export default function (store, api) {
 				.then( res => {
 					store.user.closestDiscoveryDistance = res.closestDiscoveryDistance;
 
-					console.log('Discover around OK', res);
-
-					if( res.discoveries.length ){
+					if( res && res.discoveries && res.discoveries.length ){
 						return this.loadUserDiscoveries()
 							.then( () => res )
 						;
 					}
+
+					if( !res || !res.discoveries ){
+						log('Empty discoveries response?', res );
+					}
+
 					return res;
 				})
 			;

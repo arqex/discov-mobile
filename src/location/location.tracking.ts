@@ -206,9 +206,7 @@ async function onBgFetchEvent() {
   return dataService.init()
     .then( () => {
       let apiClient = dataService.getApiClient();
-
-      bgLog('data init OK');
-
+      
       // We use the api status instead of the dataService's one
       // because we just need the client to be authenticated
       // not the account data to be loaded

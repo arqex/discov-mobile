@@ -1,8 +1,7 @@
 
 import actionService from './action.service';
 import storeService from '../store.service';
-import { Alert, I18nManager } from 'react-native';
-import { getCurrentPositionAsync, requestPermissionsAsync } from 'expo-location';
+import { getCurrentPositionAsync } from 'expo-location';
 import * as RNLocalize from "react-native-localize";
 
 export default function (store, api) {

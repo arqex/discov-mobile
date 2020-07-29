@@ -104,13 +104,16 @@ const ACTIVE_RADIUS = 200;
 function onDiscoveryResponse( res, location, setTrackingMode ){
   console.log('On discovery response');
 
+  
+  if( !res || !res.discoveries ) return;
+
   // Notify new discoveries 
   if( res.discoveries && res.discoveries.length ){
     log('New discoveries: ' + res.discoveries.length);
     notifications.createDiscoveriesNofication( res.discoveries );
   }
   else {
-    console.log('No new discoveries');
+    log('No new discoveries');
   }
 
   const distanceToDiscovery = res.closestDiscoveryDistance;
