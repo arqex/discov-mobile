@@ -49,11 +49,6 @@ export default {
 
 }
 
-// checkDiscoveries has a buffer of 10 secs
-// to not to saturate the endpoint with calls with close locations
-const BUFFER_TIME = 10000;
-let bufferDate = Date.now();
-let bufferLocation;
 function checkDiscoveries( location, setTrackingMode ){
   console.log('Location received');
 
@@ -74,22 +69,16 @@ function checkDiscoveries( location, setTrackingMode ){
 
   // From here we have a location out of the fence, we are close to
   // a discovery
-  if( needToBuffer() ){
-    console.log('----- Buffering location');
-    bufferLocation = location;
+  if( !inRequestPause() ){
+    log('----- In request pause');
     return Promise.resolve( false );
   }
   
   log('----- Getting discoveries!');
-  // Setting the buffer location we prevent asking for discoveries
-  // in some time
-  bufferLocation = location;
 
   return dataService.getActions().discovery.discoverAround( location )
     .then( res => onDiscoveryResponse( res, location, setTrackingMode ) )
     .then( () => {
-      // No more updates in some time
-      startLocationTimer( location, setTrackingMode );
       console.log('----- End location update');
     })
   ;
@@ -141,24 +130,16 @@ function onDiscoveryResponse( res, location, setTrackingMode ){
   updateFences( location, distanceToDiscovery - ACTIVE_RADIUS );
 }
 
-function needToBuffer(){
-  return bufferLocation && (Date.now() - bufferDate) < BUFFER_TIME;
-}
-
-function startLocationTimer( lastLocation, setTrackingMode ){
-  bufferDate = Date.now();
-
-  setTimeout( () => {
-    let location = bufferLocation;
-    bufferLocation = false;
-    if( location && location !== lastLocation ){
-      console.log('Unbuffering', location);
-      checkDiscoveries( location, setTrackingMode );
-    }
-    else {
-      console.log('Buffer end without changes' );
-    }
-  }, BUFFER_TIME);
+// Five seconds without requesting new discoveries
+const REQUEST_PAUSE = 5000;
+let lastRequested;
+function inRequestPause() {
+  let now = Date.now();
+  if( !lastRequested || now - lastRequested > REQUEST_PAUSE ){
+    lastRequested = now;
+    return true;
+  }
+  return false;
 }
 
 function updateFences( location, radius ){

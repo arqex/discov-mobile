@@ -139,7 +139,6 @@ export default class Account extends Component<ScreenProps> {
 	_openAvatarModal = () => {
 		Modal.open(
 			<AvatarModal
-				initialDisplayName={this.props.store.user.account.displayName}
 				onSave={this._updateAccount}
 			/>
 		);

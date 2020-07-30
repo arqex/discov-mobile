@@ -5,7 +5,6 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { uploadImage, openAvatarPicker } from '../../utils/image.service';
 
 interface AvatarModalProps {
-	initialAvatar: string
 	onSave: (field: string, value: string) => void
 }
 
@@ -56,8 +55,14 @@ class AvatarModal extends React.Component<AvatarModalProps> {
 			this.setState({status: 'uploading'});
 			uploadImage( result )
 				.then( res => {
-					console.log( res );
-					Modal.close();
+					if( !res.imageUrl ){
+						this.setState({status: 'error'});
+					}
+					else {
+						// Save the small version of the image
+						let url = `${res.imageUrl}_s`;
+						this.props.onSave( 'avatarPic', url );
+					}
 				})
 			;
 		});

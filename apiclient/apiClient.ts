@@ -154,8 +154,11 @@ export class ApiClient {
 
   uploadImage( imageData ){
 		let credentials = this.gql.config.credentials;
+		let endpoint = this._getUploadEndpoint();
 
-    return fetch( this._getUploadEndpoint(), {
+		console.log('Upload endpoint ' + endpoint + ' ' + credentials.authHeader );
+
+    return fetch( endpoint, {
       method: 'POST',
       body: JSON.stringify( imageData ),
       headers: {
@@ -189,11 +192,9 @@ export class ApiClient {
 		let currentUser = this.getCurrentUser().user;
 		if( !currentUser ) return 'NOT_AUTHENTICATED';
 
-		let endpoint = currentUser.isTestUser ? this.config.test_endpoint : this.config.test_endpoint;
-
-		let parts = endpoint.split('/');
+		let parts = this.config.endpoint.split('/');
 		parts.pop();
 
-		return parts.join('/') + '/imageUpload';
+		return parts.join('/') + ( currentUser.isTestUser ? '/imageUploadCi' : '/imageUpload' );
 	}
 }
