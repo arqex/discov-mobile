@@ -22,6 +22,6 @@ const styles = StyleSheet.create({
 		height: 40, fontSize: 18
 	},
 	multiline: {
-		height: 80
+	 height: 80
 	}
 });

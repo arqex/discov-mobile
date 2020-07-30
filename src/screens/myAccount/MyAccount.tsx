@@ -3,6 +3,7 @@ import { StyleSheet, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, ScrollScreen, Text, TopBar, Panel, ListItem, Button, Wrapper, Modal, styleVars } from '../../components';
 import AccountAvatar from '../components/AccountAvatar';
+import AvatarModal from './AvatarModal';
 import DisplayNameModal from './DisplayNameModal';
 import DescriptionModal from './DescriptionModal';
 import HandleModal from './HandleModal';
@@ -64,6 +65,7 @@ export default class Account extends Component<ScreenProps> {
 		return (
 			<Wrapper style={ styles.itemWrapper }>
 				<ListItem
+					onPress={ this._openAvatarModal }
 					titleColor={ styleVars.colors.text }
 					style={styles.listItem}
 					pre={avatar}
@@ -132,6 +134,15 @@ export default class Account extends Component<ScreenProps> {
 
 	renderSeparator() {
 		return <Wrapper style={ styles.separator } />;
+	}
+
+	_openAvatarModal = () => {
+		Modal.open(
+			<AvatarModal
+				initialDisplayName={this.props.store.user.account.displayName}
+				onSave={this._updateAccount}
+			/>
+		);
 	}
 
 	_openDisplayNameModal = () => {

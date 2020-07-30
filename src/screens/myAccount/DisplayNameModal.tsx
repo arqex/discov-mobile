@@ -25,6 +25,8 @@ class DisplayNameModal extends React.Component<DisplayNameModalProps> {
 						onChangeText={displayName => this.setState({ displayName })}
 						inputProps={{autoFocus: true}}
 						color={ styleVars.colors.blueText }
+						errorLevel={ this.state.error && 'error' }
+						caption={ this.state.error }
 						onSubmitEditing={ this._onSave }
 					/>
 				</View>

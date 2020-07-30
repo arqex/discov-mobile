@@ -45,7 +45,6 @@ export class ApiClient {
 	config: ApiClientConfig
 	gql: GqlApi
 	auth: AuthClient
-	credentials: any
 	loginPromise: Promise<ApiLoginResult>
 
 	constructor( config: ApiClientConfig ){
@@ -154,14 +153,17 @@ export class ApiClient {
 	}
 
   uploadImage( imageData ){
+		let credentials = this.gql.config.credentials;
+
     return fetch( this._getUploadEndpoint(), {
       method: 'POST',
       body: JSON.stringify( imageData ),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': this.credentials.authorizationHeader
+				'Authorization': credentials.authHeader
       }
-    });
+		})
+		.then( response => response.json() );
 	}
 
 	///////
@@ -188,6 +190,10 @@ export class ApiClient {
 		if( !currentUser ) return 'NOT_AUTHENTICATED';
 
 		let endpoint = currentUser.isTestUser ? this.config.test_endpoint : this.config.test_endpoint;
-		return endpoint.split('/gql')[0] + '/imageUpload';
+
+		let parts = endpoint.split('/');
+		parts.pop();
+
+		return parts.join('/') + '/imageUpload';
 	}
 }
