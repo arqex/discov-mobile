@@ -33,5 +33,5 @@ export default {
 		borderWidth: 1,
 		borderColor: '#E6EAF2'
 	},
-	textWidth: 330
+	textWidth: 320
 }

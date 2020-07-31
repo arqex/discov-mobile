@@ -21,7 +21,7 @@ export default function AccountProvider(WrappedComponent) {
 		render() {
 			return (
 				<WrappedComponent
-					account={this.account}
+					account={ storeService.getAccount(this.props.accountId) }
 					{...this.props} />
 			);
 		}

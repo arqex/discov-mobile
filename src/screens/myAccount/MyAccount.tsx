@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, ScrollScreen, Text, TopBar, Panel, ListItem, Button, Wrapper, Modal, styleVars } from '../../components';
+import { Bg, ScrollScreen, Text, TopBar, Panel, ListItem, Button, Wrapper, Modal, styleVars, ModalContent } from '../../components';
 import AccountAvatar from '../components/AccountAvatar';
 import AvatarModal from './AvatarModal';
 import DisplayNameModal from './DisplayNameModal';
 import DescriptionModal from './DescriptionModal';
 import HandleModal from './HandleModal';
+import RemoveAvatarModal from './RemoveAvatarModal';
 
 export default class Account extends Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
@@ -45,6 +46,7 @@ export default class Account extends Component<ScreenProps> {
 
 	renderAvatarPicker() {
 		let account = this.props.store.user.account;
+
 		let avatar = (
 			<Wrapper margin="0 10 0 0">
 				<AccountAvatar accountId={account.id} size={50} />
@@ -56,7 +58,7 @@ export default class Account extends Component<ScreenProps> {
 		if( account.avatarPic ){
 			title = 'Update my image';
 			removeButton = (
-				<Button type="transparent" color="primary" size="s">
+				<Button type="transparent" color="primary" size="s" onPress={ this._openRemoveAvatarModal }>
 					Remove
 				</Button>
 			);
@@ -141,6 +143,12 @@ export default class Account extends Component<ScreenProps> {
 			<AvatarModal
 				onSave={this._updateAccount}
 			/>
+		);
+	}
+
+	_openRemoveAvatarModal = () => {
+		Modal.open(
+			<RemoveAvatarModal onSave={ this._updateAccount } />
 		);
 	}
 
