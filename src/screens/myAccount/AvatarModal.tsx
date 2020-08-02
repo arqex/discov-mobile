@@ -46,35 +46,41 @@ class AvatarModal extends React.Component<AvatarModalProps> {
 		this.setState({status: 'processing'});
 
 		openAvatarPicker()
-		.then( result => {
-			if( result.cancelled ) {
-				this.setState({status: 'ok'});
-				return;
-			}
-
-			this.setState({status: 'uploading'});
-			uploadImage( result )
-				.then( res => {
-					if( !res.imageUrl ){
-						this.setState({status: 'error'});
-					}
-					else {
-						// Save the small version of the image
-						let url = `${res.imageUrl}_s`;
-						this.props.onSave( 'avatarPic', url );
-					}
-				})
-			;
-		});
+			.then( this._handleSelectedAvatar )
+		;
 	}
 
 	_openCamera = () => {
-		ImagePicker.openCamera({
+		this.setState({status: 'processing'});
+		
+		let options = {
 			compressImageQuality: .8
-		}).then(result => {
-			if (result.cancelled) return;
-			console.log('Picker result', result);
-		});
+		};
+
+		ImagePicker.openCamera( options )
+			.then( this._handleSelectedAvatar )
+		;
+	}
+
+	_handleSelectedAvatar = result => {
+		if (result.cancelled) {
+			this.setState({ status: 'ok' });
+			return;
+		}
+
+		this.setState({ status: 'uploading' });
+		uploadImage(result)
+			.then(res => {
+				if (!res.imageUrl) {
+					this.setState({ status: 'error' });
+				}
+				else {
+					// Save the small version of the image
+					let url = `${res.imageUrl}_s`;
+					this.props.onSave('avatarPic', url);
+				}
+			})
+		;
 	}
 };
 
