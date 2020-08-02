@@ -25,6 +25,15 @@ export function uploadImage( image ) {
 export function openAvatarPicker(){
 	return ImagePicker.openPicker({
 		multiple: false,
-		includeBase64: true
+		includeBase64: true,
+		mediaType: 'photo'
 	});
+}
+
+export function openAvatarCamera() {
+	return ImagePicker.openCamera({
+		compressImageQuality: .8,
+		includeBase64: true,
+		mediaType: 'photo'
+	})
 }
