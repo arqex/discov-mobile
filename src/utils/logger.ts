@@ -1,4 +1,5 @@
 import store from "../state/store";
+import loggerReporter from './loggerReporter';
 
 function log( ...args: any[] ) {
 	_saveLogLine('log', 'L', arguments);
@@ -17,12 +18,13 @@ function _saveLogLine( method, type, args ){
 	if ( !store.apiInitialized ) return;
 
 	let logList = store.logList && store.logList.slice && store.logList.slice() || [];
-
-	logList.unshift({
+	let logLine = {
 		time: Date.now(),
 		type,
-		items: Array.prototype.map.call( args, arg => arg.toString() )
-	});
+		items: Array.prototype.map.call(args, arg => arg.toString())
+	};
+
+	logList.unshift( logLine );
 
 	if( logList.lenght > MAX_LENGTH ){
 		logList.pop();
@@ -30,7 +32,10 @@ function _saveLogLine( method, type, args ){
 
 	console[method].apply( console, args );
 	store.logList = logList;
+
+	loggerReporter.report( store, logLine );
 }
+
 
 export {
 	log, logWarning, logError

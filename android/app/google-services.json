@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "542264311070",
+    "firebase_url": "https://discov.firebaseio.com",
+    "project_id": "discov",
+    "storage_bucket": "discov.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:542264311070:android:70440c0c8d9eddb485dd0f",
+        "android_client_info": {
+          "package_name": "com.discovmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "542264311070-7fodl3v7b58efbs1sroir7pe2j2f5msf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.discovmobile",
+            "certificate_hash": "7d435a77490c32497338e52ed29b56dfc0c589c1"
+          }
+        },
+        {
+          "client_id": "542264311070-mrnci2o242mm4lbptq3gdtb5uk3k4mok.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyovAYNMAf9yxr1H9k5lbPGfEX_iqQ0dk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "542264311070-mrnci2o242mm4lbptq3gdtb5uk3k4mok.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "542264311070-acqbu3hh86osqq8458tqiaf40qv847n0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "host.exp.exponent"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

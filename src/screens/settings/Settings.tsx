@@ -161,7 +161,7 @@ class Settings extends React.Component<ScreenProps> {
 			if( !meta ) return;
 			
 			this.setState({
-				version: `${meta.appVersion}.${meta.packageHash.slice(-6)} ${meta.isPending? '*' : ''}`
+				version: `${meta.appVersion}${meta.label} ${meta.isPending? '*' : ''}`
 			})
 			console.log( meta );
 		})

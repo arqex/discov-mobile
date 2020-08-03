@@ -18,6 +18,8 @@ import BackButtonHandler from './utils/BackButtonHandler';
 
 globalThis.gql_debug = false;
 
+notifications.init(router);
+
 class Root extends React.Component {
   state = {
 		showingLoading: this.isLoading(),
@@ -114,8 +116,6 @@ class Root extends React.Component {
 			StatusBar.setBackgroundColor("rgba(0,0,0,0)")
 			StatusBar.setTranslucent(true)
 		}
-
-		notifications.init( router );
 
 		BackButtonHandler.init( BackHandler );
 		BackButtonHandler.addListener( () => {
