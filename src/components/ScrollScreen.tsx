@@ -61,13 +61,15 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 	}
 
 	renderTopBar() {
+		let scrollPadding;
 		if (this.props.loading) {
-			return this.renderScrollPadding();
+			scrollPadding = this.renderScrollPadding();
 		}
 
 		return (
 			<View style={styles.topBar}>
 				{this.props.topBar}
+				{ scrollPadding }
 			</View>
 		);
 	}

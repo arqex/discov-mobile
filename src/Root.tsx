@@ -37,6 +37,7 @@ class Root extends React.Component {
 	loadingTimer: any = false;
 	discoveriesPopulated: any = false;
 	unmounted: boolean = false;
+	drawerInitiallyOpen: boolean = true;
 
 	constructor(props) {
 		super(props);
@@ -72,7 +73,7 @@ class Root extends React.Component {
 				interceptor={this.interceptor}
 				strategy="node"
 				DrawerComponent={ this.getDrawerComponent() }
-				drawerInitiallyOpen={ this.canSeeDrawer() }
+				drawerInitiallyOpen={ this.drawerInitiallyOpen }
 				transitions={{ 0: screenTransition }} />
 		)
 	}
@@ -87,9 +88,16 @@ class Root extends React.Component {
 		return can;
 	}
 
+
 	isOnboardingRoute() {
 		let path = router.location && router.location.pathname;
-		return path && path.startsWith('/onboarding');
+		let isOnboarding = path && path.startsWith('/onboarding');
+
+		if( isOnboarding ){
+			this.drawerInitiallyOpen = false;
+		}
+
+		return isOnboarding;
 	}
 	
 	getDrawerComponent() {

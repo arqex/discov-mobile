@@ -4,6 +4,7 @@ import { ListItem, Button } from '../../components';
 import { MaterialIcons } from '@expo/vector-icons';
 import Flash from './Flash';
 import PlaceListItem from '../components/PlaceListItem';
+import { log } from '../../utils/logger';
 
 interface LocationSelectorProps {
 	onSelect: Function,
@@ -87,6 +88,10 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 	renderPlaces(){
 		const places = this.props.places
 		if( !places ) return;
+
+		if( !places.map ){
+			return log('Places not as an array', places);
+		}
 		
 		return (
 			<ScrollView style={ styles.placesWrapper }

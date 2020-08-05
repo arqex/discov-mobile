@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, ScrollScreen, Text, Button, SearchBar, TopBar } from '../../components';
+import { Bg, ScrollScreen, Text, Button, SearchBar, TopBar, Tooltip, Wrapper } from '../../components';
 import PeopleListItem from '../components/PeopleListItem';
 import storeService from '../../state/store.service';
 
@@ -49,7 +49,7 @@ export default class MorePeople extends Component<ScreenProps> {
 		}
 
 		return (
-			<View style={styles.header}>
+			<View style={[styles.header, styles.searchHeader]}>
 				<Text type="header">Search for people</Text>
 				{this.renderSearchSubtitle()}
 			</View>
@@ -63,7 +63,8 @@ export default class MorePeople extends Component<ScreenProps> {
 		);
 
 		let searchbar = (
-			<SearchBar onOpen={this._startSearch}
+			<SearchBar
+				onOpen={this._startSearch}
 				onClose={this._endSearch}
 				onSearch={this._onSearch}
 				preButtons={backButton}
@@ -73,7 +74,7 @@ export default class MorePeople extends Component<ScreenProps> {
 		);
 
 		return (
-			<TopBar content={searchbar}
+			<TopBar content={ searchbar }
 				animatedScrollValue={this.animatedScrollValue}
 				withSafeArea />
 		);
@@ -108,9 +109,11 @@ export default class MorePeople extends Component<ScreenProps> {
 
 	renderSubtitle(text) {
 		return (
-			<Text type="paragraph" style={{ textAlign: 'center' }}>
-				{text}
-			</Text>
+			<Wrapper margin="8 0">
+				<Tooltip style={{maxWidth: 300}}>
+					{text}
+				</Tooltip>
+			</Wrapper>
 		);
 	}
 
@@ -204,5 +207,8 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		paddingLeft: 30,
 		paddingRight: 30
+	},
+	searchHeader: {
+		paddingTop: 20
 	}
 });

@@ -86,6 +86,7 @@ export default class SearchBar extends React.Component<SearchBarProps> {
                 value={ this.state.text }
                 color={ styleVars.colors.blueText }
                 onSubmitEditing={ this._onSearch }
+                style={{height: 38}}
                 onChangeText={ this._onQueryChange } />
             </View>
           <Button type="icon"

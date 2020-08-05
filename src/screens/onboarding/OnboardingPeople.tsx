@@ -59,6 +59,9 @@ Discov is all about sharing with your people, so why not to begin by following s
 		this.props.actions.account.updateAccount({
 			extra: JSON.stringify({})
 		});
+
+		// Preload people around
+		this.props.actions.account.loadAround();
 	}
 }
 
