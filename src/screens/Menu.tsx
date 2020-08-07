@@ -48,7 +48,8 @@ export default class Menu extends Component<ScreenProps> {
 										<Avatar name={ account.displayName }
 											pic={ account.avatarPic }
 											size={ 60 }
-											border={ 3 } />
+											border={ 3 }
+											borderColor="red" />
 									</View>
 									<Text type="header">{account.displayName}</Text>
 								</View>

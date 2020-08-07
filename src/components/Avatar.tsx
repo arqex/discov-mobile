@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { intToRGB, hashCode } from './utils/colors';
 import { Text, View, StyleSheet, Image } from 'react-native';
+import styleVars from './styleVars';
 
 interface AvatarProps {
 	name: string,
 	pic?: string,
 	size?: number,
 	border?: number,
-	borderColor?: number
+	borderColor?: 'white' | 'red' | 'blue'
 }
 
 export default class Avatar extends React.Component<AvatarProps> {
@@ -15,7 +16,8 @@ export default class Avatar extends React.Component<AvatarProps> {
 
 	static defaultProps = {
 		size: 32,
-		border: 1
+		border: 1,
+		borderColor: 'white'
 	}
 
 	constructor( props ){
@@ -30,7 +32,8 @@ export default class Avatar extends React.Component<AvatarProps> {
 			borderRadius: size,
 			width: size,
 			height: size,
-			borderWidth: this.props.border
+			borderWidth: this.props.border,
+			borderColor: borderColors[ this.props.borderColor ]
 		}
 
 		let textSize = {
@@ -72,6 +75,12 @@ function getInitials( name ){
 		return (parts[0][0] + parts[1][0]).toUpperCase();
 	}
 	return parts[0][0].toUpperCase();
+}
+
+const borderColors = {
+	white: '#fff',
+	red: styleVars.colors.borderRed,
+	blue: styleVars.colors.borderBlue
 }
 
 const styles = StyleSheet.create({

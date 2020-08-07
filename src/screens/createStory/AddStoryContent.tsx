@@ -35,7 +35,8 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 					title={ __('createStory.writeTitle') }
 				/>
 				<View style={styles.textInputWrapper }>
-					<TextInput multiline style={styles.textInput}
+					<TextInput multiline
+						style={styles.textInput}
 						ref={ this.input }
 						onChangeText={ content => this.setState({content}) }
 						value={ this.state.content } />

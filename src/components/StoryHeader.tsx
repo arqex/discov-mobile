@@ -29,7 +29,9 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 					<TouchableOpacity onPress={ this._goToAccount }>
 						<Avatar name={account.displayName}
 							pic={account.avatarPic}
-							size={60} />
+							size={60}
+							border={2}
+							borderColor="blue" />
 					</TouchableOpacity>
 				</View>
 				<View style={styles.texts}>

@@ -55,7 +55,11 @@ class PeerAccount extends Component<PeerAccountProps> {
 		return (
 			<View style={styles.openHeader}>
 				<View style={styles.avatar}>
-					<Avatar name={acc.displayName} pic={acc.avatarPic} size={70} border={2} />
+					<Avatar name={acc.displayName}
+						pic={acc.avatarPic}
+						size={70}
+						border={2}
+						borderColor="blue" />
 				</View>
 				<Text type="header">{acc.displayName}</Text>
 				{ this.renderDescription( acc ) }				

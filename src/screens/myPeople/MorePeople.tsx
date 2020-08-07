@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Animated } from 'react-native';
+import { StyleSheet, View, Animated, Platform } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, ScrollScreen, Text, Button, SearchBar, TopBar, Tooltip, Wrapper } from '../../components';
 import PeopleListItem from '../components/PeopleListItem';
@@ -94,7 +94,7 @@ export default class MorePeople extends Component<ScreenProps> {
 			return (
 				<View>
 					{this.renderSubtitle(<Text>No people found for <Text>{searchTerms}</Text></Text>)}
-					<Button size="s">Clear search</Button>
+					<Button size="s" type="transparent">Clear search</Button>
 				</View>
 			)
 		}
@@ -209,6 +209,6 @@ const styles = StyleSheet.create({
 		paddingRight: 30
 	},
 	searchHeader: {
-		paddingTop: 20
+		paddingTop: Platform.OS === 'ios' ? 50 : 20
 	}
 });

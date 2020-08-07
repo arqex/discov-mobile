@@ -5,7 +5,9 @@ import AccountProvider from '../../providers/AccountProvider';
 
 interface AccountAvatarProps {
 	account: any,
-	size?: number
+	size?: number,
+	border?: number,
+	borderColor?: 'white' | 'red' | 'blue'
 }
 
 const AccountAvatar = (props: AccountAvatarProps) => {
@@ -19,7 +21,9 @@ const AccountAvatar = (props: AccountAvatarProps) => {
 	return (
 		<Avatar name={account.displayName}
 			pic={account.avatarPic}
-			size={ size } />
+			size={ size }
+			border={ props.border }
+			borderColor={ props.borderColor } />
 	);
 };
 
