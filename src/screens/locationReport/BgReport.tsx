@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ScrollView, FlatList } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Wrapper } from '../../components';
 
@@ -11,21 +11,26 @@ export default class LocationReport extends Component<ScreenProps> {
 		return (
 			<Wrapper padding="40 10">
 				<Text>Logs</Text>
-				<ScrollView contentContainerStyle={styles.container}>
-					{ logs.map(this._renderLog) }
-				</ScrollView>
+				<FlatList contentContainerStyle={styles.container}
+					data={ logs }
+					renderItem={ this._renderLog }
+					keyExtractor={ this._keyExtractor } />
 			</Wrapper>
 		);
 	}
 
-	_renderLog = line => {
+	_renderLog = ({item}) => {
 		return (
 			<View style={styles.line}>
-				<Text>{this.renderDate(line.time)}</Text>
-				<Text style={styles.type}>{line.type}</Text>
-				{ this.renderItems(line.items) }
+				<Text>{this.renderDate(item.time)}</Text>
+				<Text style={styles.type}>{item.type}</Text>
+				{ this.renderItems(item.items) }
 			</View>
 		);
+	}
+
+	_keyExtractor = item => {
+		return `l${item.time}`;
 	}
 
 	renderDate( t ){
