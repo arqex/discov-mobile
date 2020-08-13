@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Animated, ActivityIndicator, Platform } from 'react-native';
+import { StyleSheet, View, Animated, ActivityIndicator, Platform, RefreshControl } from 'react-native';
 import styleVars from './styleVars';
 import interpolations from './utils/scrollInterpolation';
 import { getStatusbarHeight } from './utils/getStatusbarHeight';
@@ -17,7 +17,8 @@ interface ScrollScreenProps {
 	data?: Array<any>,
 	renderItem?: any,
 	keyExtractor?: (item: any) => string,
-	ListEmptyComponent?: any
+	ListEmptyComponent?: any,
+	onRefresh?: () => Promise<any>
 }
 
 export default class ScrollScreen extends Component<ScrollScreenProps> {
@@ -26,6 +27,10 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 	headerTranslate: Animated.AnimatedInterpolation;
 	openOpacity: Animated.AnimatedInterpolation;
 	closedOpacity: Animated.AnimatedInterpolation;
+
+	state =	 {
+		refreshing: false
+	}
 
 	constructor(props) {
 		super(props);
@@ -107,6 +112,7 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 				data={this.props.data}
 				renderItem={this.props.renderItem}
 				keyExtractor={this.props.keyExtractor}
+				refreshControl={ this.getRefresh() }
 				// contentContainerStyle={{ width: '100%' }}
 			/>
 		);
@@ -120,6 +126,7 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 				snapToEnd={false}
 				decelerationRate="fast"
 				nestedScrollEnabled={true}
+				refreshControl={this.getRefresh()}
 				scrollEventThrottle={1}>
 				{this.renderScrollPadding()}
 				{this.props.children}
@@ -148,6 +155,29 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 				</Animated.View>
 			</View>
 		);
+	}
+
+	getRefresh(){
+		if( !this.props.onRefresh ) return;
+
+		console.log( this.state.refreshing );
+
+		return (
+			<RefreshControl
+				refreshing={ this.state.refreshing }
+				onRefresh={ this._onRefresh } />
+		);
+	}
+
+	_onRefresh = () => {
+		console.log('Refreshing start');
+		this.setState({refreshing: true});
+		this.props.onRefresh()
+			.finally( () => {
+				console.log('Refreshing end');
+				this.setState({ refreshing: false });
+			})
+		;	
 	}
 }
 

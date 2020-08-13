@@ -54,8 +54,6 @@ function getImageUrl( width, height, location ){
 		`&key=${GMAPS_KEY}` + 
 		`&style=feature:poi|visibility:off`
 	;
-
-	console.log( url );
 	
 	return url;
 }

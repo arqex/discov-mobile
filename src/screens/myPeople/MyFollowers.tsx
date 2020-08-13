@@ -42,6 +42,7 @@ export default class MyFollowers extends Component<ScreenProps> {
 					animatedScrollValue={this.animatedScrollValue}
 					data={followers && followers.items}
 					renderItem={this._renderItem}
+					onRefresh={this._loadFollowers}
 					keyExtractor={item => item} />
 			</Bg>
 		)
@@ -56,7 +57,7 @@ export default class MyFollowers extends Component<ScreenProps> {
 		let followers = this.getFollowers();
 
 		if (!followers || !followers.valid || followers.lastUpdatedAt + this.EXPIRE_TIME < Date.now()) {
-			this.props.actions.relationship.loadUserFollowers();
+			this._loadFollowers();
 		}
 	}
 
@@ -82,6 +83,10 @@ export default class MyFollowers extends Component<ScreenProps> {
 
 	_goToAccount = id => {
 		this.props.router.navigate(`/myPeople/myFollowers/${id}`);
+	}
+
+	_loadFollowers = () => {
+		return this.props.actions.relationship.loadUserFollowers();
 	}
 }
 

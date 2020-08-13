@@ -32,6 +32,7 @@ export default class MorePeople extends Component<ScreenProps> {
 					loading={this.isLoading()}
 					data={data}
 					renderItem={this._renderItem}
+					onRefresh={this._loadAround}
 					keyExtractor={item => item} />
 			</Bg>
 		)
@@ -135,7 +136,7 @@ export default class MorePeople extends Component<ScreenProps> {
 		let people = this.getPeople();
 		if ( !people || !people.valid || people.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ) {
 			console.log('Loading!!');
-			this.props.actions.account.loadAround();
+			this._loadAround();
 		}
 	}
 
@@ -186,7 +187,11 @@ export default class MorePeople extends Component<ScreenProps> {
 					searchResults: results
 				})
 			})
-			;
+		;
+	}
+
+	_loadAround = () => {
+		return this.props.actions.account.loadAround();
 	}
 }
 

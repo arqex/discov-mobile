@@ -36,6 +36,7 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 					animatedScrollValue={this.animatedScrollValue}
 					data={ discoveries && discoveries.items}
 					renderItem={this._renderItem}
+					onRefresh={ this._loadDiscoveries }
 					keyExtractor={item => item} />
 			</Bg>
 		)
@@ -83,7 +84,7 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 		let discoveries = this.getDiscoveries();
 
 		if( !discoveries || discoveries.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ) {
-			this.props.actions.discovery.loadUserDiscoveries();
+			this._loadDiscoveries();
 		}
 	}
 
@@ -97,6 +98,10 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 				router={this.props.router}
 				rootPath="/myDiscoveries" />
 		);
+	}
+
+	_loadDiscoveries = () => {
+		return this.props.actions.discovery.loadUserDiscoveries();
 	}
 }
 

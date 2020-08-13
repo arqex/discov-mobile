@@ -37,6 +37,7 @@ export default class MyStories extends Component<ScreenProps> {
 					loading={ !stories }
 					data={ stories && stories.items }
 					renderItem={ this._renderItem }
+					onRefresh={ this._loadStories }
 					keyExtractor={ item => item } />
 			</Bg>
 		)
@@ -52,9 +53,7 @@ export default class MyStories extends Component<ScreenProps> {
 		let stories = this.getStories();
 
 		if (!stories || stories.lastUpdatedAt + this.EXPIRE_TIME < Date.now()) {
-			this.waitForActions().then(() => {
-				this.props.actions.story.loadUserStories();
-			})
+			this.waitForActions().then( this._loadStories )
 		}
 	}
 
@@ -78,6 +77,10 @@ export default class MyStories extends Component<ScreenProps> {
 				router={this.props.router}
 				rootPath="/myStories" />
 		);
+	}
+
+	_loadStories = () => {
+		return this.props.actions.story.loadUserStories();
 	}
 }
 

@@ -44,6 +44,7 @@ export default class Following extends Component<ScreenProps> {
 					loading={!following}
 					data={ following && following.items}
 					renderItem={ this._renderItem }
+					onRefresh={ this._loadFollowing }
 					keyExtractor={item => item} />
 			</Bg>
 		)
@@ -58,16 +59,7 @@ export default class Following extends Component<ScreenProps> {
 	componentDidMount() {
 		let following = this.getFollowing();
 		if (!following || !following.valid || following.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ) {
-			this.props.actions.relationship.loadUserFollowing();
-		}
-	}
-
-	componentDidUpdate() {
-		let following = this.getFollowing();
-
-		if( !following || !following.valid ){
-			console.log('Refreshing following');
-			this.props.actions.relationship.loadUserFollowing();
+			this._loadFollowing();
 		}
 	}
 
@@ -83,6 +75,10 @@ export default class Following extends Component<ScreenProps> {
 
 	_goToAccount = id => {
 		this.props.router.navigate(`/myPeople/following/${id}`);
+	}
+
+	_loadFollowing = () => {
+		return this.props.actions.relationship.loadUserFollowing();
 	}
 }
 
