@@ -235,6 +235,7 @@ export default {
 		this.invalidateFollowing();
 		store.peerAccounts = {};
 		store.peerMeta = {};
+		store.placesByLocation = {};
 		
 		delete store.user.stories;
 		delete store.user.discoveries;

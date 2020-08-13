@@ -90,7 +90,8 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 		if( !places ) return;
 
 		if( !places.map ){
-			return log('Places not as an array', places);
+			log('Places not as an array', places);
+			return;
 		}
 		
 		return (
