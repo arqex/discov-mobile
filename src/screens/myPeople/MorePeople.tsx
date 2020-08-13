@@ -130,9 +130,10 @@ export default class MorePeople extends Component<ScreenProps> {
 		return this.props.store.accountsAround;
 	}
 
+	EXPIRE_TIME = 24 * 60 * 60 * 1000; // One day
 	componentDidMount() {
 		let people = this.getPeople();
-		if (!people || !people.items) {
+		if ( !people || !people.valid || people.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ) {
 			console.log('Loading!!');
 			this.props.actions.account.loadAround();
 		}

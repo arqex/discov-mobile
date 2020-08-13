@@ -12,6 +12,7 @@
     "android:bgFetch": "adb shell cmd jobscheduler run -f com.discovmobile 999",
     "ios": "react-native run-ios",
     "ios:release": "react-native run-ios --device --configuration Release",
+    "ios:ota:Production": "appcenter codepush release-react -a arqex/discov-ios -d Production --plist-file ios/discovmobile/Info.plist",
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watch",

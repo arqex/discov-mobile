@@ -159,6 +159,8 @@ export default function (store, api) {
 
 					store.accountsAround = {
 						...res,
+						lastUpdatedAt: Date.now(),
+						valid: true,
 						items: ids
 					};
 				})

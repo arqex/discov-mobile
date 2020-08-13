@@ -50,15 +50,14 @@ export default class Following extends Component<ScreenProps> {
 	}
 
 	getFollowing() {
-		let following = this.props.store.user.following;
-		if ( following && following.valid ) {
-			return following;
-		}
+		return this.props.store.user.following;
 	}
 
+
+	EXPIRE_TIME = 60 * 60 * 1000; // One hour
 	componentDidMount() {
 		let following = this.getFollowing();
-		if (!following || !following.valid ) {
+		if (!following || !following.valid || following.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ) {
 			this.props.actions.relationship.loadUserFollowing();
 		}
 	}

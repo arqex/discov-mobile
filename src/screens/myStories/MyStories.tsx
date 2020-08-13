@@ -46,8 +46,12 @@ export default class MyStories extends Component<ScreenProps> {
 		return this.props.store.user.stories;
 	}
 
+	EXPIRE_TIME = 24 * 60 * 60 * 1000; // One day
+
 	componentDidMount() {
-		if( !this.getStories() ){
+		let stories = this.getStories();
+
+		if (!stories || stories.lastUpdatedAt + this.EXPIRE_TIME < Date.now()) {
 			this.waitForActions().then(() => {
 				this.props.actions.story.loadUserStories();
 			})

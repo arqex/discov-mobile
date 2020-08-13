@@ -100,8 +100,13 @@ class PeerAccount extends Component<PeerAccountProps> {
 		return storeService.getPeerMeta( this.props.accountId );
 	}
 
+	EXPIRE_TIME = 60 * 60 * 1000; // One hour
+
 	componentDidMount(){
-		if( !this.getAccountMeta() ){
+		let accountMeta = this.getAccountMeta();
+		
+		if( !accountMeta || !accountMeta.valid || accountMeta.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ){
+			// Reload the data when is not valid or expired
 			this.loadMeta();
 		}
 	}

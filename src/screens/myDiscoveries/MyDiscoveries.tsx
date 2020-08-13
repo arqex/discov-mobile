@@ -77,8 +77,12 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 		return this.props.store.user.discoveries;
 	}
 
+	EXPIRE_TIME = 60 * 60 * 1000; // One hour
+
 	componentDidMount(){
-		if ( true ) { // !this.getDiscoveries() ){
+		let discoveries = this.getDiscoveries();
+
+		if( !discoveries || discoveries.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ) {
 			this.props.actions.discovery.loadUserDiscoveries();
 		}
 	}

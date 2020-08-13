@@ -48,15 +48,14 @@ export default class MyFollowers extends Component<ScreenProps> {
 	}
 
 	getFollowers() {
-		let followers = this.props.store.user.followers;
-
-		if (followers && followers.valid) {
-			return followers;
-		}
+		return this.props.store.user.followers;
 	}
 
+	EXPIRE_TIME = 60 * 60 * 1000; // One hour
 	componentDidMount() {
-		if (!this.getFollowers()) {
+		let followers = this.getFollowers();
+
+		if (!followers || !followers.valid || followers.lastUpdatedAt + this.EXPIRE_TIME < Date.now()) {
 			this.props.actions.relationship.loadUserFollowers();
 		}
 	}
