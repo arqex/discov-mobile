@@ -148,10 +148,13 @@ function restoreStore(){
 			if( strBackup ){
 				try {	
 					let backup = JSON.parse( strBackup );
+
 					if(backup.user && backup.user.id){
 						Object.keys(backup).forEach(key => {
 							store[key] = backup[key];
 						});
+
+						store.accountStatus = {}; // Clear the account status in case we need to refresh
 					}
 
 					console.log(`###### Backup RESTORED: ${backup.locationReport && backup.locationReport.length}`);
