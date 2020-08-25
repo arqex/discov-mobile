@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { Keyboard, View, TextInput, StyleSheet, Alert } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import {TopBar, Button } from '../../components';
+import {TopBar, Button, Wrapper } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
+import StoryImagePicker from './StoryImagePicker';
 
 interface AddStoryContentState {
 	content: string,
@@ -42,7 +43,10 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 						value={ this.state.content } />
 				</View>
 				<View style={[styles.bottomBar, extraPadding]}>
-					<Button size="s" onPress={ this._onContentOk }>{ __('ok') }</Button>
+					<StoryImagePicker images={[]} onChange={ () => {} } />
+					<View>
+						<Button size="s" onPress={ this._onContentOk }>{ __('ok') }</Button>
+					</View>
 				</View>
 			</View>
 		)
@@ -51,7 +55,6 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 	focusInput() {
 		this.input.current && this.input.current.focus();
 	}
-
 
 	_onContentOk = () => {
 		if( !this.state.content ){
@@ -63,6 +66,14 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 		story.content = this.state.content;
 
 		this.props.router.navigate('/createStory/addContent/share');
+	}
+
+	_onCamera = () => {
+
+	}
+
+	_onGallery = () => {
+
 	}
 
 	_onSelection = e => {
@@ -120,7 +131,8 @@ const styles = StyleSheet.create({
 	},
 	bottomBar: {
 		flexDirection: 'row',
-		justifyContent: 'flex-end',
+		alignItems: 'center',
+		justifyContent: 'space-between',
 		paddingTop: 10,
 		paddingBottom: 10,
 		paddingLeft: 20,

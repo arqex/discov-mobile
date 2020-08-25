@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { ModalContent, Modal, Input, styleVars, Text } from '../../components';
-import ImagePicker from 'react-native-image-crop-picker';
-import { uploadImage, openAvatarPicker, openAvatarCamera } from '../../utils/image.service';
+import { StyleSheet } from 'react-native';
+import { ModalContent, Modal, Text } from '../../components';
+import { uploadImage, openAvatarPicker, openCamera } from '../../utils/image.service';
 
 interface AvatarModalProps {
 	onSave: (field: string, value: string) => void
@@ -53,7 +52,7 @@ class AvatarModal extends React.Component<AvatarModalProps> {
 	_openCamera = () => {
 		this.setState({status: 'processing'});
 
-		openAvatarCamera()
+		openCamera()
 			.then( this._handleSelectedAvatar )
 		;
 	}

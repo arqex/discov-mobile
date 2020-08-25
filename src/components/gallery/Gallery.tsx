@@ -3,6 +3,7 @@ import { View, StyleSheet, Button } from 'react-native';
 import ButtonGallery from './ButtonGallery';
 import InputGallery from './InputGallery';
 import SpinnerGallery from './SpinnerGallery';
+// import ImagePickerGallery from './ImagePickerGallery';
 import TextGallery from './TextGallery';
 import ListItemGallery from './ListItemGallery';
 import AvatarGallery from './AvatarGallery';
@@ -29,6 +30,7 @@ const components = {
 	Bg: BgGallery,
 	Button: ButtonGallery,
 	Font: FontGallery,
+	// ImagePicker: ImagePickerGallery,
 	Input: InputGallery,
 	ListItem: ListItemGallery,
 	Logo: LogoGallery,

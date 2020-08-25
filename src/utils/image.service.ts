@@ -1,5 +1,3 @@
-import { Platform } from "react-native";
-import { getEnv } from '../../environment';
 import { dataService } from "../services/data.service";
 import ImagePicker from 'react-native-image-crop-picker';
 
@@ -24,16 +22,33 @@ export function uploadImage( image ) {
 
 export function openAvatarPicker(){
 	return ImagePicker.openPicker({
+		compressImageQuality: .8,
+		compressImageMaxHeight: 2000,
+		compressImageMaxWidth: 2000,
 		multiple: false,
 		includeBase64: true,
 		mediaType: 'photo'
 	});
 }
 
-export function openAvatarCamera() {
+export function openCamera() {
 	return ImagePicker.openCamera({
 		compressImageQuality: .8,
+		compressImageMaxHeight: 2000,
+		compressImageMaxWidth: 2000,
 		includeBase64: true,
 		mediaType: 'photo'
+	})
+}
+
+export function openStoryImageGallery(){
+	return ImagePicker.openPicker({
+		compressImageQuality: .8,
+		// compressImageMaxHeight: 2000,
+		compressImageMaxWidth: 2000,
+		multiple: true,
+		maxFiles: 5,
+		includeBase64: true,
+		mediaType: 'photo',
 	})
 }
