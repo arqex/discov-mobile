@@ -17,7 +17,7 @@ import SettingCardGallery from './SettingCardGallery';
 import MapScreenGallery from './MapScreenGallery';
 import TopBarGallery from './TopBarGallery';
 import TagGallery from './TagGallery';
-// import AvatarGroupGallery from './AvatarGroupGallery';
+import ProgressCircleGallery from './ProgressCircleGallery';
 import DrawerUpdate from './DrawerUpdate';
 import TabSelectorGallery from './TabSelectorGallery';
 import FontGallery from './FontGallery';
@@ -26,7 +26,6 @@ import WrapperGallery from './WrapperGallery';
 
 const components = {
 	Avatar: AvatarGallery,
-	// AvatarGroup: AvatarGroupGallery,
 	Bg: BgGallery,
 	Button: ButtonGallery,
 	Font: FontGallery,
@@ -35,6 +34,7 @@ const components = {
 	ListItem: ListItemGallery,
 	Logo: LogoGallery,
 	MapScreen: MapScreenGallery,
+	ProgressCircle: ProgressCircleGallery,
 	ScrollScreen: ScrollScreenGallery,
 	// ScrollScreen2: ScrollScreenGallery2,
 	SearchBar: SearchBarGallery,

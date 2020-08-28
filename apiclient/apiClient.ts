@@ -152,21 +152,45 @@ export class ApiClient {
 		return this.auth.logout();
 	}
 
-  uploadImage( imageData ){
+  uploadImage( imageData, progressClbk ){
 		let credentials = this.gql.config.credentials;
 		let endpoint = this._getUploadEndpoint();
 
 		console.log('Upload endpoint ' + endpoint + ' ' + credentials.authHeader );
 
-    return fetch( endpoint, {
-      method: 'POST',
-      body: JSON.stringify( imageData ),
-      headers: {
-        'Content-Type': 'application/json',
-				'Authorization': credentials.authHeader
-      }
-		})
-		.then( response => response.json() );
+		return new Promise( (resolve, reject) => {
+			const xhr = new XMLHttpRequest();
+
+			// listen for `upload.error` event
+			xhr.upload.onerror = err => {
+				console.log( err );
+				reject( err );
+			}
+
+			// listen for `upload.abort` event
+			xhr.upload.onabort = () => {
+				reject('aborted');
+			}
+
+			// listen for `progress` event
+			xhr.upload.onprogress = (event) => {
+				let percentage = Math.round( event.loaded / event.total * 100 );
+				progressClbk && progressClbk( percentage, event );
+				console.log(`${event.loaded / event.total * 100}%`);
+			}
+
+			xhr.onload = () => {
+				resolve( JSON.parse(xhr.responseText) );
+			}
+
+			// open request
+			xhr.open('POST', endpoint);
+
+			xhr.setRequestHeader('Content-Type', 'application/json');
+			xhr.setRequestHeader('Authorization', credentials.authHeader);
+
+			xhr.send(JSON.stringify(imageData));
+		});
 	}
 
 	///////

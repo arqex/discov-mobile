@@ -1,7 +1,8 @@
 export { default as Avatar } from './Avatar';
 export { default as AvatarGroup } from '../screens/components/AvatarGroup';
 export {default as Bg} from './Bg';
-export {default as Button} from './Button';
+export { default as Button } from './Button';
+export { default as CounterBadge } from './CounterBadge';
 export {default as DiscovMarker} from './DiscovMarker';
 export { default as Icon } from './Icon';
 export { default as Input } from './Input';

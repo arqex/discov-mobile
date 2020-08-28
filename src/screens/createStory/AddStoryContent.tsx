@@ -8,7 +8,8 @@ import StoryImagePicker from './StoryImagePicker';
 interface AddStoryContentState {
 	content: string,
 	selection: any,
-	emojiKeyboard: boolean
+	emojiKeyboard: boolean,
+	images: any[]
 }
 
 export default class AddStoryContent extends Component<ScreenProps, AddStoryContentState> {
@@ -19,7 +20,8 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 		this.state = {
 			content: story.content,
 			selection: { start: 0, end: 0 },
-			emojiKeyboard: false
+			emojiKeyboard: false,
+			images: story.images
 		};
 	}
 
@@ -43,7 +45,9 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 						value={ this.state.content } />
 				</View>
 				<View style={[styles.bottomBar, extraPadding]}>
-					<StoryImagePicker images={[]} onChange={ () => {} } />
+					<StoryImagePicker
+						images={ this.state.images }
+						onChange={ images => this.setState({images}) } />
 					<View>
 						<Button size="s" onPress={ this._onContentOk }>{ __('ok') }</Button>
 					</View>

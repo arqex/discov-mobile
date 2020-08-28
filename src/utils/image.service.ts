@@ -1,7 +1,7 @@
 import { dataService } from "../services/data.service";
 import ImagePicker from 'react-native-image-crop-picker';
 
-export function uploadImage( image ) {
+export function uploadImage( image, progressClbk ) {
 	let apiClient = dataService.getApiClient();
 	
 	let payload = {
@@ -9,7 +9,7 @@ export function uploadImage( image ) {
 		data: image.data
 	};
 
-	return apiClient.uploadImage( payload )
+	return apiClient.uploadImage( payload, progressClbk )
 		.then( response => {
 			console.log('Image upload Ok', response);
 			return response;
@@ -41,13 +41,13 @@ export function openCamera() {
 	})
 }
 
-export function openStoryImageGallery(){
+export function openStoryImageGallery( maxFiles ){
 	return ImagePicker.openPicker({
 		compressImageQuality: .8,
 		// compressImageMaxHeight: 2000,
 		compressImageMaxWidth: 2000,
 		multiple: true,
-		maxFiles: 5,
+		maxFiles: Math.min( maxFiles, 5 ),
 		includeBase64: true,
 		mediaType: 'photo',
 	})

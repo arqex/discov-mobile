@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
-import { StyleSheet } from 'react-native';
-import { Button } from '../../components';
-import { View } from 'react-native';
+import { StyleSheet, Image, View } from 'react-native';
+import { Button, styleVars, Tag, CounterBadge, Touchable } from '../../components';
 import { openCamera, openStoryImageGallery } from '../../utils/image.service';
+import MediaButtons from './MediaButtons';
+import StoryImages from './StoryImages';
 
-const THUMB_SIZE = 46;
+const MAX_IMAGES = 5;
 
 interface UploadImage {
-	file: any,
+	path: any,
+	data: any,
+	filename: string,
 	url?: string,
-	loaded: number
+	uploaded: number
 }
 
 interface StoryImagePickerProps {
@@ -28,35 +31,61 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 
 	render() {
 		return (
-			<View>
+			<View style={{flexDirection: 'row', alignItems: 'flex-end', transform: [{translateY: -5}]}}>
+				{ this.renderImages() }
 				{ this.renderSourceButtons() }
 			</View>
 		);
 	}
 
 	renderImages() {
+		let images = this.props.images;
+		if (!images.length) return;
 
+		return (
+			<StoryImages
+				removing={ this.state.mode === 'removing' }
+				onLongPress={ this._onRemoveMode }
+				images={ this.props.images }
+				onRemoveImage={ this._onRemoveImage } />
+		);
 	}
 
 	renderSourceButtons() {
+		if( this.state.mode === 'removing' || this.props.images.length >= MAX_IMAGES ) return;
+
 		return (
 			<View style={ styles.sourceButtons }>
-				<Button iconColor="#999" type="icon" icon="camera-alt" onPress={this._onCamera} />
-				<Button iconColor="#999" type="icon" icon="image" onPress={this._onGallery} />
+				<MediaButtons adding={ this.isAdding() }
+					onAdd={ this._onAddMode }
+					onCamera={ this._onCamera }
+					onGallery={ this._onGallery } />
 			</View>
 		);
 	}
 
-	renderAdder() {
-		return (
-			<View style={ styles.adder }>
-				<Button iconColor="#999" type="icon" icon="add-circle" onPress={this._onCamera} />
-			</View>
-		)
-	}
-
 	imagesAdded() {
 		return this.props.images.length > 0;
+	}
+
+	isAdding() {
+		let { mode } = this.state;
+		let { images } = this.props;
+		
+		return mode === 'adding' || mode === 'default' && !images.length;
+	}
+
+	modeTimer: any = false
+	_onAddMode = () => {
+		clearTimeout( this.modeTimer );
+		this.setState({mode: 'adding'});
+		this.modeTimer = setTimeout( () => { this.setState({mode: 'default'})}, 5000);
+	}
+
+	_onRemoveMode = () => {
+		clearTimeout(this.modeTimer);
+		this.setState({ mode: 'removing' });
+		this.modeTimer = setTimeout(() => { this.setState({ mode: 'default' }) }, 5000);
 	}
 
 	_onCamera = () => {
@@ -66,9 +95,35 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 	}
 
 	_onGallery = () => {
-		openStoryImageGallery().then( images => {
-			console.log( images )
-		});
+		openStoryImageGallery( this.getRemainingImages() )
+			.then( images => {
+				let updated = this.props.images.slice();
+
+				images.forEach( image => {
+					updated.push({
+						path: image.path,
+						data: image.data,
+						filename: image.filename,
+						uploaded: 0
+					});
+				});
+
+				this.props.onChange( updated );
+				console.log( images )
+			})
+		;
+	}
+
+	_onRemoveImage = index => {
+		let images = this.props.images.slice();
+		images.splice( index, 1 );
+		this.props.onChange( images );
+		// refresh remove timer
+		this._onRemoveMode();
+	}
+
+	getRemainingImages() {
+		return MAX_IMAGES - this.props.images.length;
 	}
 }
 

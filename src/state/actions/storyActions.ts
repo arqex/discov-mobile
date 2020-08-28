@@ -80,7 +80,8 @@ export default function (store, api) {
 					location: false,
 					discoveryRadius: 100,
 					content: '',
-					selectedFriends
+					selectedFriends,
+					images: []
 				};
 			}
 
