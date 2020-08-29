@@ -22,11 +22,16 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 
 	render() {
 		const {images} = this.props;
+		const st = {
+			flexDirection: 'row',
+			width: this.getContainerWidth(),
+			position: 'relative'
+		}
 
 		return (
 			<Touchable onLongPress={this.props.onLongPress}
 				disabled={ this.props.removing }>
-				<View style={{ flexDirection: 'row', width: THUMB_SIZE + (images.length * 5), position: 'relative' }}>
+				<View style={ st }>
 					{images.map(this._renderImage)}
 					{ this.renderCounter() }
 				</View>
@@ -88,6 +93,15 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 					size={size} />
 			</View>
 		)
+	}
+
+	getContainerWidth() {
+		const { removing, images } = this.props;
+
+		return removing ?
+			( 4 + THUMB_SIZE ) * images.length :
+			THUMB_SIZE + (images.length * 5)
+		;
 	}
 
 	getImageTranslate( index ){

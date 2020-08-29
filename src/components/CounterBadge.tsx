@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, StyleSheet, Text, Animated } from 'react-native'
+import { View, StyleSheet, Text, Animated, Platform } from 'react-native'
 import ProgressCircle from './ProgressCircle';
 import styleVars from './styleVars';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -124,6 +124,8 @@ export default class CounterBadge extends React.Component<CounterBadgeProps> {
 	}
 }
 
+
+const isAndroid = Platform.OS === 'android';
 const styles = StyleSheet.create({
 	container: {
 		borderColor: styleVars.colors.borderBlue,
@@ -134,7 +136,10 @@ const styles = StyleSheet.create({
 		overflow: 'hidden',
 		alignItems: 'center',
 		justifyContent: 'center',
-		transform: [{translateX: -0.5}, {translateY: -0.5}]
+		transform: [
+			{translateX: isAndroid ? -1.5 : -0.5},
+			{translateY: isAndroid ? -1.5 : -0.5}
+		]
 	},
 	progress: {
 		position: 'absolute', top: -1, left: -1, zIndex: 10

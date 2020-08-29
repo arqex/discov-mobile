@@ -31,9 +31,9 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 
 	render() {
 		return (
-			<View style={{flexDirection: 'row', alignItems: 'flex-end', transform: [{translateY: -5}]}}>
-				{ this.renderImages() }
+			<View style={{flexDirection: 'row-reverse', alignItems: 'flex-end', transform: [{translateY: -5}]}}>
 				{ this.renderSourceButtons() }
+				{ this.renderImages() }
 			</View>
 		);
 	}
@@ -118,8 +118,13 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 		let images = this.props.images.slice();
 		images.splice( index, 1 );
 		this.props.onChange( images );
-		// refresh remove timer
-		this._onRemoveMode();
+		if( !images.length ){
+			this.setState({mode: 'default'});
+		}
+		else {
+			// refresh remove timer
+			this._onRemoveMode();
+		}
 	}
 
 	getRemainingImages() {
