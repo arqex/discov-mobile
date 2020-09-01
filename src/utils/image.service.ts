@@ -1,11 +1,15 @@
 import { dataService } from "../services/data.service";
 import ImagePicker from 'react-native-image-crop-picker';
 
-export function uploadImage( image, progressClbk ) {
+interface UploadResult {
+	imageUrl?: string
+}
+
+export function uploadImage(image, type, progressClbk?) : Promise < UploadResult > {
 	let apiClient = dataService.getApiClient();
 	
 	let payload = {
-		type: 'avatar',
+		type,
 		data: image.data
 	};
 

@@ -5,12 +5,18 @@ import Text from './Text'
 import AccountProvider from '../providers/AccountProvider';
 import storeService from '../state/store.service';
 import Marker from './Marker';
+import StoryImages from '../screens/components/StoryImages';
+import memoizeOne from 'memoize-one';
+import moment from 'moment';
+
+const DAY_DATE_TIME = 6 * 30 * 20 * 60 * 60000; // 6 months
 
 interface StoryHeaderProps {
 	account: any,
 	accountId: string,
 	story: any
-	router: any
+	router: any,
+	showDate?: boolean
 }
 
 class StoryHeader extends React.Component<StoryHeaderProps> {
@@ -39,17 +45,41 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 						{ this.renderUserName( account ) }
 						{ this.renderPlace( story ) }
 					</View>
-					<View style={styles.date}>
-						<Text type="subtitle">{ this.renderDate( story )}</Text>
+					<View style={styles.right}>
+						{ this.renderRightContent( story ) }
 					</View>
 				</View>
 			</View>
 		);
 	}
 
+	renderRightContent( story ) {
+		let images = this.getImages( story );
+
+		if( !this.props.showDate && images ){
+			return (
+				<StoryImages images={ images } />
+			);
+		}
+
+		return (
+			<Text type="subtitle">
+				{ this.renderDate(story) }
+			</Text>
+		);
+	}
+
 	renderDate( story ){
-		let date = new Date(story.createdAt || Date.now());
-		return date.getDate() + `/` + (date.getMonth() + 1);
+		let createTime = story.createdAt || Date.now();
+		let diff = Date.now() - createTime;
+		let m = moment( createTime );
+
+		if( diff < DAY_DATE_TIME ){
+			return m.format('MM MMM');
+		}
+		else {
+			return m.format("MMM 'YY");
+		}
 	}
 
 	renderPlace( story ){
@@ -67,6 +97,30 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 			</View>
 		);
 	}
+
+	getImages( story ){
+		if( story.images ) return story.images;
+
+		const {assets} = story.content || {};
+		if( assets ){
+			return this._parseImageAssets( assets );
+		}
+	}
+
+	_parseImageAssets = memoizeOne( assets => {
+		let images = [];
+
+		assets.forEach( asset => {
+			if( asset.type === 'image' ){
+				images.push({
+					uri: asset.data + '_s',
+					filename: asset.data.split('/').slice(-1)[0]
+				});
+			}
+		});
+
+		return images;
+	});
 
 	_goToAccount = () => {
 		const {accountId} = this.props;
@@ -114,7 +168,7 @@ const styles = StyleSheet.create({
 		overflow: 'hidden',
 		marginRight: 10
 	},
-	date: {
+	right: {
 		flexShrink: 0
 	},
 	place: {

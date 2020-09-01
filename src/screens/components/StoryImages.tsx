@@ -6,10 +6,12 @@ import { MaterialIcons } from '@expo/vector-icons'
 const THUMB_SIZE = 46;
 
 interface StoryImagesProps {
-	removing: boolean,
-	onLongPress: () => any,
+	removing?: boolean,
+	onPress?: () => any,
+	onLongPress?: () => any,
 	images: any[],
-	onRemoveImage: (index: number) => any
+	onRemoveImage?: (index: number) => any,
+	uploadProgress?: number
 }
 
 export default class StoryImages extends React.Component<StoryImagesProps> {
@@ -47,7 +49,9 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 
 		return (
 			<Animated.View style={st}>
-				<CounterBadge progress={100} count={this.props.images.length} />
+				<CounterBadge
+					progress={ this.props.uploadProgress || 0 }
+					count={this.props.images.length} />
 			</Animated.View>
 		);
 	}
@@ -62,11 +66,13 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 		};
 
 		return (
-			<Touchable disabled={!this.props.removing} onPress={ () => this.props.onRemoveImage( i )}>
-				<Animated.View style={st} key={image.filename}>
+			<Touchable disabled={!this.props.removing}
+				onPress={ () => this.props.onRemoveImage( i )}
+				key={image.filename}>
+				<Animated.View style={st}>
 					<Image
 						style={{ width: THUMB_SIZE, height: THUMB_SIZE, borderWidth: 2, borderColor: 'white', borderRadius: 2 }}
-						source={{ uri: image.path }} />
+						source={{ uri: image.path || image.uri }} />
 					{ this.renderRemoveIcon() }
 				</Animated.View>
 			</Touchable>

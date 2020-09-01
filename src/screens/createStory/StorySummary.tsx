@@ -26,7 +26,6 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 
 	render() {
 		const story = this.getStory();
-		// ( 'Story', story );
 		
 		return (
 			<MapScreen top={ this.renderTopBar() }
@@ -188,6 +187,10 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 
 	createStory( isDraft ){
 		const story = this.getStory();
+		let content = { type: 'text', text: story.content };
+		if( story.images ){
+			content.assets = this.parseAssets( story.images );
+		}
 
 		// console.log( story.selectedFriends );
 
@@ -195,7 +198,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 			ownerId: this.props.store.user.id,
 			...story.location,
 			discoverDistance: story.discoveryRadius,
-			content: { type: 'text', text: story.content },
+			content,
 			sharedWith: Object.keys(story.selectedFriends).join(','),
 			status: isDraft ? 'draft' : 'published',
 			place: story.place
@@ -215,6 +218,13 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 				this.navigate('/myStories');
 			})
 		;
+	}
+
+	parseAssets( images ){
+		return images.map( image => ({
+			type: 'image',
+			data: image.uri
+		}));
 	}
 }
 

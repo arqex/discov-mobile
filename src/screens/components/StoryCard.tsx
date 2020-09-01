@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { View, StyleSheet, Dimensions, Platform } from 'react-native';
-import { StoryHeader, Button, MapImage, DiscovMarker, Text, Touchable, Tag, Wrapper } from '../../components';
+import { StoryHeader, Button, MapImage, DiscovMarker, Text, Touchable, Tag, Wrapper, styleVars } from '../../components';
 import StoryProvider from '../../providers/StoryProvider';
 import UnseenDiscovery from './UnseenDiscovery';
 import notifications from '../../utils/notifications';
+import FastImage from 'react-native-fast-image';
 
 interface StoryCardProps {
 	storyId: string,
@@ -31,27 +32,16 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 			);
 		}
 
-		const markerStyles = [
-			styles.marker,
-			Platform.OS === 'android' && styles.markerAndroid
-		];
-
 		return (
 			<View style={ styles.background }>
 				<Touchable style={ styles.container }
 					onPress={ this._goToDiscovery }>
-					<View style={ styles.images }  >
-						<View style={ markerStyles }>
-							<DiscovMarker location={ story } size="s" />
-						</View>
-						<MapImage width={ Dimensions.get('window').width }
-							height={ 80 }
-							location={ story } />
-					</View>
+					{ this.renderBanner() }
 					<View style={ styles.header }>
 						<StoryHeader accountId={ story.ownerId }
 							story={ story }
-							router={ this.props.router } />
+							router={ this.props.router }
+							showDate={ true } />
 					</View>
 					<Wrapper textWidth style={ styles.body }>
 						<Text type="paragraph" numberOfLines={3}>
@@ -71,6 +61,62 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 				</Touchable>
 			</View>
 		);
+	}
+
+	renderBanner() {
+		let image = this.getImageAsset();
+		let dimensions = Dimensions.get('window');
+
+		if( !image ){
+			return this.renderMapBanner( dimensions.width );
+		}
+		else {
+			return this.renderMapAndImageBanner( dimensions.width, image );
+		}
+	}
+
+	renderMapBanner( width ){
+		const markerStyles = [
+			styles.marker,
+			Platform.OS === 'android' && styles.markerAndroid
+		];
+
+		return (
+			<View style={styles.banner}  >
+				<View style={markerStyles}>
+					<DiscovMarker location={this.props.story} size="s" />
+				</View>
+				<MapImage width={ width }
+					height={80}
+					location={this.props.story} />
+			</View>
+		)
+	}
+
+	renderMapAndImageBanner( width, imageUrl ){
+		let imageWidth = Math.min( width / 3 * 2, 400 );
+		let mapWidth = width - imageWidth;
+
+		const markerStyles = [
+			styles.marker,
+			Platform.OS === 'android' && styles.markerAndroid,
+			{left: mapWidth / 2 }
+		];
+		return (
+			<View style={styles.banner}  >
+				<View style={markerStyles}>
+					<DiscovMarker location={this.props.story} size="s" />
+				</View>
+				<MapImage width={mapWidth}
+					height={80}
+					location={this.props.story} />
+				<View style={{borderLeftWidth: 1, borderLeftColor: styleVars.colors.borderBlue}}>
+					<FastImage source={{ uri: imageUrl + '_m' }}
+						style={{ width: imageWidth, height: 80 }}
+						resizeMode={FastImage.resizeMode.cover} />
+				</View>
+			</View>
+		)
 	}
 
 	renderLoading() {
@@ -105,6 +151,16 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		this.props.router.navigate( route );
 	}
 
+	getImageAsset(){
+		let assets: any[] = this.props.story.content.assets;
+		if( !assets || !assets.length ) return;
+
+		let i = 0;
+		while( i < assets.length ){
+			if( assets[i].type === 'image' ) return assets[i].data;
+		}
+	}
+
 	_goToDiscovery = () => {
 		this.navigate(`${ this.props.rootPath }/${ this.props.story.id }`)
 	}
@@ -136,17 +192,19 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 
-	images: {
+	banner: {
 		overflow: 'hidden',
 		position: 'relative',
 		height: 80,
 		flex: 1,
+		flexDirection: 'row',
 		justifyContent: 'center',
 		alignItems: 'center',
 		borderTopLeftRadius: 10,
 		borderTopRightRadius: 10,
-		backgroundColor: '#e8e8e8'
+		backgroundColor: 'red' // '#e8e8e8',
 	},
+	
 	marker: {
 		position: 'absolute',
 		top: '50%', left: '50%',

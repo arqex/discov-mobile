@@ -46,8 +46,7 @@ export default class AddStoryContent extends Component<ScreenProps, AddStoryCont
 				</View>
 				<View style={[styles.bottomBar, extraPadding]}>
 					<StoryImagePicker
-						images={ this.state.images }
-						onChange={ images => this.setState({images}) } />
+						images={ this.getStory().images } />
 					<View>
 						<Button size="s" onPress={ this._onContentOk }>{ __('ok') }</Button>
 					</View>

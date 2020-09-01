@@ -64,7 +64,7 @@ class AvatarModal extends React.Component<AvatarModalProps> {
 		}
 
 		this.setState({ status: 'uploading' });
-		uploadImage(result)
+		uploadImage(result, 'avatar')
 			.then(res => {
 				if (!res.imageUrl) {
 					this.setState({ status: 'error' });

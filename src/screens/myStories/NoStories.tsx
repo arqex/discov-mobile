@@ -28,6 +28,7 @@ export default class NoStories extends Component<ScreenProps> {
 			<Bg>
 				<ScrollScreen header={header}
 					animatedScrollValue={this.animatedScrollValue}
+					onRefresh={ this._loadStories }
 					topBar={ topBar }>
 						<View style={ styles.noStoriesCard }>
 							<Wrapper textWidth>
@@ -46,6 +47,10 @@ export default class NoStories extends Component<ScreenProps> {
 	
 	_createStory = () => {
 		this.props.router.navigate('/createStory')
+	}
+
+	_loadStories = () => {
+		return this.props.actions.story.loadUserStories();
 	}
 }
 

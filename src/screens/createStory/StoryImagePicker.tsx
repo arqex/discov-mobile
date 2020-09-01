@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, View } from 'react-native';
-import { Button, styleVars, Tag, CounterBadge, Touchable } from '../../components';
-import { openCamera, openStoryImageGallery } from '../../utils/image.service';
+import { StyleSheet, View } from 'react-native';
+import { openCamera, openStoryImageGallery, uploadImage } from '../../utils/image.service';
 import MediaButtons from './MediaButtons';
-import StoryImages from './StoryImages';
+import StoryImages from '../components/StoryImages';
 
 const MAX_IMAGES = 5;
 
 interface UploadImage {
 	path: any,
-	data: any,
 	filename: string,
-	url?: string,
+	uri?: string,
 	uploaded: number
 }
 
 interface StoryImagePickerProps {
-	images: UploadImage[],
-	onChange: (images: UploadImage[]) => any
+	images: UploadImage[]
 }
 
 interface StoryImagePickerState {
@@ -31,9 +28,9 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 
 	render() {
 		return (
-			<View style={{flexDirection: 'row-reverse', alignItems: 'flex-end', transform: [{translateY: -5}]}}>
+			<View style={{flexDirection: 'row', alignItems: 'flex-end', transform: [{translateY: -5}]}}>
+				{this.renderImages()}
 				{ this.renderSourceButtons() }
-				{ this.renderImages() }
 			</View>
 		);
 	}
@@ -44,6 +41,7 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 
 		return (
 			<StoryImages
+				uploadProgress={ this.getUploadProgress() }
 				removing={ this.state.mode === 'removing' }
 				onLongPress={ this._onRemoveMode }
 				images={ this.props.images }
@@ -75,6 +73,21 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 		return mode === 'adding' || mode === 'default' && !images.length;
 	}
 
+	getUploadProgress() {
+		let {images} = this.props;
+		if( !images.length ) return 100;
+
+		let total = 0;
+		let uploaded = 0;
+
+		images.forEach( image => {
+			total += 100;
+			uploaded += image.uploaded;
+		});
+
+		return Math.round( uploaded / total * 100 );
+	}
+
 	modeTimer: any = false
 	_onAddMode = () => {
 		clearTimeout( this.modeTimer );
@@ -96,28 +109,61 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 
 	_onGallery = () => {
 		openStoryImageGallery( this.getRemainingImages() )
-			.then( images => {
-				let updated = this.props.images.slice();
+			.then( this._onAddImages )
+		;
+	}
 
-				images.forEach( image => {
-					updated.push({
-						path: image.path,
-						data: image.data,
-						filename: image.filename,
-						uploaded: 0
-					});
-				});
+	_onAddImages = imagesToAdd => {
+		// These are directly the images from the store
+		// we can update them and the the screen will be refreshed
+		let images = this.props.images;
 
-				this.props.onChange( updated );
-				console.log( images )
+		imagesToAdd.forEach(image => {
+			images.push({
+				path: image.path,
+				filename: image.filename,
+				uploaded: 0
+			});
+
+			this.uploadImage( image )
+		});
+	}
+
+	uploadImage( image ){
+		let onProgress = percentage => {
+			let stored = this.findImage( image.filename );
+			stored && (stored.uploaded = percentage);
+		}
+
+		uploadImage( image, 'story', onProgress )
+			.then( res => {
+				console.log( res );
+
+				let stored = this.findImage(image.filename);
+				if( stored ){
+					stored.uploaded = 100;
+					stored.uri = res.imageUrl;
+				}
 			})
 		;
 	}
 
+	findImage( filename ){
+		const images = this.props.images;
+		let i = images.length;
+		while( i-- ){
+			if( images[i].filename === filename ){
+				return images[i];
+			}
+		}
+	}
+
 	_onRemoveImage = index => {
-		let images = this.props.images.slice();
+		// These are directly the images from the store
+		// we can update them and the the screen will be refreshed
+		let images = this.props.images;
 		images.splice( index, 1 );
-		this.props.onChange( images );
+
 		if( !images.length ){
 			this.setState({mode: 'default'});
 		}

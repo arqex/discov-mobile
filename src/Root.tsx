@@ -1,7 +1,7 @@
 
 /// <reference path="../types/custom.d.ts" />
 import * as React from 'react';
-import { StyleSheet, View, BackHandler, StatusBar, Platform, AppState } from 'react-native';
+import { StyleSheet, View, BackHandler, StatusBar, Platform, AppState, Dimensions } from 'react-native';
 import codePush from "react-native-code-push";
 import { dataService } from './services/data.service';
 import { Navigator, router } from './react-urlstack';
@@ -14,7 +14,6 @@ import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
 import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
 import BackButtonHandler from './utils/BackButtonHandler';
-
 
 globalThis.gql_debug = false;
 
