@@ -31,7 +31,9 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 		}
 
 		return (
-			<Touchable onLongPress={this.props.onLongPress}
+			<Touchable
+				onPress={this.props.onPress}
+				onLongPress={this.props.onLongPress}
 				disabled={ this.props.removing }>
 				<View style={ st }>
 					{images.map(this._renderImage)}

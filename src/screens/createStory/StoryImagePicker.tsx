@@ -6,10 +6,14 @@ import StoryImages from '../components/StoryImages';
 
 const MAX_IMAGES = 5;
 
+
+type ImageSize = [number, number];
+
 interface UploadImage {
 	path: any,
 	filename: string,
 	uri?: string,
+	size?: ImageSize,
 	uploaded: number
 }
 
@@ -143,6 +147,7 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 				if( stored ){
 					stored.uploaded = 100;
 					stored.uri = res.imageUrl;
+					stored.size = res.size;
 				}
 			})
 		;

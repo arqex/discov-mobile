@@ -16,7 +16,8 @@ interface StoryHeaderProps {
 	accountId: string,
 	story: any
 	router: any,
-	showDate?: boolean
+	showDate?: boolean,
+	onAssetsPress?: () => any
 }
 
 class StoryHeader extends React.Component<StoryHeaderProps> {
@@ -58,7 +59,9 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 
 		if( !this.props.showDate && images ){
 			return (
-				<StoryImages images={ images } />
+				<StoryImages
+					onPress={ this.props.onAssetsPress }
+					images={ images } />
 			);
 		}
 

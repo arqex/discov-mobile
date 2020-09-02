@@ -7,7 +7,8 @@ import StoryMap from './StoryMap';
 interface StoryScreenProps {
 	story: any,
 	layout: any,
-	router: any
+	router: any,
+	location: any,
 	onBack?: Function,
 	currentPosition?: any
 }
@@ -52,6 +53,7 @@ export default class StoryScreen extends Component<StoryScreenProps> {
 			<View style={ styles.header }>
 				<StoryHeader accountId={story.ownerId}
 					router={ this.props.router }
+					onAssetsPress={ this._navigateToImages }
 					story={story} />
 					<Wrapper textWidth>
 						<Text type="paragraph">
@@ -81,6 +83,13 @@ export default class StoryScreen extends Component<StoryScreenProps> {
 					onPress={ this.props.onBack }
 					withShadow />
 			</View>
+		);
+	}
+
+	_navigateToImages = () => {
+		console.log( this.props.location );
+		this.props.router.navigate(
+			`${this.props.location.pathname}/assets`
 		);
 	}
 }

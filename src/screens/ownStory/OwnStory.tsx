@@ -29,7 +29,8 @@ export default class OwnStory extends Component<ScreenProps> {
 			<StoryScreen
 				story={ story }
 				layout={this.props.layout}
-				router={ this.props.router }
+				router={this.props.router}
+				location={this.props.location}
 				currentPosition={currentPosition && currentPosition.coords}
 				onBack={ this._goBack } />
 		);
