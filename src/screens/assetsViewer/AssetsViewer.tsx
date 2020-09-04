@@ -2,7 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, StatusBar } from 'react-native';
 import { TopBar } from '../../components';
 import storeService from '../../state/store.service';
-import Gallery from 'react-native-image-gallery';
+import Gallery from '../../react-native-image-gallery/src/Gallery';
 
 interface AssetsViewerProps {
 	router: any,
