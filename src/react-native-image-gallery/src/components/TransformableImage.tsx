@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, Image, ImageLoadEventData, ImageStyle, ImageResizeMode } from 'react-native';
+import { View, Text, Image, ImageLoadEventData, ImageResizeMode, ViewStyle } from 'react-native';
 import ViewTransformer, { TransformEvent } from './ViewTransformer';
 
 export interface TransformableImageData {
@@ -9,7 +9,7 @@ export interface TransformableImageData {
 
 interface TransformableImageProps {
 	image: TransformableImageData,
-	style?: ImageStyle,
+	style?: ViewStyle,
 	onLoad?: (event: ImageLoadEventData) => any,
 	onLoadStart?: () => any,
 	enableTransform?: boolean,
@@ -28,7 +28,9 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 		enableScale: true,
 		enableTranslate: true,
 		imageComponent: undefined,
-		resizeMode: 'contain'
+		resizeMode: 'contain',
+		onLoadStart: nofn,
+		onLoad: nofn
 	};
 
 	_mounted = true;
@@ -37,7 +39,7 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 		viewWidth: 0,
 		viewHeight: 0,
 		imageLoaded: false,
-		imageDimensions: this.props.image.dimensions,
+		imageSize: this.props.image.dimensions,
 		keyAccumulator: 1,
 		error: false
 	};
@@ -49,19 +51,19 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 
 		let image = this.props.image;
 		if (!image.dimensions) {
-			this.getImageSize(image);
+			this.fetchImageSize(image);
 		}
 	}
 
 	componentDidUpdate(prevProps) {
 		if (!sameImage(this.props.image, prevProps.image)) {
-			// image source changed, clear last image's imageDimensions info if any
+			// image source changed, clear last image's imageSize info if any
 			this.setState({
-				imageDimensions: this.props.image.dimensions,
+				imageSize: this.props.image.dimensions,
 				keyAccumulator: this.state.keyAccumulator + 1
 			});
 			if (!this.props.image.dimensions) { // if we don't have image dimensions provided in source
-				this.getImageSize(this.props.image);
+				this.fetchImageSize(this.props.image);
 			}
 		}
 	}
@@ -71,14 +73,14 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 	}
 
 	_onLoadStart = () => {
-		this.props.onLoadStart && this.props.onLoadStart();
+		this.props.onLoadStart();
 		if (this.state.imageLoaded) {
 			this.setState({ imageLoaded: false });
 		}
 	}
 
 	_onLoad = e => {
-		this.props.onLoad && this.props.onLoad(e);
+		this.props.onLoad(e);
 		if (!this.state.imageLoaded) {
 			this.setState({ imageLoaded: true });
 		}
@@ -91,36 +93,16 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 		}
 	}
 
-	getImageSize(image) {
-		if (!image) {
-			return;
-		}
-		const { source, dimensions } = image;
+	fetchImageSize( image ) {
+		let onSuccess = (width, height) => {
+			this._mounted && this.setState({ imageSize: { width, height } })
+		};
+		let onError = error => {
+			console.warn( error );
+			this._mounted && this.setState({ error: true });
+		};
 
-		if (dimensions) {
-			this.setState({ imageDimensions: dimensions });
-			return;
-		}
-
-		if (source && source.uri) {
-			Image.getSize(
-				source.uri,
-				(width, height) => {
-					if (width && height) {
-						if (this.state.imageDimensions && this.state.imageDimensions.width === width && this.state.imageDimensions.height === height) {
-							// no need to update state
-						} else {
-							this._mounted && this.setState({ imageDimensions: { width, height } });
-						}
-					}
-				},
-				() => {
-					this._mounted && this.setState({ error: true });
-				}
-			);
-		} else {
-			console.warn('react-native-image-gallery', 'Please provide dimensions of your local images');
-		}
+		Image.getSize( image.source.uri, onSuccess, onError );
 	}
 
 	// This is accessed by the main gallery component
@@ -129,25 +111,8 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 	}
 
 	render() {
-		const { imageDimensions, viewWidth, viewHeight, keyAccumulator, imageLoaded, error } = this.state;
-		const { style, image, imageComponent, resizeMode, enableTransform, enableScale, enableTranslate, onTransformGestureReleased, onViewTransformed } = this.props;
-
-		let maxScale = 1;
-		let contentAspectRatio;
-		let width, height; // imageDimensions
-
-		if (imageDimensions) {
-			width = imageDimensions.width;
-			height = imageDimensions.height;
-		}
-
-		if (width && height) {
-			contentAspectRatio = width / height;
-			if (viewWidth && viewHeight) {
-				maxScale = Math.max(width / viewWidth, height / viewHeight);
-				maxScale = Math.max(1, maxScale);
-			}
-		}
+		const { keyAccumulator, imageLoaded, error } = this.state;
+		const { style, enableTransform, enableScale, enableTranslate, onTransformGestureReleased, onViewTransformed } = this.props;
 
 		return (
 			<ViewTransformer
@@ -159,8 +124,8 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 				enableResistance={true}
 				onTransformGestureReleased={onTransformGestureReleased}
 				onViewTransformed={onViewTransformed}
-				maxScale={maxScale}
-				contentAspectRatio={contentAspectRatio}
+				maxScale={ this.getMaxScale() }
+				contentAspectRatio={ this.getAspectRatio() }
 				onLayout={this._onLayout}
 				style={style}>
 				{error ? this.renderError() : this.renderImage()}
@@ -169,8 +134,8 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 	}
 
 	renderImage() {
-		const { imageLoaded, imageDimensions = {} } = this.state;
-		const { style, image, resizeMode, enableTransform, enableScale, enableTranslate, onTransformGestureReleased, onViewTransformed } = this.props;
+		const { imageLoaded } = this.state;
+		const { style, image, resizeMode } = this.props;
 
 		const imageProps = {
 			...this.props,
@@ -204,6 +169,20 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 			</View>
 		);
 	}
+
+	getMaxScale() {
+		const { imageSize, viewWidth, viewHeight } = this.state;
+		if( !imageSize || !viewWidth || !viewHeight ) return 1;
+		
+		return Math.max(
+			1, Math.max(imageSize.width / viewWidth, imageSize.height / viewHeight)
+		);
+	}
+
+	getAspectRatio(){
+		const { imageSize } = this.state;
+		return imageSize ? imageSize.width / imageSize.height : 1;
+	}
 }
 
 function sameImage(source, nextSource) {
@@ -217,3 +196,6 @@ function sameImage(source, nextSource) {
 	}
 	return false;
 }
+
+
+function nofn(){}

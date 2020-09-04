@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ReactNative, { View, Animated, Easing, NativeModules, LayoutChangeEvent } from 'react-native';
+import ReactNative, { View, Animated, Easing, NativeModules, LayoutChangeEvent, ViewProps } from 'react-native';
 import Scroller from '../libraries/Scroller';
 import { createResponder } from '../libraries/GestureResponder';
 import { Rect, Transform, transformedRect, availableTranslateSpace, fitCenterRect, alignedRect, getTransform } from '../libraries/TransformUtils';
@@ -10,7 +10,7 @@ export interface TransformEvent {
 	translateY: number
 }
 
-interface ViewTransformerProps {
+interface ViewTransformerProps extends ViewProps {
 	enableTransform?: boolean,
 	enableScale?: boolean,
 	enableTranslate?: boolean,
@@ -36,7 +36,9 @@ export default class ViewTransformer extends React.Component<ViewTransformerProp
 		enableTranslate: true,
 		enableTransform: true,
 		maxScale: 1,
-		enableResistance: false
+		enableResistance: false,
+		onSingleTapConfirmed: nofn,
+		contentAspectRatio: 1
 	};
 
 	_viewPortRect = new Rect();
@@ -82,9 +84,7 @@ export default class ViewTransformer extends React.Component<ViewTransformerProp
 			onResponderRelease: this._onResponderRelease,
 			onResponderTerminate: this._onResponderRelease,
 			onResponderTerminationRequest: () => false, // Do not allow parent view to intercept gesture
-			onResponderSingleTapConfirmed: () => {
-				this.props.onSingleTapConfirmed && this.props.onSingleTapConfirmed();
-			}
+			onResponderSingleTapConfirmed: this.props.onSingleTapConfirmed
 		});
 	}
 
@@ -94,19 +94,16 @@ export default class ViewTransformer extends React.Component<ViewTransformerProp
 	}
 
 	getContentRect() {
-		let rect = this.viewPortRect().copy();
-		if (this.props.contentAspectRatio && this.props.contentAspectRatio > 0) {
-			rect = fitCenterRect(this.props.contentAspectRatio, rect);
-		}
-		return rect;
+		return fitCenterRect(
+			this.props.contentAspectRatio, this.viewPortRect().copy()
+		);
 	}
 
 	getTransformedContentRect() {
-		let rect = transformedRect(this.viewPortRect(), this.currentTransform());
-		if (this.props.contentAspectRatio && this.props.contentAspectRatio > 0) {
-			rect = fitCenterRect(this.props.contentAspectRatio, rect);
-		}
-		return rect;
+		return fitCenterRect(
+			this.props.contentAspectRatio,
+			transformedRect(this.viewPortRect(), this.currentTransform())
+		);
 	}
 
 	currentTransform() {
@@ -416,3 +413,6 @@ export default class ViewTransformer extends React.Component<ViewTransformerProp
 		return availableTranslateSpace(this.getTransformedContentRect(), this.viewPortRect());
 	}
 }
+
+
+function nofn() { }
