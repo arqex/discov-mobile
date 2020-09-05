@@ -8,8 +8,8 @@ import {
 	Dimensions,
 	FlatListProps
 } from 'react-native';
-import Scroller from '../libraries/Scroller';
-import { createResponder } from '../libraries/GestureResponder';
+import Scroller from '../utils/Scroller';
+import { createResponder } from '../utils/GestureResponder';
 
 const MIN_FLING_VELOCITY = 0.5;
 
@@ -46,7 +46,9 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 		pageDataArray: [],
 		initialListSize: 10,
 		removeClippedSubviews: true,
-		flatListProps: {}
+		flatListProps: {},
+		onPageSelected: nofn,
+		onPageScrollStateChanged: nofn
 	};
 
 	currentPage = undefined; // Do not initialize to make onPageSelected(0) be dispatched
@@ -76,7 +78,7 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 		return new Scroller(true, (dx, dy, scroller) => {
 			if (dx === 0 && dy === 0 && scroller.isFinished()) {
 				if (!this.activeGesture) {
-					this.onPageScrollStateChanged('idle');
+					this.props.onPageScrollStateChanged('idle');
 				}
 			} else {
 				const curX = this.scroller.getCurrX();
@@ -100,7 +102,7 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 		// FlatList is set to render at initialPage.
 		// The scroller we use is not aware of this.
 		// Let it know by simulating most of what happens in scrollToPage()
-		this.onPageScrollStateChanged('settling');
+		this.props.onPageScrollStateChanged('settling');
 
 		const page = this.validPage(this.props.initialPage);
 		this.onPageChanged(page);
@@ -140,7 +142,7 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 
 	_onResponderGrant = (evt, gestureState) => {
 		this.activeGesture = true;
-		this.onPageScrollStateChanged('dragging');
+		this.props.onPageScrollStateChanged('dragging');
 	}
 
 	_onResponderMove = (evt, gestureState) => {
@@ -158,12 +160,8 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 	onPageChanged(page) {
 		if (this.currentPage !== page) {
 			this.currentPage = page;
-			this.props.onPageSelected && this.props.onPageSelected(page);
+			this.props.onPageSelected(page);
 		}
-	}
-
-	onPageScrollStateChanged(state) {
-		this.props.onPageScrollStateChanged && this.props.onPageScrollStateChanged(state);
 	}
 
 	settlePage(vx) {
@@ -200,7 +198,7 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 	}
 
 	flingToPage(page, velocityX) {
-		this.onPageScrollStateChanged('settling');
+		this.props.onPageScrollStateChanged('settling');
 
 		page = this.validPage(page);
 		this.onPageChanged(page);
@@ -211,7 +209,7 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 	}
 
 	scrollToPage(page, immediate = false) {
-		this.onPageScrollStateChanged('settling');
+		this.props.onPageScrollStateChanged('settling');
 
 		page = this.validPage(page);
 		this.onPageChanged(page);
@@ -266,7 +264,7 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 	}
 
 	keyExtractor(item, index) {
-		return index;
+		return `p${index}`;
 	}
 
 	_renderRow = ({ item, index }) => {
@@ -284,7 +282,7 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 		const element = React.createElement(page.type, newProps);
 
 		if (this.props.pageMargin > 0 && index > 0) {
-			// Do not using margin style to implement pageMargin.
+			// Do not use margin style to implement pageMargin.
 			// The ListView seems to calculate a wrong width for children views with margin.
 			return (
 				<View style={{
@@ -334,3 +332,5 @@ export default class ViewPager extends React.PureComponent<ViewPagerProps> {
 		);
 	}
 }
+
+function nofn() {};

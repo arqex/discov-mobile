@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { View, StyleSheet, StatusBar } from 'react-native';
-import { TopBar } from '../../components';
+import { View, StyleSheet, StatusBar, Animated } from 'react-native';
 import storeService from '../../state/store.service';
 import Gallery from '../../react-native-image-gallery/src/Gallery';
+import AssetViewerBar from './AssetViewerBar';
+import AssetViewerDots from './AssetViewerDots';
 
 interface AssetsViewerProps {
 	router: any,
@@ -10,16 +11,47 @@ interface AssetsViewerProps {
 }
 
 export default class AssetsViewer extends React.Component<AssetsViewerProps> {
+	state = {
+		page: 0
+	}
+
+	animatedValue = new Animated.Value(1);
+	barTranslate = this.animatedValue.interpolate({
+		inputRange: [0, 1],
+		outputRange:[ -100, 0]
+	})
+
+	dotsTranslate = this.animatedValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: [60, 0]
+	})
+
 	render() {
 		let images = this.getImages();
 
-		console.log( images );
+		let barStyles = [
+			styles.topBar,
+			{transform: [{translateY: this.barTranslate}]}
+		];
+		let dotsStyles = [
+			styles.dots,
+			{ transform: [{ translateY: this.dotsTranslate }] }
+		];
 
 		return (
 			<View style={ styles.container }>
-				<TopBar onBack={ () => this.props.router.back() } withSafeArea />
+				<Animated.View style={ barStyles}>
+					<AssetViewerBar onBack={() => this.props.router.back()} withSafeArea />
+				</Animated.View>
 				<Gallery images={ images }
-					style={{flex: 1}} />
+					style={{flex: 1}}
+					onPageSelected={ page => this.setState({page}) }
+					onGalleryStateChanged={ state => console.log( state ) } />
+				<Animated.View style={ dotsStyles }>
+					<AssetViewerDots
+						size={ images.length }
+						active={ this.state.page }/>
+				</Animated.View>
 			</View>
 		);
 	}
@@ -44,5 +76,16 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: 'black'
+	},
+	topBar: {
+		position: 'absolute',
+		top: 0, left: 0, right: 0,
+		zIndex: 10
+	},
+	dots: {
+		position: 'absolute',
+		bottom: 50, left: 0, right: 0,
+		zIndex: 10,
+		alignItems: 'center'
 	}
 });

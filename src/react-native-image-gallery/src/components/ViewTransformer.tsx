@@ -1,8 +1,8 @@
 import * as React from 'react';
 import ReactNative, { View, Animated, Easing, NativeModules, LayoutChangeEvent, ViewProps } from 'react-native';
-import Scroller from '../libraries/Scroller';
-import { createResponder } from '../libraries/GestureResponder';
-import { Rect, Transform, transformedRect, availableTranslateSpace, fitCenterRect, alignedRect, getTransform } from '../libraries/TransformUtils';
+import Scroller from '../utils/Scroller';
+import { createResponder } from '../utils/GestureResponder';
+import { Rect, Transform, transformedRect, availableTranslateSpace, fitCenterRect, alignedRect, getTransform } from '../utils/TransformUtils';
 
 export interface TransformEvent {
 	scale: number,

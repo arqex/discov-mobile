@@ -260,13 +260,7 @@ const screenTransition = {
 				inputRange: [ -1, 0, 1 ],
 				outputRange: [ layout.width, 0, (-layout.width) / 3], //-layout.width, -layout.width ]
 				extrapolate: 'clamp'
-			},
-			/*
-			opacity: {
-				inputRange: [ -2, -1, 0, .8, 1 ],
-				outputRange: [ 0, 1, 1, 0, 0]
 			}
-			*/
 		}
 	},
 	duration: 300,

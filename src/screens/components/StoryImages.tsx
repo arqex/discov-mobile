@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, StyleSheet, Image, Animated } from 'react-native';
 import { CounterBadge, Touchable, styleVars, Button } from '../../components';
 import { MaterialIcons } from '@expo/vector-icons'
+import SharedElement from '../../react-urlstack/SharedElement';
 
 const THUMB_SIZE = 46;
 
@@ -11,7 +12,8 @@ interface StoryImagesProps {
 	onLongPress?: () => any,
 	images: any[],
 	onRemoveImage?: (index: number) => any,
-	uploadProgress?: number
+	uploadProgress?: number,
+	imageInFront?: number
 }
 
 export default class StoryImages extends React.Component<StoryImagesProps> {
@@ -70,7 +72,8 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 		return (
 			<Touchable disabled={!this.props.removing}
 				onPress={ () => this.props.onRemoveImage( i )}
-				key={image.filename}>
+				key={image.filename}
+				style={{ zIndex: this.isImageInFront(i) ? 20 : 10 - i}}>
 				<Animated.View style={st}>
 					<Image
 						style={{ width: THUMB_SIZE, height: THUMB_SIZE, borderWidth: 2, borderColor: 'white', borderRadius: 2 }}
@@ -101,6 +104,13 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 					size={size} />
 			</View>
 		)
+	}
+
+	isImageInFront( index ){
+		let imageInFront = this.props.imageInFront;
+		return index === imageInFront ||
+			imageInFront === undefined && index
+		;
 	}
 
 	getContainerWidth() {

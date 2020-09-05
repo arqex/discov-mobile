@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Dimensions } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { storyService } from '../../services/story.service';
 import storeService from '../../state/store.service';

@@ -22,6 +22,8 @@ interface TransformableImageProps {
 	resizeMode?: ImageResizeMode
 }
 
+let imageSizeCache = {};
+
 export default class TransformableImage extends React.PureComponent<TransformableImageProps> {
 	static defaultProps = {
 		enableTransform: true,
@@ -56,7 +58,7 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 	}
 
 	componentDidUpdate(prevProps) {
-		if (!sameImage(this.props.image, prevProps.image)) {
+		if (!sameImage(this.props.image.source, prevProps.image.source)) {
 			// image source changed, clear last image's imageSize info if any
 			this.setState({
 				imageSize: this.props.image.dimensions,
@@ -94,9 +96,24 @@ export default class TransformableImage extends React.PureComponent<Transformabl
 	}
 
 	fetchImageSize( image ) {
+		let uri = image.source.uri;
+		let cached = imageSizeCache[ uri ];
+
+		if( cached ){
+			if( cached.error ){
+				this.setState({ error: true});
+			}
+			else {
+				this.setState({ imageSize: cached });
+			}
+			return;
+		}
+		
 		let onSuccess = (width, height) => {
+			imageSizeCache[ uri ] = { width, height };
 			this._mounted && this.setState({ imageSize: { width, height } })
 		};
+
 		let onError = error => {
 			console.warn( error );
 			this._mounted && this.setState({ error: true });
