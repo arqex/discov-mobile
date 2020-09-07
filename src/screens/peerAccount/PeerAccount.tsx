@@ -60,17 +60,17 @@ class PeerAccount extends Component<PeerAccountProps> {
 		
 		return (
 			<View style={styles.openHeader}>
-				<View style={styles.avatar}
-					ref="avatar"
-					onLayout={ this._onAvatarLayout }>
-					<Touchable onPress={ this._openImage }>
+				<Touchable onPress={this._openImage}>
+					<View style={styles.avatar}
+						ref="avatar"
+						onLayout={ this._onAvatarLayout }>
 						<Avatar name={acc.displayName}
 							pic={acc.avatarPic}
 							size={70}
 							border={2}
 							borderColor="blue" />
-					</Touchable>
-				</View>
+					</View>
+				</Touchable>
 				<Text type="header">{acc.displayName}</Text>
 				{ this.renderDescription( acc ) }				
 			</View>
