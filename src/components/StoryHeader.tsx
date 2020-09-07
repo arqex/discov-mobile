@@ -17,7 +17,8 @@ interface StoryHeaderProps {
 	story: any
 	router: any,
 	showDate?: boolean,
-	onAssetsPress?: () => any
+	onAssetsPress?: () => any,
+	onAvatarPress?: () => any
 }
 
 class StoryHeader extends React.Component<StoryHeaderProps> {

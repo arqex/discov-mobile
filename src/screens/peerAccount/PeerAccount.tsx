@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import AccountProvider from '../../providers/AccountProvider';
-import { Bg, ScrollScreen, Text, Avatar, TopBar } from '../../components';
+import { Bg, ScrollScreen, Text, Avatar, TopBar, Touchable } from '../../components';
 import storeService from '../../state/store.service';
 import FollowingCard from './FollowingCard';
 import FollowerCard from './FollowerCard';
+import PeerAccountImageViewer from './PeerAccountImageViewer';
+import BackButtonHandler from '../../utils/BackButtonHandler';
 
 interface PeerAccountProps extends ScreenProps {
 	account: any,
@@ -16,9 +18,12 @@ interface PeerAccountProps extends ScreenProps {
 class PeerAccount extends Component<PeerAccountProps> {
 	loadingMeta = false
 	animatedScrollValue = new Animated.Value(0)
+	animatedImage = new Animated.Value(0)
 
 	state = {
-		loading: false
+		loading: false,
+		isImageOpen: false,
+		avatarBox: false
 	}
 
 	render() {
@@ -43,6 +48,7 @@ class PeerAccount extends Component<PeerAccountProps> {
 								meta={accountMeta && accountMeta.asFollower} />
 						</View>
 				</ScrollScreen>
+				{ this.renderImageViewer(account) }
 			</Bg>
 		)
 	}
@@ -54,12 +60,16 @@ class PeerAccount extends Component<PeerAccountProps> {
 		
 		return (
 			<View style={styles.openHeader}>
-				<View style={styles.avatar}>
-					<Avatar name={acc.displayName}
-						pic={acc.avatarPic}
-						size={70}
-						border={2}
-						borderColor="blue" />
+				<View style={styles.avatar}
+					ref="avatar"
+					onLayout={ this._onAvatarLayout }>
+					<Touchable onPress={ this._openImage }>
+						<Avatar name={acc.displayName}
+							pic={acc.avatarPic}
+							size={70}
+							border={2}
+							borderColor="blue" />
+					</Touchable>
 				</View>
 				<Text type="header">{acc.displayName}</Text>
 				{ this.renderDescription( acc ) }				
@@ -78,7 +88,9 @@ class PeerAccount extends Component<PeerAccountProps> {
 				animatedScrollValue={this.animatedScrollValue}
 				withSafeArea>
 				<View style={styles.avatar}>
-					<Avatar name={acc.displayName} pic={acc.avatarPic} size={30} border={2} />
+					<Avatar name={acc.displayName}
+						pic={acc.avatarPic}
+						size={30}border={2} />
 					<Text type="mainTitle">{acc.displayName}</Text>
 				</View>
 			</TopBar>
@@ -92,6 +104,23 @@ class PeerAccount extends Component<PeerAccountProps> {
 				<Text type="quote" numberOfLines={3} style={styles.description}>
 					"{account.description.trim()}"
 				</Text>
+			</View>
+		);
+	}
+
+	renderImageViewer( account ) {
+		let viewerStyles = [
+			styles.viewer,
+			{ zIndex: this.state.isImageOpen ? 10 : -10 }
+		];
+
+		return (
+			<View style={ viewerStyles }>
+				<PeerAccountImageViewer
+					animatedValue={this.animatedImage}
+					onBack={this._closeImage}
+					imageUri={account.avatarPic.replace(/_s$/, '')}
+					initialBox={this.state.avatarBox} />
 			</View>
 		);
 	}
@@ -151,6 +180,54 @@ class PeerAccount extends Component<PeerAccountProps> {
 			})
 		;
 	}
+
+	_openImage = () => {
+		console.log('OpenImage');
+		Animated.timing( this.animatedImage, {
+			toValue: 1,
+			duration: 900,
+			useNativeDriver: true,
+			easing: Easing.out(Easing.cubic)
+		}).start();
+		this.setState({isImageOpen: true});
+		BackButtonHandler.addListener( this._onBackPress );
+	}
+
+	_closeImage = () => {
+		BackButtonHandler.removeListener( this._onBackPress );
+		Animated.timing(this.animatedImage, {
+			toValue: 0,
+			duration: 900,
+			useNativeDriver: true,
+			easing: Easing.out(Easing.cubic)
+		}).start( () => this.setState({ isImageOpen: false }) );
+	}
+
+	_onBackPress = () => {
+		if( this.state.isImageOpen ){
+			this._closeImage();
+			return true;
+		}
+		return false;
+	}
+
+	_onAvatarLayout = e => {
+		console.log( this.refs.avatar );
+
+		// This timeout will prevent calculating the position of the avatar
+		// while the sreen is been animated in.
+		setTimeout( () => {
+			this.refs.avatar.measure((cx, cy, width, height, x, y) => {
+				this.setState({
+					avatarBox: { width, height, x, y }
+				});
+			});
+		}, 300);
+	}
+
+	componentWillUnmount() {
+		BackButtonHandler.removeListener( this._onBackPress );
+	}
 }
 
 
@@ -162,6 +239,11 @@ const styles = StyleSheet.create({
 	},
 	description: {
 		textAlign: 'center'
+	},
+	viewer: {
+		position: 'absolute',
+		top: 0, bottom: 0, right: 0, left: 0,
+		zIndex: 7
 	}
 });
 

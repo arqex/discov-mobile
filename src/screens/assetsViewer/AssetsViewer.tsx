@@ -2,8 +2,9 @@ import * as React from 'react';
 import { View, StyleSheet, StatusBar, Animated } from 'react-native';
 import storeService from '../../state/store.service';
 import Gallery from '../../react-native-image-gallery/src/Gallery';
-import AssetViewerBar from './AssetViewerBar';
 import AssetViewerDots from './AssetViewerDots';
+import AssetStoryHeader from './AssetStoryHeader';
+import { DarkTopBar } from '../../components';
 
 interface AssetsViewerProps {
 	router: any,
@@ -15,6 +16,8 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 		page: 0
 	}
 
+	isMetaDisplayed = true
+
 	animatedValue = new Animated.Value(1);
 	barTranslate = this.animatedValue.interpolate({
 		inputRange: [0, 1],
@@ -23,7 +26,7 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 
 	dotsTranslate = this.animatedValue.interpolate({
 		inputRange: [0, 1],
-		outputRange: [60, 0]
+		outputRange: [80, 0]
 	})
 
 	render() {
@@ -41,18 +44,33 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 		return (
 			<View style={ styles.container }>
 				<Animated.View style={ barStyles}>
-					<AssetViewerBar onBack={() => this.props.router.back()} withSafeArea />
+					<DarkTopBar
+						onBack={ () => this.props.router.back()}
+						content={ this.renderStoryHeader() }
+						withSafeArea />
 				</Animated.View>
 				<Gallery images={ images }
 					style={{flex: 1}}
 					onPageSelected={ page => this.setState({page}) }
-					onGalleryStateChanged={ state => console.log( state ) } />
+					onViewTransformed={ this._onImageTransform } />
 				<Animated.View style={ dotsStyles }>
 					<AssetViewerDots
 						size={ images.length }
 						active={ this.state.page }/>
 				</Animated.View>
 			</View>
+		);
+	}
+
+	renderStoryHeader() {
+		let story = this.getStory();
+
+		console.log( story.ownerId )
+
+		return (
+			<AssetStoryHeader 
+				accountId={ story.ownerId }
+				story={story} />
 		);
 	}
 
@@ -64,11 +82,39 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 		StatusBar.setBarStyle('dark-content');
 	}
 
-	getImages() {
+	getStory() {
 		let storyId = this.props.location.params.id;
-		let story = storeService.getStory( storyId );
+		return storeService.getStory(storyId);
+	}
 
-		return story.content.assets.map( asset => ({source: {uri: asset.data}}) );
+	getImages() {
+		return this.getStory().content.assets.map( asset => ({source: {uri: asset.data}}) );
+	}
+
+	_onImageTransform = transform => {
+		console.log( transform );
+		if( this.isMetaDisplayed && transform.scale > 1 ){
+			this.hideMeta();
+		}
+		else if( !this.isMetaDisplayed && transform.scale === 1 ){
+			this.showMeta();
+		}
+	}
+
+	showMeta() {
+		Animated.timing( this.animatedValue, {
+			toValue: 1,
+			duration: 300
+		}).start();
+		this.isMetaDisplayed = true
+	}
+
+	hideMeta() {
+		Animated.timing(this.animatedValue, {
+			toValue: 0,
+			duration: 300
+		}).start();
+		this.isMetaDisplayed = false
 	}
 };
 

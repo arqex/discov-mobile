@@ -73,7 +73,7 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 			<Touchable disabled={!this.props.removing}
 				onPress={ () => this.props.onRemoveImage( i )}
 				key={image.filename}
-				style={{ zIndex: this.isImageInFront(i) ? 20 : 10 - i}}>
+				style={{ zIndex: this.isImageInFront(i) ? 10 : 8 - i}}>
 				<Animated.View style={st}>
 					<Image
 						style={{ width: THUMB_SIZE, height: THUMB_SIZE, borderWidth: 2, borderColor: 'white', borderRadius: 2 }}
@@ -109,7 +109,7 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 	isImageInFront( index ){
 		let imageInFront = this.props.imageInFront;
 		return index === imageInFront ||
-			imageInFront === undefined && index
+			imageInFront === undefined && !index
 		;
 	}
 

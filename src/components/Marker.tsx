@@ -12,6 +12,7 @@ const colors = {
 	dark: { circle: "#FF4D55", path: "#313140" },
 	light: { circle: "#FF4D55", path: "#EEE" },
 	gray: { circle: styleVars.colors.lightText, path: styleVars.colors.lightText },
+	lightBlue: { circle: styleVars.colors.borderBlue, path: styleVars.colors.borderBlue }
 }
 
 export default function Marker( props ){

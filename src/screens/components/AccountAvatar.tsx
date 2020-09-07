@@ -7,7 +7,7 @@ interface AccountAvatarProps {
 	account: any,
 	size?: number,
 	border?: number,
-	borderColor?: 'white' | 'red' | 'blue'
+	borderColor?: 'white' | 'red' | 'blue' | 'light'
 }
 
 const AccountAvatar = (props: AccountAvatarProps) => {

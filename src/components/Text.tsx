@@ -7,12 +7,14 @@ interface TextProps {
 	color?: string,
 	children?: any,
 	numberOfLines?: number,
-	style?: any
+	style?: any,
+	theme? : 'light' | 'dark'
 }
 
 const Text = (props: TextProps) => {
 	let textStyles: any = [
 		styles[ props.type ],
+		props.theme === 'dark' && styles[`${props.type}_dark`],
 		props.style
 	];
 
@@ -43,11 +45,17 @@ const styles = StyleSheet.create({
 		fontFamily: isIOS ? 'System' : 'sans-serif',
 		color: colors.blueText
 	},
+	header_dark: {
+		color: colors.white
+	},
 	mainTitle: {
 		fontSize: 18,
 		fontWeight: '600',
 		fontFamily: isIOS ? 'System' : 'sans-serif-medium',
 		color: colors.blueText
+	},
+	mainTitle_dark: {
+		color: colors.white
 	},
 	title: {
 		fontSize: 17,
@@ -55,9 +63,15 @@ const styles = StyleSheet.create({
 		fontFamily: isIOS ? 'System' : 'sans-serif-medium',
 		color: colors.blueText
 	},
+	title_dark: {
+		color: colors.white,
+	},
 	paragraph: {
 		fontSize: 16,
 		color: colors.text
+	},
+	paragraph_dark: {
+		color: colors.borderBlue
 	},
 	bold: {
 		fontSize: 15,
@@ -65,9 +79,15 @@ const styles = StyleSheet.create({
 		fontWeight: '500',
 		fontFamily: isIOS ? 'System' : 'sans-serif-medium',
 	},
+	bold_dark: {
+		color: colors.white,
+	},
 	subtitle: {
 		fontSize: 14,
 		color: colors.lightText
+	},
+	subtitle_dark: {
+		color: colors.borderBlue
 	},
 	quote: {
 		fontSize: 16,

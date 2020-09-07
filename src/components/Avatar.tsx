@@ -8,7 +8,7 @@ interface AvatarProps {
 	pic?: string,
 	size?: number,
 	border?: number,
-	borderColor?: 'white' | 'red' | 'blue'
+	borderColor?: 'white' | 'red' | 'blue' | 'light'
 }
 
 export default class Avatar extends React.Component<AvatarProps> {
@@ -80,7 +80,8 @@ function getInitials( name ){
 const borderColors = {
 	white: '#fff',
 	red: styleVars.colors.borderRed,
-	blue: styleVars.colors.borderBlue
+	blue: styleVars.colors.borderBlue,
+	light: 'rgba(255,255,255,.5)'
 }
 
 const styles = StyleSheet.create({

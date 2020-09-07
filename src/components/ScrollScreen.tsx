@@ -160,8 +160,6 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 	getRefresh(){
 		if( !this.props.onRefresh ) return;
 
-		console.log( this.state.refreshing );
-
 		return (
 			<RefreshControl
 				refreshing={ this.state.refreshing }

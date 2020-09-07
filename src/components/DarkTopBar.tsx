@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Button } from '../../components';
-import layoutUtils from '../../components/utils/layout.utils';
+import Button from './Button';
+import layoutUtils from './utils/layout.utils';
 
 interface AssetViewerBarProps {
 	onBack?: Function,
@@ -25,7 +25,7 @@ export default class AssetViewerBar extends React.Component<AssetViewerBarProps>
 					icon="arrow-back"
 					iconColor="white"
 					onPress={this.props.onBack} />
-				{ this.props.content }
+				{this.props.content}
 			</View>
 		);
 	}
@@ -40,6 +40,5 @@ const styles = StyleSheet.create({
 		backgroundColor: 'rgba(0,0,0,.5)',
 		borderBottomWidth: 1,
 		borderBottomColor: 'rgba(255,255,255,.2)'
-	},
-
+	}
 });

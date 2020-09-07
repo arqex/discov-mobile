@@ -11,7 +11,8 @@ export interface ListItemProps {
 	post?: any,
 	style?: any,
 	onPress?: any,
-	titleColor?: string
+	titleColor?: string,
+	theme?: 'light' | 'dark'
 }
 
 const ListItem = (props: ListItemProps) => {
@@ -34,7 +35,7 @@ const ListItem = (props: ListItemProps) => {
 	if (props.subtitle) {
 		subtitle = (
 			<View style={styles.subtitle}>
-				<Text type="subtitle">
+				<Text type="subtitle" theme={ props.theme }>
 					{props.subtitle}
 				</Text>
 			</View>
@@ -44,7 +45,7 @@ const ListItem = (props: ListItemProps) => {
 	if( props.overtitle ){
 		overtitle = (
 			<View style={styles.overtitle}>
-				<Text type="subtitle">
+				<Text type="subtitle" theme={ props.theme }>
 					{props.overtitle}
 				</Text>
 			</View>
@@ -56,7 +57,7 @@ const ListItem = (props: ListItemProps) => {
 			{ pre }
 			<View style={ styles.texts }>
 				{ overtitle }
-				<Text type="title" color={ props.titleColor }>{props.title}</Text>
+				<Text type="title" color={ props.titleColor } theme={props.theme}>{props.title}</Text>
 				{ subtitle }
 			</View>
 			{ post }
