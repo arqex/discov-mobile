@@ -13,9 +13,15 @@ interface PeerAccountImageViewerProps {
 
 class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps> {
 
-	animatedOpacity = this.props.animatedValue.interpolate({
-		inputRange: [0, .1, 1],
+	backgroundOpacity = this.props.animatedValue.interpolate({
+		inputRange: [0, .5, 1],
 		outputRange: [0, 1, 1]
+	});
+
+	placeholderOpacity = this.props.animatedValue.interpolate({
+		inputRange: [0, .09, .1],
+		outputRange: [0, 0, 1],
+		extrapolate: 'clamp'
 	});
 
 	galleryOpacity = this.props.animatedValue.interpolate({
@@ -42,6 +48,7 @@ class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps
 	render() {
 		return (
 			<View style={styles.container}>
+				{ this.renderPlaceholder() }
 				{ this.renderBackground() }
 				{ this.renderGallery() }
 				{ this.renderAvatarTransition() }
@@ -60,10 +67,36 @@ class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps
 		}
 	}
 
+	renderPlaceholder() {
+		const initialBox = this.props.initialBox;
+		if( !this.props.initialBox ) return;
+
+		let wrapperStyle = [
+			styles.placeholderWrapper,
+			{ opacity: this.placeholderOpacity }
+		]
+
+		let phStyle = {
+			width: initialBox.width,
+			height: initialBox.height,
+			top: initialBox.y,
+			left: initialBox.x,
+			backgroundColor: 'white',
+			borderRadius: initialBox.width / 2,
+			overflow: 'hidden'
+		}
+
+		return (
+			<Animated.View style={ wrapperStyle }>
+				<View style={ phStyle } />
+			</Animated.View>
+		);
+	}
+
 	renderBackground() {
 		let st = [
 			styles.background,
-			{ opacity: this.animatedOpacity }
+			{ opacity: this.backgroundOpacity }
 		];
 
 		return <Animated.View style={ st } />;
@@ -75,7 +108,7 @@ class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps
 		let st = {
 			position: 'absolute',
 			top: 0, left: 0, right: 0, bottom: 0,
-			zIndex: this.state.open ? 0 : 1
+			zIndex: this.state.open ? 3 : 3
 		};
 
 		return (
@@ -166,11 +199,17 @@ const styles = StyleSheet.create({
 	background: {
 		backgroundColor: 'black',
 		position: 'absolute',
-		top: 0, left: 0, right: 0, bottom: 0
+		top: 0, left: 0, right: 0, bottom: 0,
+		zIndex: 2
 	},
 	topBar: {
 		position: 'absolute',
 		top: 0, left: 0, right: 0,
 		zIndex: 20
+	},
+	placeholderWrapper: {
+		position: 'absolute',
+		top: 0, left: 0, right: 0, bottom: 0,
+		zIndex: 1
 	}
 });

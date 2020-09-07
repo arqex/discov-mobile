@@ -8,7 +8,6 @@ import FollowingCard from './FollowingCard';
 import FollowerCard from './FollowerCard';
 import PeerAccountImageViewer from './PeerAccountImageViewer';
 import BackButtonHandler from '../../utils/BackButtonHandler';
-import { getStatusbarHeight } from '../../components/utils/getStatusbarHeight';
 
 interface PeerAccountProps extends ScreenProps {
 	account: any,
@@ -194,7 +193,7 @@ class PeerAccount extends Component<PeerAccountProps> {
 		console.log('OpenImage');
 		Animated.timing( this.animatedImage, {
 			toValue: 1,
-			duration: 900,
+			duration: 800,
 			useNativeDriver: true,
 			easing: Easing.out(Easing.cubic)
 		}).start();
@@ -207,7 +206,7 @@ class PeerAccount extends Component<PeerAccountProps> {
 		BackButtonHandler.removeListener( this._onBackPress );
 		Animated.timing(this.animatedImage, {
 			toValue: 0,
-			duration: 700,
+			duration: 600,
 			useNativeDriver: true,
 			easing: Easing.in(Easing.cubic)
 		}).start( () => {
