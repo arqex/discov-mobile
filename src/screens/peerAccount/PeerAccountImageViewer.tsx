@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, Animated, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Animated, ActivityIndicator } from 'react-native';
 import { DarkTopBar } from '../../components';
 import AvatarTransition from './AvatarTransition';
 import Gallery from '../../react-native-image-gallery/src/Gallery';

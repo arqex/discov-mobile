@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { View, StyleSheet, Animated, Easing, Platform, StatusBar } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import AccountProvider from '../../providers/AccountProvider';
 import { Bg, ScrollScreen, Text, Avatar, TopBar, Touchable } from '../../components';
@@ -8,6 +8,7 @@ import FollowingCard from './FollowingCard';
 import FollowerCard from './FollowerCard';
 import PeerAccountImageViewer from './PeerAccountImageViewer';
 import BackButtonHandler from '../../utils/BackButtonHandler';
+import { getStatusbarHeight } from '../../components/utils/getStatusbarHeight';
 
 interface PeerAccountProps extends ScreenProps {
 	account: any,
@@ -138,6 +139,14 @@ class PeerAccount extends Component<PeerAccountProps> {
 			// Reload the data when is not valid or expired
 			this.loadMeta();
 		}
+
+		setTimeout( () => {
+			// On android, onLayout is not called sometimes on mount
+			// so we do it manually
+			if( !this.layoutCalled ){
+				this._onAvatarLayout();
+			}
+		}, 300);
 	}
 
 	componentDidUpdate( prevProps ) {
@@ -191,16 +200,20 @@ class PeerAccount extends Component<PeerAccountProps> {
 		}).start();
 		this.setState({isImageOpen: true});
 		BackButtonHandler.addListener( this._onBackPress );
+		StatusBar.setBarStyle('light-content');
 	}
 
 	_closeImage = () => {
 		BackButtonHandler.removeListener( this._onBackPress );
 		Animated.timing(this.animatedImage, {
 			toValue: 0,
-			duration: 900,
+			duration: 700,
 			useNativeDriver: true,
-			easing: Easing.out(Easing.cubic)
-		}).start( () => this.setState({ isImageOpen: false }) );
+			easing: Easing.in(Easing.cubic)
+		}).start( () => {
+			this.setState({ isImageOpen: false });
+			StatusBar.setBarStyle('dark-content');
+		});
 	}
 
 	_onBackPress = () => {
@@ -211,15 +224,20 @@ class PeerAccount extends Component<PeerAccountProps> {
 		return false;
 	}
 
-	_onAvatarLayout = e => {
+	_onAvatarLayout = () => {
 		console.log( this.refs.avatar );
+
+		this.layoutCalled = true;
 
 		// This timeout will prevent calculating the position of the avatar
 		// while the sreen is been animated in.
 		setTimeout( () => {
 			this.refs.avatar.measure((cx, cy, width, height, x, y) => {
 				this.setState({
-					avatarBox: { width, height, x, y }
+					avatarBox: {
+						width, height, x,
+						y: y
+					}
 				});
 			});
 		}, 300);

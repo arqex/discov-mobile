@@ -8,7 +8,7 @@ interface AvatarTransitionProps {
 	animatedValue: Animated.Value
 }
 
-let windowSize = Dimensions.get('screen');
+let windowSize = Dimensions.get('window');
 
 class AvatarTransition extends React.PureComponent<AvatarTransitionProps> {
 	constructor( props ) {
@@ -43,7 +43,7 @@ class AvatarTransition extends React.PureComponent<AvatarTransitionProps> {
 		let placeholderStyles = [
 			styles.placeholder,
 			this.state.imageSize,
-			{opacity: this.animatedOpacity},
+			{opacity: this.animatedOpacity, borderRadius: this.animatedRadius},
 			{ transform: [
 				{ translateY: this.animatedTranslate },
 				{ scale: this.animatedScale }
@@ -130,6 +130,12 @@ class AvatarTransition extends React.PureComponent<AvatarTransitionProps> {
 			outputRange:[ translate, translate, 0, 0]
 		});
 
+		let maxradius = aspectRatio > 1 ? height / 2 : width / 2;
+		this.animatedRadius = this.props.animatedValue.interpolate({
+			inputRange: [0, .1, .9, 1],
+			outputRange: [maxradius, maxradius, 0, 0]
+		});
+
 		this.setState({initialScale, finalScale });
 
 		console.log( initialScale, finalScale );
@@ -146,5 +152,6 @@ const styles = StyleSheet.create({
 	},
 
 	placeholder: {
+		overflow: 'hidden'
 	}
 });
