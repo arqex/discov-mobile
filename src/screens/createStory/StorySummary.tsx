@@ -188,6 +188,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 	createStory( isDraft ){
 		const story = this.getStory();
 		let content = { type: 'text', text: story.content };
+
 		if( story.images ){
 			content.assets = this.parseAssets( story.images );
 		}
@@ -223,7 +224,7 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 	parseAssets( images ){
 		return images.map( image => ({
 			type: 'image',
-			data: image.uri
+			data: { size: image.size, uri: image.uri }
 		}));
 	}
 }

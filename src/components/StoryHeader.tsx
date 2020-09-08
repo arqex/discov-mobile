@@ -117,8 +117,8 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 		assets.forEach( asset => {
 			if( asset.type === 'image' ){
 				images.push({
-					uri: asset.data + '_s',
-					filename: asset.data.split('/').slice(-1)[0]
+					...asset.data,
+					filename: asset.data.uri.split('/').slice(-1)[0]
 				});
 			}
 		});

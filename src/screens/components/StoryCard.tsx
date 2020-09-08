@@ -93,7 +93,7 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		)
 	}
 
-	renderMapAndImageBanner( width, imageUrl ){
+	renderMapAndImageBanner( width, image ){
 		let imageWidth = Math.min( width / 3 * 2, 400 );
 		let mapWidth = width - imageWidth;
 
@@ -102,6 +102,7 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 			Platform.OS === 'android' && styles.markerAndroid,
 			{left: mapWidth / 2 }
 		];
+
 		return (
 			<View style={styles.banner}  >
 				<View style={markerStyles}>
@@ -111,7 +112,7 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 					height={80}
 					location={this.props.story} />
 				<View style={{borderLeftWidth: 1, borderLeftColor: styleVars.colors.borderBlue}}>
-					<FastImage source={{ uri: imageUrl + '_m' }}
+					<FastImage source={{ uri: image.uri + '_m' }}
 						style={{ width: imageWidth, height: 80 }}
 						resizeMode={FastImage.resizeMode.cover} />
 				</View>

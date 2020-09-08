@@ -36,10 +36,6 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 			styles.topBar,
 			{transform: [{translateY: this.barTranslate}]}
 		];
-		let dotsStyles = [
-			styles.dots,
-			{ transform: [{ translateY: this.dotsTranslate }] }
-		];
 
 		return (
 			<View style={ styles.container }>
@@ -53,11 +49,7 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 					style={{flex: 1}}
 					onPageSelected={ page => this.setState({page}) }
 					onViewTransformed={ this._onImageTransform } />
-				<Animated.View style={ dotsStyles }>
-					<AssetViewerDots
-						size={ images.length }
-						active={ this.state.page }/>
-				</Animated.View>
+				{ this.renderDots(images) }
 			</View>
 		);
 	}
@@ -74,6 +66,23 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 		);
 	}
 
+	renderDots( images ) {
+		let dotsStyles = [
+			styles.dots,
+			{ transform: [{ translateY: this.dotsTranslate }] }
+		];
+
+		if( images.length > 1 ){
+			return (
+				<Animated.View style={dotsStyles}>
+					<AssetViewerDots
+						size={images.length}
+						active={this.state.page} />
+				</Animated.View>
+			)
+		}
+	}
+
 	componentWillEnter() {
 		StatusBar.setBarStyle('light-content');
 	}
@@ -88,7 +97,10 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 	}
 
 	getImages() {
-		return this.getStory().content.assets.map( asset => ({source: {uri: asset.data}}) );
+		return this.getStory().content.assets.map( asset => ({
+			source: {uri: asset.data.uri},
+			dimensions: asset.data.size
+		}));
 	}
 
 	_onImageTransform = transform => {

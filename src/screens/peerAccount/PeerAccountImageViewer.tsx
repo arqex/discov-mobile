@@ -14,19 +14,19 @@ interface PeerAccountImageViewerProps {
 class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps> {
 
 	backgroundOpacity = this.props.animatedValue.interpolate({
-		inputRange: [0, .5, 1],
+		inputRange: [0, .8, 1],
 		outputRange: [0, 1, 1]
 	});
 
 	placeholderOpacity = this.props.animatedValue.interpolate({
-		inputRange: [0, .09, .1],
+		inputRange: [0, .05, .1],
 		outputRange: [0, 0, 1],
 		extrapolate: 'clamp'
 	});
 
 	galleryOpacity = this.props.animatedValue.interpolate({
-		inputRange: [0, .8, .96, 1 ],
-		outputRange: [ 0, 0 , 1, 1 ]
+		inputRange: [0, .85, 1 ],
+		outputRange: [ 0, 0, 1 ]
 	});
 
 	barTranslate = new Animated.Value(0)

@@ -35,6 +35,7 @@ export default class Account extends Component<ScreenProps> {
 		return (
 			<TopBar title={__('myAccount.title')}
 				onBack={ () => this.props.drawer.open() }
+				post={ this.renderPreviewButton() }
 				animatedScrollValue={this.animatedScrollValue}
 				withSafeArea />
 		);
@@ -136,6 +137,16 @@ export default class Account extends Component<ScreenProps> {
 
 	renderSeparator() {
 		return <Wrapper style={ styles.separator } />;
+	}
+
+	renderPreviewButton(){
+		return (
+			<Button type="icon"
+				color="secondary"
+				icon="account-box"
+				onPress={() => this.props.router.navigate(`/accountModal?accountId=${this.props.store.user.account.id}`) }
+			/>
+		);
 	}
 
 	_openAvatarModal = () => {

@@ -32,7 +32,7 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 
 	render() {
 		return (
-			<View style={{flexDirection: 'row', alignItems: 'flex-end', transform: [{translateY: -5}]}}>
+			<View style={ styles.container }>
 				{this.renderImages()}
 				{ this.renderSourceButtons() }
 			</View>
@@ -107,7 +107,7 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 
 	_onCamera = () => {
 		openCamera().then( image => {
-			console.log( image );
+			this._onAddImages( [image] );
 		});
 	}
 
@@ -125,7 +125,7 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 		imagesToAdd.forEach(image => {
 			images.push({
 				path: image.path,
-				filename: image.filename,
+				filename: image.filename || 'im' + Math.round(Math.random() * 100000),
 				uploaded: 0
 			});
 
@@ -185,6 +185,11 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 
 
 const styles = StyleSheet.create({
+	container: {
+		flexDirection: 'row',
+		alignItems: 'flex-end',
+		transform: [{translateY: -4}]
+	},
 	sourceButtons: {
 		flexDirection: 'row'
 	},

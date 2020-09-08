@@ -36,17 +36,7 @@ class PeerAccount extends Component<PeerAccountProps> {
 					topBar={this.renderTopBar(account)}
 					animatedScrollValue={this.animatedScrollValue}
 					loading={!accountMeta}>
-						<View style={{ marginTop: 20 }}>
-							<FollowingCard
-								loading={ this.state.loading }
-								account={account}
-								meta={accountMeta && accountMeta.asPublisher}
-								onFollow={this._follow}
-								onUnfollow={this._unfollow} />
-							<FollowerCard key="follower"
-								account={account}
-								meta={accountMeta && accountMeta.asFollower} />
-						</View>
+						{ this.renderCards( account, accountMeta ) }
 				</ScrollScreen>
 				{ this.renderImageViewer(account) }
 			</Bg>
@@ -124,17 +114,37 @@ class PeerAccount extends Component<PeerAccountProps> {
 			</View>
 		);
 	}
+	
+	renderCards( account, accountMeta ) {
+		if( !this.isCurrentUserAccount() ){
+			return (
+				<View style={{ marginTop: 20 }}>
+					<FollowingCard
+						loading={this.state.loading}
+						account={account}
+						meta={accountMeta && accountMeta.asPublisher}
+						onFollow={this._follow}
+						onUnfollow={this._unfollow} />
+					<FollowerCard key="follower"
+						account={account}
+						meta={accountMeta && accountMeta.asFollower} />
+				</View>
+			)
+		}
+	}
+
+	isCurrentUserAccount(){
+		return this.props.accountId === storeService.getUserId();
+	}
 
 	getAccountMeta(){
-		return storeService.getPeerMeta( this.props.accountId );
+		return this.isCurrentUserAccount() ? {current: true} : storeService.getPeerMeta( this.props.accountId );
 	}
 
 	EXPIRE_TIME = 60 * 60 * 1000; // One hour
 
 	componentDidMount(){
-		let accountMeta = this.getAccountMeta();
-		
-		if( !accountMeta || !accountMeta.valid || accountMeta.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ){
+		if( !this.isValidMeta( this.getAccountMeta() ) ){
 			// Reload the data when is not valid or expired
 			this.loadMeta();
 		}
@@ -148,14 +158,15 @@ class PeerAccount extends Component<PeerAccountProps> {
 		}, 300);
 	}
 
+	isValidMeta( meta ){
+		if( meta && meta.current ) return true;
+		return meta && meta.valid && meta.lastUpdateAt + this.EXPIRE_TIME >= Date.now();
+	}
+
 	componentDidUpdate( prevProps ) {
 		let meta = this.getAccountMeta();
-		
-		if( prevProps.accountId !== this.props.accountId && !meta ){
-			this.loadMeta();
-		}
 
-		if( meta && !meta.valid ){
+		if( prevProps.accountId !== this.props.accountId && !this.isValidMeta(meta) ){
 			this.loadMeta();
 		}
 	}

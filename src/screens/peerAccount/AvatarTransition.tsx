@@ -21,8 +21,8 @@ class AvatarTransition extends React.PureComponent<AvatarTransitionProps> {
 	}
 
 	animatedOpacity = this.props.animatedValue.interpolate({
-		inputRange: [ 0, .1, .99, 1],
-		outputRange:[ 0, 1, 1, 0]
+		inputRange: [ 0, .1, 1],
+		outputRange:[ 0, 1, 1]
 	});
 
 	getResetState(){
@@ -117,7 +117,7 @@ class AvatarTransition extends React.PureComponent<AvatarTransitionProps> {
 		;
 
 		this.animatedScale = this.props.animatedValue.interpolate({
-			inputRange: [0, .3, .8, 1],
+			inputRange: [0, .3, .9, 1],
 			outputRange: [initialScale, initialScale, finalScale, finalScale]
 		})
 
@@ -126,14 +126,14 @@ class AvatarTransition extends React.PureComponent<AvatarTransitionProps> {
 		let translate = initialCenter - windowCenter;
 
 		this.animatedTranslate = this.props.animatedValue.interpolate({
-			inputRange: [0, .1, .8, 1],
+			inputRange: [0, .1, .9, 1],
 			outputRange:[ translate, translate, 0, 0]
 		});
 
 		let maxradius = aspectRatio > 1 ? height / 2 : width / 2;
 		this.animatedRadius = this.props.animatedValue.interpolate({
-			inputRange: [0, .1, .9, 1],
-			outputRange: [maxradius, maxradius, 0, 0]
+			inputRange: [0, .1, 1],
+			outputRange: [maxradius, maxradius, 0]
 		});
 
 		this.setState({initialScale, finalScale });
@@ -148,7 +148,8 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		backgroundColor: 'transparent'
 	},
 
 	placeholder: {
