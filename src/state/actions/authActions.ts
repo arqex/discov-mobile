@@ -1,3 +1,22 @@
+type Listener = (status: string) => any
+let clbks: Listener[] = [];
+let eventEmitter = {
+	addListener(clbk: Listener) {
+		clbks.push( clbk );
+	},
+
+	removeListener(clbk: Listener) {
+		let i = clbks.length;
+		while( i-- > 0 ){
+			clbks.splice( i, 1 );
+		}
+	},
+
+	emit( status:string ){
+		clbks.forEach( clbk => clbk(status) );
+	}
+}
+
 export default function (store, api, actions ){	
 	if( store.account === undefined ){
 		store.account = false // User data will live here
@@ -72,6 +91,8 @@ export default function (store, api, actions ){
 		},
 		
 		logout: async function logout() {
+			eventEmitter.emit('OUT');
+			
 			return await api.logout()
 				.then( () => {
 					Object.keys( store ).forEach( key => {
@@ -81,6 +102,14 @@ export default function (store, api, actions ){
 					});
 				})
 			;
+		},
+		
+		addLoginListener( clbk ){
+			eventEmitter.addListener( clbk );
+		},
+
+		removeLoginListener( clbk ){
+			eventEmitter.removeListener( clbk );
 		}
 	}
 
@@ -128,6 +157,7 @@ function handleLoginResponse(store, api, actions, result, credentials) {
 		return actions.account.loadOrCreateAccount()
 			.then( () => {
 				store.loginLoading = false;
+				eventEmitter.emit('IN');
 				return store.user;
 			})
 		;	

@@ -2,12 +2,36 @@ import { Platform } from "react-native";
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import PushNotification from "react-native-push-notification";
 import storeService from "../state/store.service";
+import { dataService } from "../services/data.service";
+
+let alreadyRegistered = false;
 
 function init( router ){
 	PushNotification.configure({
+		token: false,
 		// (optional) Called when Token is generated (iOS and Android)
 		onRegister: function (token) {
-			console.log("TOKEN:", token);
+			if( alreadyRegistered ) return;
+
+			alreadyRegistered = true;
+			console.log( 'Notification token', token );
+
+			dataService.init().then( () => {
+				let api = dataService.getApiClient();
+
+				if (dataService.getAuthStatus() === 'IN') {
+					api.savePushToken(token);
+				}
+
+				dataService.getActions().auth.addLoginListener(status => {
+					if (status === 'IN') {
+						api.savePushToken(token);
+					}
+					else {
+						// api.removePushToken(token);
+					}
+				});
+			});
 		},
 
 		onRegistrationError: function (err) {
@@ -56,7 +80,6 @@ function init( router ){
 
 	PushNotification.requestPermissions();
 }
-
 
 export default {
 	init,

@@ -12,6 +12,8 @@
 
 import { AuthClient } from './auth/authClient';
 import { GqlApi, GqlConfig } from './gql/gqlAPI';
+import imageApi from './otherApis/imageApi';
+import pushNotificationApi from './otherApis/pushNotificationApi';
 
 interface ApiUser {
 	id: string
@@ -152,45 +154,17 @@ export class ApiClient {
 		return this.auth.logout();
 	}
 
+	// Other APIs methods
   uploadImage( imageData, progressClbk ){
-		let credentials = this.gql.config.credentials;
-		let endpoint = this._getUploadEndpoint();
+		return imageApi.uploadImage( this.gql, imageData, progressClbk );
+	}
 
-		console.log('Upload endpoint ' + endpoint + ' ' + credentials.authHeader );
+	savePushToken( token ){
+		return pushNotificationApi.savePushToken( this.gql, token );
+	}
 
-		return new Promise( (resolve, reject) => {
-			const xhr = new XMLHttpRequest();
-
-			// listen for `upload.error` event
-			xhr.upload.onerror = err => {
-				console.log( err );
-				reject( err );
-			}
-
-			// listen for `upload.abort` event
-			xhr.upload.onabort = () => {
-				reject('aborted');
-			}
-
-			// listen for `progress` event
-			xhr.upload.onprogress = (event) => {
-				let percentage = Math.round( event.loaded / event.total * 100 );
-				progressClbk && progressClbk( percentage, event );
-				console.log(`${event.loaded / event.total * 100}%`);
-			}
-
-			xhr.onload = () => {
-				resolve( JSON.parse(xhr.responseText) );
-			}
-
-			// open request
-			xhr.open('POST', endpoint);
-
-			xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.setRequestHeader('Authorization', credentials.authHeader);
-
-			xhr.send(JSON.stringify(imageData));
-		});
+	removePushToken( token ){
+		return pushNotificationApi.removePushToken(this.gql, token);
 	}
 
 	///////
@@ -210,15 +184,5 @@ export class ApiClient {
 			endpoint: credentials.user.isTestUser ? this.config.test_endpoint : this.config.endpoint,
 			credentials
 		};
-	}
-	
-	_getUploadEndpoint() {
-		let currentUser = this.getCurrentUser().user;
-		if( !currentUser ) return 'NOT_AUTHENTICATED';
-
-		let parts = this.config.endpoint.split('/');
-		parts.pop();
-
-		return parts.join('/') + ( currentUser.isTestUser ? '/imageUploadCi' : '/imageUpload' );
 	}
 }

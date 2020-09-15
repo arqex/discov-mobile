@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderTopLeftRadius: 10,
 		borderTopRightRadius: 10,
-		backgroundColor: 'red' // '#e8e8e8',
+		backgroundColor: '#e8e8e8',
 	},
 	
 	marker: {
