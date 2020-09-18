@@ -40,14 +40,14 @@ function init( router ){
 
 		// (required) Called when a remote or local notification is opened or received
 		onNotification: function (notification) {
-			console.log("NOTIFICATION:", notification);
-
-			if( notification.foreground ){
+			if( notification.userInteraction ){
+				console.log("NOTIFICATION OPEN:", notification);
 				console.log('Navigating');
+				router.navigate('/myDiscoveries');
 			}
-
-			console.log( router && router.location );
-			router.navigate('/myDiscoveries');
+			else {
+				console.log("NOTIFICATION RECEIVED:", notification);
+			}
 			
 			notification.finish(PushNotificationIOS.FetchResult.NoData);
 		},
@@ -139,6 +139,10 @@ export default {
 			__( 'notifications.singleMessage', {name: discoveries[0].owner.displayName} )
 		;
 
-		return this.open({ title, message });
+		return this.open({
+			title,
+			message,
+			largeIconUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQanDmDzKGJxRcOsZJjuUwmHGgeKzaOeBaGnA&usqp=CAU'
+		});
 	}
 }
