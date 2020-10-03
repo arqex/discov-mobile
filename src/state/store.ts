@@ -1,6 +1,6 @@
-import onstate from 'onstate'
+import ors from '@arqex/ors';
 
-let store = onstate({
+let store = ors({
 	status: 'INIT',
 	user: {},
 	accountStatus: {},

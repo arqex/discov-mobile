@@ -20,6 +20,7 @@
     "bumpMajor": "node ./scripts/bumpVersion.js major"
   },
   "dependencies": {
+    "@arqex/ors": "^0.8.0",
     "@aws-amplify/api": "^3.1.19",
     "@aws-amplify/auth": "^3.3.1",
     "@aws-amplify/core": "^3.4.2",

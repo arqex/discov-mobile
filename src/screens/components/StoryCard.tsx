@@ -3,7 +3,6 @@ import { View, StyleSheet, Dimensions, Platform } from 'react-native';
 import { StoryHeader, Button, MapImage, DiscovMarker, Text, Touchable, Tag, Wrapper, styleVars } from '../../components';
 import StoryProvider from '../../providers/StoryProvider';
 import UnseenDiscovery from './UnseenDiscovery';
-import notifications from '../../utils/notifications';
 import FastImage from 'react-native-fast-image';
 
 interface StoryCardProps {
@@ -174,7 +173,6 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		};
 
 		this._goToDiscovery();
-		notifications.clear();
 		this.props.actions.discovery.updateDiscoveryExtra( discovery.id, extra );
 	}
 };

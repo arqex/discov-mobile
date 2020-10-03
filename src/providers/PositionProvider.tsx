@@ -58,13 +58,13 @@ export default function PositionProvider(WrappedComponent) {
 		checkListeners() {
 			if (this.position && !this.positionListener) {
 				this.positionListener = true;
-				this.position.on('state', this._onChange);
+				this.position.addChangeListener( this._onChange );
 			}
 		}
 
 		componentWillUnmount() {
 			if (this.positionListener) {
-				this.position.off('state', this._onChange);
+				this.position.removeChangeListener( this._onChange );
 			}
 		}
 

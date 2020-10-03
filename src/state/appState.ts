@@ -8,7 +8,7 @@ function initActions( apiClient ){
 }
 
 function onStoreChange( clbk ){
-  store.on('state', clbk );
+	store.addChangeListener( clbk );
 }
 
 export { store, actions, initActions, onStoreChange };

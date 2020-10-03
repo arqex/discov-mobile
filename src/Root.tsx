@@ -9,7 +9,7 @@ import createInterceptor from './routes/routeInterceptor';
 import {routes} from './routes/routes';
 import Menu from './screens/Menu';
 import RootLoading from './RootLoading';
-import notifications from './utils/notifications';
+import notifications from './services/notifications/notification.listener';
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
 import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
@@ -117,7 +117,7 @@ class Root extends React.Component {
 		let store = dataService.getStore();
 
 		// Refresh on data change
-		store.on('state', update);
+		store.addChangeListener(update);
 
 		if (Platform.OS === 'android') {
 			StatusBar.setBackgroundColor("rgba(0,0,0,0)")

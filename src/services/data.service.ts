@@ -19,8 +19,8 @@ export const dataService = {
 		restoreStore();
 		storeService.init(store);
 
-		store.off('state', storeListener );
-		store.on('state', storeListener );
+		store.removeChangeListener( storeListener );
+		store.addChangeListener( storeListener );
 
 		initPromise = createApiClient()
 			.then( client => {

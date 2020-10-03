@@ -1,6 +1,7 @@
 import { loginService } from './login.service';
 import { storyService } from './story.service';
 import { usersService } from './users.service';
+import notificationService from './notifications/notification.service';
 
 export default {
 	init( actions, store ){
@@ -12,4 +13,5 @@ export default {
 	login: loginService,
 	story: storyService,
 	users: usersService,
+	notification: notificationService
 }
