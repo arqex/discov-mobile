@@ -57,8 +57,6 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 	renderStoryHeader() {
 		let story = this.getStory();
 
-		console.log( story.ownerId )
-
 		return (
 			<AssetStoryHeader 
 				accountId={ story.ownerId }
@@ -104,7 +102,6 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 	}
 
 	_onImageTransform = transform => {
-		console.log( transform );
 		if( this.isMetaDisplayed && transform.scale > 1 ){
 			this.hideMeta();
 		}

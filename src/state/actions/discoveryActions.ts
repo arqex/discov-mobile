@@ -64,7 +64,7 @@ export default function (store, api) {
 					}
 
 					if( !res || !res.discoveries ){
-						log('Empty discoveries response?', res );
+						log('Empty discoveries response?', JSON.stringify(res) );
 					}
 
 					return res;

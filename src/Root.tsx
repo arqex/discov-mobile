@@ -15,7 +15,7 @@ import storeService from './state/store.service';
 import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
 import BackButtonHandler from './utils/BackButtonHandler';
 
-globalThis.gql_debug = false;
+globalThis.gql_debug = true;
 
 notifications.init(router);
 

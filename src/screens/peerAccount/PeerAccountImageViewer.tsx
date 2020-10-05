@@ -143,7 +143,7 @@ class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps
 				{ this.renderSpinner() }
 				<Gallery
 					images={[{ source: { uri: this.props.imageUri } }]}
-					style={{ flex: 1, backgroundColor: 'transparent', zIndex: 10 }}
+					style={{ flex: 1, backgroundColor: 'black', zIndex: 10 }}
 					onViewTransformed={this._onImageTransform} />
 			</Animated.View>
 		);

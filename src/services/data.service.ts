@@ -6,6 +6,7 @@ import { initActions, store } from '../state/appState';
 import storeService from '../state/store.service';
 import { Platform } from 'react-native';
 import services from '.';
+import DeviceInfo from 'react-native-device-info'
 
 let statusChangeClbks = [];
 let apiClient: ApiClient;
@@ -96,9 +97,15 @@ dataService.init();
 function createApiClient() {
 	return getEnv().then( env => {
 		let endpoint = env.apiUrl;
-		if (endpoint.includes('/localhost') && Platform.OS === 'android') {
-			// Localhost doesn't work on android emulator
-			endpoint = endpoint.replace('localhost', '10.0.2.2');
+
+		if (endpoint.includes('/localhost')){
+			if( Platform.OS === 'android' ){
+				// Localhost doesn't work on android emulator
+				endpoint = endpoint.replace('localhost', '10.0.2.2');
+			}
+			else if( !DeviceInfo.isEmulatorSync() ){
+				endpoint = endpoint.replace('localhost', 'JaviBook.local');
+			}
 		}
 
 		store.endpoint = endpoint;

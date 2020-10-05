@@ -12,6 +12,7 @@ function init( router ){
 		// (optional) Called when Token is generated (iOS and Android)
 		onRegister: function (token) {
 			if( alreadyRegistered ) return;
+			
 
 			alreadyRegistered = true;
 			console.log( 'Notification token', token );

@@ -28,7 +28,8 @@ let promise = isEmulator().then(result => {
 
 function getCurrentEnv( isLocal ){
 	// return dev;
-	return isLocal ? local: dev;
+	return local;
+	// return isLocal ? local: dev;
 }
 
 export function getEnv(){

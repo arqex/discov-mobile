@@ -45,7 +45,7 @@ function getUploadEndpoint( gql ) {
 	let currentUser = gql.getCurrentUser().user;
 	if (!currentUser) return 'NOT_AUTHENTICATED';
 
-	let parts = this.config.endpoint.split('/');
+	let parts = gql.config.endpoint.split('/');
 	parts.pop();
 
 	return parts.join('/') + (currentUser.isTestUser ? '/imageUploadCi' : '/imageUpload');
