@@ -6,21 +6,23 @@ import { log } from "../../utils/logger";
 const notificationListener = {
 	init( router ){
 		notificationService.onToken( token => {
-			let api = dataService.getApiClient();
-	
-			if (dataService.getAuthStatus() === 'IN') {
-				log('Saving push token');
-				api.savePushToken(token);
-			}
-	
-			dataService.getActions().auth.addLoginListener(status => {
-				if (status === 'IN') {
+			dataService.init().then(() => {
+				let api = dataService.getApiClient();
+
+				if (dataService.getAuthStatus() === 'IN') {
 					log('Saving push token');
 					api.savePushToken(token);
 				}
-				else {
-					// api.removePushToken(token);
-				}
+
+				dataService.getActions().auth.addLoginListener(status => {
+					if (status === 'IN') {
+						log('Saving push token');
+						api.savePushToken(token);
+					}
+					else {
+						// api.removePushToken(token);
+					}
+				});
 			});
 		});
 	
@@ -40,7 +42,7 @@ const notificationListener = {
 				notificationService.open( notification );
 			}
 		});
-	
+		
 		notificationService.init();
 	}
 }

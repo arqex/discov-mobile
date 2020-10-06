@@ -17,7 +17,9 @@ let notifications = {};
 let alreadyRegistered = false;
 
 const notificationService = {
-  init(){
+  init() {
+    log('Initializing notification service');
+    
     PushNotification.configure({
       token: false,
       // (optional) Called when Token is generated (iOS and Android)
