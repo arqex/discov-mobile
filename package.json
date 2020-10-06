@@ -20,6 +20,7 @@
     "bumpMajor": "node ./scripts/bumpVersion.js major"
   },
   "dependencies": {
+    "@arqex/ors": "^0.8.0",
     "@aws-amplify/api": "^3.1.19",
     "@aws-amplify/auth": "^3.3.1",
     "@aws-amplify/core": "^3.4.2",
@@ -55,7 +56,7 @@
     "react-native-image-gallery": "^2.1.5",
     "react-native-localize": "^1.4.0",
     "react-native-maps": "0.26.1",
-    "react-native-push-notification": "^4.0.0",
+    "react-native-push-notification": "^5.1.1",
     "react-native-svg": "11.0.1",
     "react-native-unimodules": "~0.8.1",
     "urlstack": "^0.7.11"

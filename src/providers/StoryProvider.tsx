@@ -52,13 +52,13 @@ export default function StoryProvider( WrappedComponent ){
 		checkListeners() {
 			if( this.story && !this.storyListener ){
 				this.storyListener = true;
-				this.story.on('state', this._onChange );
+				this.story.addChangeListener( this._onChange );
 			}
 		}
 
 		componentDidUpdate( prevProps ){
 			if( this.props.storyId !== prevProps.storyId ){
-				this.story.off('state', this._onChange);
+				this.story.removeChangeListener( this._onChange );
 				this.storyListener = false;
 				this.loadStory( this.props.storyId );
 			}
@@ -66,7 +66,7 @@ export default function StoryProvider( WrappedComponent ){
 
 		componentWillUnmount() {
 			if (this.storyListener) {
-				this.story.off('state', this._onChange);
+				this.story.removeChangeListener( this._onChange );
 			}
 		}
 	}

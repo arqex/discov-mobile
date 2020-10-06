@@ -66,13 +66,13 @@ export default function PeopleProvider(WrappedComponent) {
 		checkListeners() {
 			if (this.people && !this.peopleListener) {
 				this.peopleListener = true;
-				this.people.on('state', this._onChange);
+				this.people.addChangeListener( this._onChange );
 			}
 		}
 
 		componentDidUpdate(prevProps) {
 			if (this.props.peopleId !== prevProps.peopleId) {
-				this.people.off('state', this._onChange);
+				this.people.removeChangeListener( this._onChange );
 				this.peopleListener = false;
 				this.loadPeople(this.props.peopleId);
 			}
@@ -80,7 +80,7 @@ export default function PeopleProvider(WrappedComponent) {
 
 		componentWillUnmount() {
 			if (this.peopleListener) {
-				this.people.off('state', this._onChange);
+				this.people.removeChangeListener( this._onChange );
 			}
 		}
 	}

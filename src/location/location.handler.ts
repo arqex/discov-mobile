@@ -10,7 +10,7 @@
 import { getDistance } from '../utils/maps';
 import storeService from '../state/store.service';
 import { dataService } from '../services/data.service';
-import notifications from '../utils/notifications';
+import notifications from '../services/notifications/notification.service';
 import geofenceService from './geofence.service';
 import { log } from '../utils/logger';
 
@@ -99,7 +99,7 @@ function onDiscoveryResponse( res, location, setTrackingMode ){
   // Notify new discoveries 
   if( res.discoveries && res.discoveries.length ){
     log('New discoveries: ' + res.discoveries.length);
-    notifications.createDiscoveriesNofication( res.discoveries );
+    createDiscoveriesNofication( res.discoveries );
   }
   else {
     log('No new discoveries');
@@ -201,4 +201,25 @@ function isInGeoFence( fence, location ){
 
   let distance = getDistance( location, fence );
   return distance < fence.radius;
+}
+
+function createDiscoveriesNofication( discoveries ){
+  let count = Math.max( discoveries.length, storeService.getUnseenCount() );
+  notifications.close();
+
+  const title = count > 1 ?
+    __( 'notifications.multipleTitle', {count} ) :
+    __( 'notifications.singleTitle')
+  ;
+
+  const message = count > 1 ?
+    __( 'notifications.multipleMessage', {name: discoveries[0].owner.displayName} ) :
+    __( 'notifications.singleMessage', {name: discoveries[0].owner.displayName} )
+  ;
+
+  return notifications.open({
+    title,
+    message,
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQanDmDzKGJxRcOsZJjuUwmHGgeKzaOeBaGnA&usqp=CAU'
+  });
 }

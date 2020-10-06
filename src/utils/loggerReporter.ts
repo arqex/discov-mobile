@@ -9,6 +9,8 @@ getEnv().then(env => {
 	URL = env.errorUrl;
 });
 
+let waitTime = 500;
+
 export default {
 	report(store, logLine) {
 		let handle = store.user.account && store.user.account.handle;
@@ -22,16 +24,25 @@ export default {
 		}
 
 		timer = setTimeout(() => {
-			fetch(URL, {
+			let options = {
 				method: 'POST',
 				body: JSON.stringify({
 					type: 'log',
 					handle: '@' + handle,
 					report: logReport
 				})
-			});
+			};
+			
+			fetch(URL, options)
+				.then( res => {
+					waitTime = 500;
+				} )
+				.catch( err => {
+					waitTime = 10 * 60 * 1000;
+				})
+			;
 			logReport = [];
 			timer = false;
-		}, 500);
+		}, waitTime);
 	}
 }

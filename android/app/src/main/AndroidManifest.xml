@@ -63,11 +63,7 @@
       <meta-data  android:name="com.dieam.reactnativepushnotification.channel_create_default"
                   android:value="true"/>
       <meta-data  android:name="com.dieam.reactnativepushnotification.notification_foreground"
-                  android:value="false"/>
-      <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name"
-                  android:value="Example-Channel"/>
-      <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_description"
-                  android:value="Super channel description"/>
+                  android:value="true"/>
       <meta-data  android:name="com.dieam.reactnativepushnotification.notification_color"
                   android:resource="@android:color/white"/>
       <meta-data  android:name="com.dieam.reactnativepushnotification.notification_channel_name.rn-push-notification-channel-id-4-300"

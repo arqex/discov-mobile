@@ -2,7 +2,6 @@ import * as React from 'react';
 import { StyleSheet, Alert, Animated } from 'react-native';
 import { ScrollScreen, Text, Panel, Bg, SettingItem, TopBar, Modal, ModalContent } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
-import notifications from '../../utils/notifications';
 import storeService from '../../state/store.service';
 import codePush from 'react-native-code-push';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -90,6 +89,8 @@ class Settings extends React.Component<ScreenProps> {
 	}
 
 	_openNotification = () => {
+		return;
+		/*
 		let discoveries = [{"createdAt": "2020-06-09T17:15:18.911Z", "discovererId": "acTUrealTestLow", "extra": "{\"seen\":false}", "id": "diGRYF53q2TCyTen3IrvMGvg", "owner": {"avatarPic": "https://javiio.com/img/javi.jpg", "description": "Por el contrario podemos ahorrar un buen dinero adquiriendo la más barata", "displayName": "Javi Testing", "handle": "realstories", "id": "acTUrealTestStoriesUser"}, "ownerId": "acTUrealTestStoriesUser", "story": {"aggregated": "{\"place\":{\"type\":\"custom\",\"name\":\"Some place\"}}", "content": "{\"type\":\"text\",\"text\":\"La terraza del 100 montaditos algún día volverá a abrir pa que los chavales puedan comer y beber barato. Tienes que pasar a 10 metros de este punto para descubrirlo.\"}", "createdAt": "2019-10-09T15:37:27.000Z", "id": "stTUrealTestStoriesUser7", "lat": 41.3977, "lng": 2.1715, "ownerId": "acTUrealTestStoriesUser", "status": "published"}, "storyId": "stTUrealTestStoriesUser7"}];
 
 		notifications.getCurrent()
@@ -104,6 +105,7 @@ class Settings extends React.Component<ScreenProps> {
 			notifications.createDiscoveriesNofication( discoveries );
 			// this.notifId = notifications.create('new_discoveries', discoveries );
 		}
+		*/
 	}
 
 	_emptyCacheData = () => {

@@ -54,13 +54,13 @@ export default function AccountProvider(WrappedComponent) {
 		checkListeners() {
 			if (this.account && !this.accountListener) {
 				this.accountListener = true;
-				this.account.on('state', this._onChange);
+				this.account.addChangeListener( this._onChange );
 			}
 		}
 
 		componentDidUpdate(prevProps) {
 			if (this.props.accountId !== prevProps.accountId) {
-				this.account.off('state', this._onChange);
+				this.account.removeChangeListener( this._onChange );
 				this.accountListener = false;
 				this.loadAccount(this.props.accountId);
 			}
@@ -68,7 +68,7 @@ export default function AccountProvider(WrappedComponent) {
 
 		componentWillUnmount() {
 			if (this.accountListener) {
-				this.account.off('state', this._onChange);
+				this.account.removeChangeListener( this._onChange );
 			}
 		}
 	}
