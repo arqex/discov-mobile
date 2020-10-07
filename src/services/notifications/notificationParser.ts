@@ -28,6 +28,18 @@ const definitions = {
     message: '%displayName% and %count% more started to follow you.',
     image: '%avatarPic%',
     action: '/myPeople/myFollowers/%id%'
+  },
+  storyDiscovered: {
+    title: 'Your story has been discovered',
+    message: '%displayName% has found the story in %location%',
+    image: '%avatarPic%',
+    action: '/myStories/%storyId%'
+  },
+  storiesDiscovered: {
+    title: 'Your followers are on fire!',
+    message: '%displayName% has found the story in %location%',
+    image: '%avatarPic%',
+    action: '/myStories/%storyId%'
   }
 }
 
