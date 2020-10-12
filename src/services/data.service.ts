@@ -4,7 +4,7 @@ import authStore from '../utils/authStore';
 import { getEnv } from '../../environment';
 import { initActions, store } from '../state/appState';
 import storeService from '../state/store.service';
-import { Platform } from 'react-native';
+import { Platform, Alert } from 'react-native';
 import services from '.';
 import DeviceInfo from 'react-native-device-info'
 
@@ -113,7 +113,9 @@ function createApiClient() {
 		let apiClient = new ApiClient({
 			endpoint,
 			test_endpoint: endpoint + 'ci',
-			authStore
+			authStore,
+			appVersion: env.appVersion,
+			onRequestError
 		});
 
 		return apiClient;
@@ -189,4 +191,24 @@ function clearStores() {
 function setAuthenticatedUser( store, user ){
 	store.user.email = user.email;
 	store.user.id = user.id;
+}
+
+function onRequestError( error ){
+	checkOutdatedAppError( error && error.errors || []);
+	return false;
+}
+
+let showingAlert = false;
+function checkOutdatedAppError( errors ){
+	let i = errors.length;
+	while( i-- > 0 ){
+		if( errors[i].name === 'outdated_app' && !showingAlert ){
+			showingAlert = true;
+			dataService.getApiClient().logout();
+			Alert.alert('Your app is outdated', errors[i].message + ' Please update your discov app.', [{
+				text: 'Ok',
+				onPress: () => showingAlert = false
+			}] );
+		}
+	}
 }

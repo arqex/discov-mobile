@@ -148,7 +148,7 @@ export default function (store, api) {
 
 
 function checkFollowersGroup( store, accountId, followers ){
-	let groupId = 'fg' + accountId;
+	let groupId = storeService.getUserFGId(accountId);
 	if( store.followerGroups[ groupId ] ) return;
 
 	store.followerGroups[groupId] = {

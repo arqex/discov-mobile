@@ -2,7 +2,7 @@ export default function validatePassword( password:string ){
 	if( !password ) return false;
 
 	// Tests users
-	if( password.startsWith('TU') && password.length > 10 ){
+	if( password.startsWith('_TU') && password.length > 10 ){
 		return true;
 	}
 	

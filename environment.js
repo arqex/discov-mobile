@@ -1,5 +1,6 @@
 
 import {isEmulator} from 'react-native-device-info';
+const pack = require('./package.json');
 
 let baseUrlDev = 'https://gql-dev.discov.me/';
 let baseUrlLocal = 'http://localhost:3000/';
@@ -9,7 +10,8 @@ let dev = {
 	baseUrl: baseUrlDev,
 	apiUrl: `${baseUrlDev}gql`,
 	errorUrl: `${baseUrlDev}errorReport`,
-	isLocal: true
+	isLocal: true,
+	appVersion: pack.version
 }
 
 let local = {
@@ -17,7 +19,8 @@ let local = {
 	baseUrl: baseUrlLocal,
 	apiUrl: `${baseUrlLocal}gql`,
 	errorUrl: `${baseUrlLocal}errorReport`,
-	isLocal: false
+	isLocal: false,
+	appVersion: pack.version
 }
 
 let isLocal;
@@ -27,8 +30,8 @@ let promise = isEmulator().then(result => {
 })
 
 function getCurrentEnv( isLocal ){
-	return dev;
-	// return local;
+	// return dev;
+	return local;
 	// return isLocal ? local: dev;
 }
 

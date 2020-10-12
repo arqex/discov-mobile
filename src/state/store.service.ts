@@ -9,8 +9,8 @@ export default {
 		return store.user.id;
 	},
 
-	getUserFGId(){
-		return 'fg' + store.user.id;
+	getUserFGId( accountId ){
+		return (accountId || store.user.id) + 'fg';
 	},
 
 	getStartAt( paginatedList, loadMore ){

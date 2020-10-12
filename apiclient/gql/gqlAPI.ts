@@ -24,7 +24,9 @@ export interface GqlCredentials {
 
 export interface GqlConfig {
   endpoint?: string
-  credentials?: GqlCredentials
+  credentials?: GqlCredentials,
+  appVersion?: string,
+  onRequestError?: (error:any) => boolean
 }
 
 export class GqlApi extends GqlMethods {
@@ -36,12 +38,11 @@ export class GqlApi extends GqlMethods {
   }
 
   setConfig( options: GqlConfig ){
-    if( options.endpoint ){
-      this.config.endpoint = options.endpoint;
-    }
-    if( options.credentials ){
-      this.config.credentials = options.credentials;
-    }
+    ['endpoint', 'credentials', 'appVersion', 'onRequestError'].forEach( key => {
+      if( options[key] ){
+        this.config[key] = options[key];
+      }
+    });
   }
 
   getCurrentUser(){
@@ -90,7 +91,8 @@ export class GqlApi extends GqlMethods {
         API.configure({
           graphql_endpoint: config.endpoint,
           graphql_headers: async () => ({
-            Authorization: config.credentials.authHeader
+            Authorization: config.credentials.authHeader,
+            'X-App-Version': config.appVersion
           })
         });
         
@@ -125,6 +127,10 @@ export class GqlApi extends GqlMethods {
           if( err && err.errors && err.errors.length ){
             if( err.errors.length > 1 ){
               console.log( 'There are more than 1 error in the gqlRequest', err.errors );
+            }
+
+            if( config.onRequestError ){
+              config.onRequestError( err );
             }
   
             return {

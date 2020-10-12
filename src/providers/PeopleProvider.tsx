@@ -50,7 +50,7 @@ export default function PeopleProvider(WrappedComponent) {
 		}
 
 		isAccount( peopleId ){
-			return peopleId && peopleId.slice(0,2) === 'ac';
+			return peopleId && peopleId.endsWith('ac');
 		}
 
 		componentDidMount() {

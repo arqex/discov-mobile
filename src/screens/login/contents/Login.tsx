@@ -10,7 +10,7 @@ import authContentStyles from './authContentStyles';
 export default class Login extends React.Component<ScreenProps> {
 	state = {
 		email: this.props.router.location.query.email || 'realTestLow@discov.net',
-		password: 'TUrealTestLowApiToken',
+		password: '_TUrealTestLowApiToken',
 		loading: false,
 		googleLoading: false
 	}
@@ -98,7 +98,8 @@ export default class Login extends React.Component<ScreenProps> {
 		this.props.actions.auth.login(this.state.email, this.state.password )
 			.then(this._onLoginEnd)
 			.catch(err => {
-				console.error(err)
+				this.setState({ loading: false });
+				console.error(err);
 			})
 		;
 	}

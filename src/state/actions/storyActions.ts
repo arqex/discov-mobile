@@ -73,7 +73,7 @@ export default function (store, api) {
 				const selectedFriends = {};
 
 				if( accountId ){
-					selectedFriends[ `fg${accountId}` ] = true;
+					selectedFriends[ storeService.getUserFGId(accountId) ] = true;
 				}
 				
 				store.storyInProgress = {

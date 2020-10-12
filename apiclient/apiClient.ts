@@ -38,7 +38,9 @@ interface ApiLoginResult {
 interface ApiClientConfig {
 	endpoint: string
 	test_endpoint: string,
-	authStore: any
+	authStore: any,
+	appVersion?: string,
+	onRequestError?: (error:any) => boolean
 }
 
 type AuthStatus = 'IN' | 'OUT' | 'LOADING'
@@ -170,7 +172,7 @@ export class ApiClient {
 	///////
 	// HELPERS
 	//////
-	_getGqlConfig( credentials?: ApiClientCredentials ): GqlConfig{
+	_getGqlConfig( credentials?: ApiClientCredentials ): GqlConfig {
 		if( !credentials || !credentials.authHeader || !credentials.user ){
 			return {
 				endpoint: 'NO_CREDENTIALS_SET',
@@ -181,6 +183,8 @@ export class ApiClient {
 		}
 
 		return {
+			appVersion: this.config.appVersion,
+			onRequestError: this.config.onRequestError,
 			endpoint: credentials.user.isTestUser ? this.config.test_endpoint : this.config.endpoint,
 			credentials
 		};

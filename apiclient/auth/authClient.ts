@@ -80,7 +80,7 @@ export class AuthClient {
 						if (idToken) {
 							return {
 								user: {
-									id: 'ac' + uuidTo64(idToken.payload.sub),
+									id: uuidTo64(idToken.payload.sub) + 'ac',
 									email: idToken.payload.email,
 									isTestUser: false,
 									userConfirmed: idToken.payload.email_verified
@@ -107,7 +107,7 @@ export class AuthClient {
 			
 			let credentials = {
 				user: {
-					id: 'ac' + password.replace('ApiToken', ''),
+					id: password.replace('ApiToken', '') + 'ac',
 					email,
 					isTestUser: true,
 					userConfirmed: true
@@ -274,7 +274,7 @@ export class AuthClient {
 
 
 function isTestUser(email, password) {
-	return email.match(/@discov.(me|net)$/) && password.startsWith('TU');
+	return email.match(/@discov.(me|net)$/) && password.startsWith('_TU');
 }
 
 async function getAttributes(user) {

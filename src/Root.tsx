@@ -108,7 +108,17 @@ class Root extends React.Component {
 	initialize(){
 		initErrorHandler(router);
 
-		dataService.init().then( this.firstNavigation );
+		dataService.init().then( () => {
+			this.firstNavigation();
+			dataService.getActions().auth.addLoginListener( status => {
+				if( status === 'OUT' ){
+					setTimeout( () => {
+						router.navigate('/');
+					}, 300);
+				}
+			}); 
+		});
+
 
     let update = () => {
 			if( !this.unmounted ) this.forceUpdate();

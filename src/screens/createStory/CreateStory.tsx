@@ -557,7 +557,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		const {store, actions} = this.props;
 		const followers = store.user.followers;
 
-		if( !followers || !followers.items ){
+		if( !followers || !followers.items || !followers.valid ){
 			actions.relationship.loadUserFollowers();
 		}
 	}
