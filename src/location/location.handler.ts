@@ -156,7 +156,7 @@ function updateFences( location, radius ){
     latitude: location.latitude,
     longitude: location.longitude,
     lastUpdated: new Date(),
-    radius
+    radius: 50
   };
 
   // We create a new fence if there isn't a current one
