@@ -69,10 +69,11 @@ geofenceService.setTaskName(GEOFENCING_TASK);
 
 function start() {
   console.log('Starting backgound services');
+  backgroundFetch.init(onBgFetchEvent);
+
   isLocationReady().then( isReady => {
     if( isReady ){
       console.log('Location track start: OK');
-      backgroundFetch.init( onBgFetchEvent );
       setTrackingMode('passive');
     }
   });
@@ -190,6 +191,9 @@ function updateCurrentLocation(){
       return locationService.getCurrentLocation()
         .then( location => {
           return locationHandler.onLocation( location.coords, setTrackingMode );
+        })
+        .catch( err => {
+          log( 'LocationError', JSON.stringify(err) );
         })
       ;
     })
