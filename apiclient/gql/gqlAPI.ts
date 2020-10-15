@@ -113,15 +113,17 @@ export class GqlApi extends GqlMethods {
         }
         catch (err) {
           console.log('ERROR', err);
+
+          let ajaxData = {
+            endpoint: config.endpoint,
+            authorization: config.credentials.authHeader,
+            'gql request': body,
+            'gql error': err,
+            'authorizer': getAuthorizerType(config.credentials.authHeader)
+          };
           
           if( glob.gql_debug ){
-            console.log({
-              endpoint: config.endpoint,
-              authorization: config.credentials.authHeader,
-              'gql request': body,
-              'gql error': err,
-              'authorizer': getAuthorizerType( config.credentials.authHeader )
-            });
+            console.log( ajaxData );
           }
 
           if( err && err.errors && err.errors.length ){
@@ -135,11 +137,12 @@ export class GqlApi extends GqlMethods {
   
             return {
               data: err.data,
-              error: err.errors[0]
+              error: err.errors[0],
+              ajax: ajaxData
             };
           }
 
-          return { error: err };
+          return { error: err, ajax: ajaxData };
         }
       }
     }
