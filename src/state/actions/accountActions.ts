@@ -140,7 +140,7 @@ export default function (store, api) {
 			let startAt = storeService.getStartAt(store.accountsAround, loadMore);
 			let payload = { accountId: storeService.getUserId(), startAt };
 
-			api.gql.getAccountsAround( actionService.peerAccountPageFields )
+			return api.gql.getAccountsAround( actionService.peerAccountPageFields )
 				.run( payload )
 				.then( res => {
 					let ids = [];

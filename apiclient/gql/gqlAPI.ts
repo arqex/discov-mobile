@@ -26,7 +26,8 @@ export interface GqlConfig {
   endpoint?: string
   credentials?: GqlCredentials,
   appVersion?: string,
-  onRequestError?: (error:any) => boolean
+  onRequestError?: (error:any) => boolean,
+  getHeaders?: () => Promise<any>
 }
 
 export class GqlApi extends GqlMethods {
@@ -38,7 +39,7 @@ export class GqlApi extends GqlMethods {
   }
 
   setConfig( options: GqlConfig ){
-    ['endpoint', 'credentials', 'appVersion', 'onRequestError'].forEach( key => {
+    ['endpoint', 'credentials', 'appVersion', 'onRequestError', 'getHeaders'].forEach( key => {
       if( options[key] ){
         this.config[key] = options[key];
       }
@@ -90,10 +91,7 @@ export class GqlApi extends GqlMethods {
 
         API.configure({
           graphql_endpoint: config.endpoint,
-          graphql_headers: async () => ({
-            Authorization: config.credentials.authHeader,
-            'X-App-Version': config.appVersion
-          })
+          graphql_headers: config.getHeaders
         });
         
         try {

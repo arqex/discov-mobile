@@ -127,7 +127,6 @@ export class ApiClient {
 	}
 
 	verifyAccount(email, password, code) {
-
 		// log the gql api out
 		this.gql.setConfig(this._getGqlConfig());
 		return this.auth.verifyAccount( email, password, code )
@@ -182,11 +181,19 @@ export class ApiClient {
 			}
 		}
 
+		const getHeaders = () => this.auth.getCachedCredentials().then( credentials => {
+			return {
+				Authorization: credentials.authHeader,
+				'X-App-Version': this.config.appVersion
+			};
+		});
+
 		return {
 			appVersion: this.config.appVersion,
 			onRequestError: this.config.onRequestError,
 			endpoint: credentials.user.isTestUser ? this.config.test_endpoint : this.config.endpoint,
-			credentials
+			credentials: credentials,
+			getHeaders
 		};
 	}
 }

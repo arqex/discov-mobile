@@ -47,7 +47,8 @@ TaskManager.defineTask(GEOFENCING_TASK, event => {
     if (exitingTimer) {
       clearTimeout(exitingTimer);
     }
-    setTimeout(() => {
+    
+    exitingTimer = setTimeout(() => {
       exitingTimer = false;
       if (exiting) {
         exiting = false;
@@ -55,7 +56,7 @@ TaskManager.defineTask(GEOFENCING_TASK, event => {
         locationHandler.resetFence();
         setTrackingMode('active');
       }
-    }, 2000);
+    }, 1000);
   }
   else {
     console.log('Not an exit event');

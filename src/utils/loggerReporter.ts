@@ -9,7 +9,7 @@ getEnv().then(env => {
 	URL = env.errorUrl;
 });
 
-let waitTime = 500;
+let waitTime = 100;
 
 export default {
 	report(store, logLine) {
@@ -35,10 +35,10 @@ export default {
 			
 			fetch(URL, options)
 				.then( res => {
-					waitTime = 500;
+					waitTime = 1000;
 				} )
 				.catch( err => {
-					waitTime = 10 * 60 * 1000;
+					// waitTime = 10 * 60 * 1000;
 				})
 			;
 			logReport = [];

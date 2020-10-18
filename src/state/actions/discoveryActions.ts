@@ -3,6 +3,21 @@ import storeService from '../store.service';
 import actionService from './action.service';
 import { locationToLng } from '../../utils/maps';
 import { log } from '../../utils/logger';
+import axios from 'axios';
+
+axios.interceptors.request.use(request => {
+	let auth = request.headers.Authorization;
+	log('Authorization', auth ? auth.slice(0,20) : 'none');
+	return request;
+});
+
+axios.interceptors.response.use( r => r, error => {
+	if( error && error.response ){
+		log(`Request error ${error.response.status}`, JSON.stringify( error.response.data ) );
+	}
+  return error;
+});
+
 
 let promises = {
 	discoveries: {}
@@ -50,7 +65,7 @@ export default function (store, api) {
 				console.log('CANT DISCOVER AROUND WITH A GOOD LOCATION', currentPosition );
 				return Promise.resolve({});
 			}
-			
+
 			return api.gql.discoverAround(`{ closestDiscoveryDistance discoveries ${actionService.userDiscoveryFieldsWithOwner} }`)
 				.run( location )
 				.then( res => {
@@ -64,6 +79,7 @@ export default function (store, api) {
 
 					if( !res || !res.discoveries ){
 						log('Empty discoveries response?', JSON.stringify(res) );
+						pingTest();
 					}
 
 					return res;
@@ -95,4 +111,12 @@ export default function (store, api) {
 			;
 		}
 	}
+}
+
+
+
+function pingTest() {
+	fetch('https://httpstat.us/404').then( res => {
+		log( 'Dummy ping', res.status );
+	});
 }
