@@ -32,6 +32,7 @@ import OwnDiscovery from '../screens/ownDiscovery/OwnDiscovery';
 import LocationReport from '../screens/locationReport/LocationReport';
 import BgReport from '../screens/locationReport/BgReport';
 import AssetsViewer from '../screens/assetsViewer/AssetsViewer';
+import StoryComments from '../screens/storyComments/StoryComments';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -57,6 +58,7 @@ export const routes = [
 	{
 		path: '/myDiscoveries', cb: MyDiscoveries, children: [
 			{ path: '/:id', cb: OwnDiscovery, children: [
+				{ path: '/comments', cb: StoryComments, isModal: true },
 				{ path: '/assets', cb: AssetsViewer }
 			]}
 		]
@@ -76,6 +78,7 @@ export const routes = [
 
 	{ path: '/myStories', cb: MyStories, children: [
 		{ path: '/:id', cb: OwnStory, children: [
+			{ path: '/comments', cb: StoryComments, isModal: true },
 			{ path: '/assets', cb: AssetsViewer }
 		]}
 	]},

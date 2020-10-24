@@ -4,6 +4,7 @@ import { StoryHeader, Button, MapImage, DiscovMarker, Text, Touchable, Tag, Wrap
 import StoryProvider from '../../providers/StoryProvider';
 import UnseenDiscovery from './UnseenDiscovery';
 import FastImage from 'react-native-fast-image';
+import StoryCommentsButton from './StoryCommentsButton';
 
 interface StoryCardProps {
 	storyId: string,
@@ -31,6 +32,8 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 			);
 		}
 
+		console.log( story.aggregated );
+
 		return (
 			<View style={ styles.background }>
 				<Touchable style={ styles.container }
@@ -52,9 +55,9 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 							{ this.renderTags( story ) }
 						</View>
 						<View style={ styles.rightControls }>
-							<Button type="transparent" color="secondary" icon="chat-bubble-outline" iconColor="#666" size="s">
-								12
-							</Button>
+							<StoryCommentsButton
+								story={story}
+								onPress={ this._goToComments } />
 						</View>
 					</View>
 				</Touchable>
@@ -147,8 +150,8 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		}
 	}
 
-	navigate( route  ){
-		this.props.router.navigate( route );
+	goToStory( subpath ){
+		this.props.router.navigate(`${this.props.rootPath}/${this.props.story.id}${subpath}` );
 	}
 
 	getImageAsset(){
@@ -162,7 +165,10 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 	}
 
 	_goToDiscovery = () => {
-		this.navigate(`${ this.props.rootPath }/${ this.props.story.id }`)
+		this.goToStory('');
+	}
+	_goToComments = () => {
+		this.goToStory(`comments`);
 	}
 
 	_onReveal = () => {
