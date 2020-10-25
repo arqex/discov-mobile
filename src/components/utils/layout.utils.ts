@@ -1,10 +1,23 @@
 import { Dimensions } from 'react-native';
+import TopBar from '../TopBar';
 import { getStatusbarHeight } from './getStatusbarHeight';
 
+const topBarHeight = 56;
 
 let cachedHeights: any;
+let cachedMapHeights: any;
 
 export default {
+  getMapWithTopBarHeights() {
+    let screen = Dimensions.get('screen');
+    let statusBar = getStatusbarHeight();
+    let layout = screen.height - statusBar - topBarHeight;
+
+    return getMapHeights( layout );
+  },
+  getMapHeights() {
+    return getMapHeights( Dimensions.get('screen').height);
+  },
   getHeights() {
     if( cachedHeights ) return cachedHeights;
 
@@ -39,5 +52,15 @@ export default {
     }
 
     return heights;
+  }
+}
+
+
+function getMapHeights( layoutHeight ){
+  return {
+    openMap: layoutHeight - 80,
+    closedMap : layoutHeight / 3,
+    minPanel: layoutHeight / 3 * 2,
+    top: topBarHeight + getStatusbarHeight()
   }
 }

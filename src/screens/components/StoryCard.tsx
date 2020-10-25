@@ -168,7 +168,7 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		this.goToStory('');
 	}
 	_goToComments = () => {
-		this.goToStory(`comments`);
+		this.goToStory(`/comments`);
 	}
 
 	_onReveal = () => {

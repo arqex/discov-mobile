@@ -1,4 +1,3 @@
-import { ActionType } from 'expo/build/Notifications/Notifications.types';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from '../../components';
@@ -6,7 +5,7 @@ import { Button } from '../../components';
 
 interface StoryCommentsButtonProps {
 	story: any,
-	onPress: () => ActionType
+	onPress: () => any
 }
 
 const StoryCommentsButton = ({story, onPress}: StoryCommentsButtonProps) => {

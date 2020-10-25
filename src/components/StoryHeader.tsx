@@ -58,12 +58,15 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 	renderRightContent( story ) {
 		let images = this.getImages( story );
 
-		if( !this.props.showDate && images ){
-			return (
-				<StoryImages
-					onPress={ this.props.onAssetsPress }
-					images={ images } />
-			);
+		if( !this.props.showDate ){
+			if( images && images.length ){
+				return (
+					<StoryImages
+						onPress={this.props.onAssetsPress}
+						images={images} />
+				);
+			}
+			return;
 		}
 
 		return (
@@ -74,8 +77,8 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 	}
 
 	renderDate( story ){
-		let createTime = story.createdAt || Date.now();
-		let diff = Date.now() - createTime;
+		let createTime = story.createdAt ? new Date( story.createdAt ) : new Date();
+		let diff = Date.now() - createTime.getTime();
 		let m = moment( createTime );
 
 		if( diff < DAY_DATE_TIME ){

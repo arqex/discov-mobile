@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { MapScreen, Button, StoryHeader, Text, Wrapper, Bg } from '../../components';
 import MapPanel from '../createStory/MapPanel';
+import StoryCommentsButton from './StoryCommentsButton';
 import StoryMap from './StoryMap';
 
 interface StoryScreenProps {
@@ -55,11 +56,12 @@ export default class StoryScreen extends Component<StoryScreenProps> {
 					router={ this.props.router }
 					onAssetsPress={ this._navigateToImages }
 					story={story} />
-					<Wrapper textWidth>
-						<Text type="paragraph">
-							{story.content.text}
-						</Text>
-					</Wrapper>
+				<Wrapper textWidth>
+					<Text type="paragraph">
+						{story.content.text}
+					</Text>
+				</Wrapper>
+				{ this.renderControls() }
 			</View>
 		)
 	}
@@ -86,10 +88,28 @@ export default class StoryScreen extends Component<StoryScreenProps> {
 		);
 	}
 
+	renderControls() {
+		return (
+			<View style={ styles.controls }>
+				<View style={styles.leftControls} />
+				<View style={styles.rightControls}>
+					<StoryCommentsButton
+						story={this.props.story}
+						onPress={this._navigateToComments} />
+				</View>
+			</View>
+		)
+	}
+
 	_navigateToImages = () => {
-		console.log( this.props.location );
 		this.props.router.navigate(
 			`${this.props.location.pathname}/assets`
+		);
+	}
+
+	_navigateToComments = () => {
+		this.props.router.navigate(
+			`${this.props.location.pathname}/comments`
 		);
 	}
 }
@@ -110,5 +130,23 @@ const styles = StyleSheet.create({
 	header: {
 		paddingLeft: 20,
 		paddingRight: 20
-	}
+	},
+	controls: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'space-between',
+		marginTop: 20,
+		maxWidth: 380,
+		width: '100%'
+	},
+	leftControls: {
+		display: 'flex',
+		flex: 1,
+		flexDirection: 'row',
+		alignItems: 'flex-end'
+	},
+	rightControls: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
 });

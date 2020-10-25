@@ -15,7 +15,14 @@ getEnv().then( env => {
 	}
 });
 
+let handledFatal: any = false;
 export function errorHandler( e, isFatal ) {
+	if ( !isFatalTimerExpired( handledFatal ) ){
+		return;
+	}
+
+	handledFatal = Date.now();
+	
 	let payload = {
 		type: isFatal ? 'mobileError' : 'mobileFatal',
 		location: router.location,
@@ -67,3 +74,10 @@ rejectionTracking.enable({
 		errorHandler( error, true );
 	}
 });
+
+// Ten seconds without sending
+const fatalTimeout = 10 * 1000;
+function isFatalTimerExpired( timer ){
+	if( !timer ) return true;
+	return Date.now() - fatalTimeout > timer;
+}

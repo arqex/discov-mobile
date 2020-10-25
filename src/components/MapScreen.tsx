@@ -30,11 +30,11 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 
 		let heights = this.getHeights();
 
-		this.deltaY.setValue( this.getInitialDelta(props, heights) );
+		this.deltaY.setValue( -this.getInitialScroll() );
 		
 		this.paddingTranslate = this.deltaY.interpolate({
-			inputRange: [0, heights.bigMap],
-			outputRange: [0, heights.bigMap / 2],
+			inputRange: [0, -heights.scrollSnapPoint],
+			outputRange: [0, -heights.scrollSnapPoint / 2],
 			extrapolate: 'clamp'
 		});
 	}
@@ -51,7 +51,7 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 		let paddingStyles = [
 			styles.padding,
 			{ 
-				height: heights.bigMap,
+				height: heights.openMap,
 				transform: [{translateY: this.paddingTranslate}]
 			}
 		]
@@ -70,19 +70,22 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 				<Animated.ScrollView
 					ref="scroll"
 					bounces={ false }
-					contentOffset={ {x: 0, y: heights.initialScroll } }
+					contentOffset={ {x: 0, y: -this.getInitialScroll() } }
 					onScroll={ this.scrollMapping }
-					snapToOffsets={[heights.minPanel]}
+					onMomentumScrollEnd={ this._onScrollEnd }
+					snapToOffsets={[ -heights.scrollSnapPoint ]}
 					nestedScrollEnabled={ true }
 					snapToEnd={false}
 					decelerationRate="fast"
 					scrollEnabled={ this.props.allowScroll || this.props.allowBigMap }
 					scrollEventThrottle={1}>
-					<Animated.View style={ paddingStyles }>
-						<Animated.View style={{ flex:1, height: heights.bigMap + 10, alignItems: 'stretch' }}>
-							{ this.props.map }
+					<View style={{ overflow: 'hidden', height: heights.openMap}}>
+						<Animated.View style={ paddingStyles }>
+							<Animated.View style={{ flex:1, height: heights.openMap + 10, alignItems: 'stretch' }}>
+								{ this.props.map }
+							</Animated.View>
 						</Animated.View>
-					</Animated.View>
+					</View>
 					<View style={contentStyles}>
 						{ this.renderHandle() }
 						{ this.renderMapBottomControls() }
@@ -124,7 +127,7 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 		let heights = this.getHeights();
 		let olStyle = [
 			styles.searchPanelWrapper,
-			{ top: this.props.top ? heights.topBar + heights.statusBar : 0 } 
+			{ top: this.props.top ? heights.top : 0 } 
 		];
 
 		return (
@@ -153,22 +156,13 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 		);
 	}
 
-	getInitialDelta( props, heights ){
-		let initialDelta = heights.bigMap - heights.header;
-		if( props.top ){
-			initialDelta += heights.topBar;
-		}
-
-		return initialDelta;
-	}
-
 	getHeights() {
-		let heights: any = layoutUtils.getHeights()[
-			this.props.top ? 'withTopBar' : 'withoutTopBar'
-		];
-
-		heights.initialScroll = heights.window - heights.header - heights.statusBar;
-
+		let heights: any = this.props.top ?
+			layoutUtils.getMapWithTopBarHeights() :
+			layoutUtils.getMapHeights()
+		;
+		
+		heights.scrollSnapPoint = heights.closedMap - heights.openMap;
 		return heights;
 	}
 	
@@ -178,11 +172,18 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 			setTimeout( () => {
 				scroll._component.scrollTo({
 					x: 0,
-					y: this.getHeights().minPanel,
+					y: this.getInitialScroll(),
 					animated: false
 				});
 			});
 		}
+	}
+
+	getInitialScroll(){
+		if( this.props.initialMode === 'bigMap' ){
+			return 0;
+		}
+		return this.getHeights().scrollSnapPoint;
 	}
 
 	closeMap() {
@@ -201,6 +202,11 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 			y: 0,
 			animated: true
 		});
+	}
+
+	_onScrollEnd = e => {
+		
+		console.log( e.nativeEvent.contentOffset, this.getHeights() );
 	}
 }
 
