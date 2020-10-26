@@ -216,6 +216,12 @@ mutation updateDiscoveryExtra( $input: DiscoveryInput! ) {
 }
 `)}
 
+  createStoryComment( returnFields: string ) { return this.makeRunnable(`
+mutation createStoryComment( $input: CreateStoryCommentInput! ) {
+  createStoryComment(input: $input) ${ returnFields }
+}
+`)}
+
 
 }
 

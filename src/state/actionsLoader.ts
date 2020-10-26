@@ -6,6 +6,7 @@ import discoveryActions from './actions/discoveryActions';
 import relationshipActions from './actions/relationshipActions';
 import followerGroupActions from './actions/followerGroupActions';
 import mapActions from './actions/mapActions';
+import storyCommentActions from './actions/storyCommentActions';
 
 let actionNames = {
   auth: authActions,
@@ -15,7 +16,8 @@ let actionNames = {
   map: mapActions,
   relationship: relationshipActions,
   user: userActions,
-  story: storyActions
+  story: storyActions,
+  storyComments: storyCommentActions
 }
 
 export default function actionLoader( store, apiClient ){

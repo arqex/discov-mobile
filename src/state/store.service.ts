@@ -68,6 +68,10 @@ export default {
 		store.stories[story.id] = story;
 	},
 
+	storeComment(comment) {
+		store.comments[comment.id] = comment;
+	}
+
 	storeDiscovery(discovery) {
 		discovery.lastUpdatedAt = Date.now();
 		delete discovery.story;
