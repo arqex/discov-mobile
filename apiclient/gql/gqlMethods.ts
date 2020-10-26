@@ -161,6 +161,14 @@ query getMultiplePeerMeta( $ids: [String!]! ) {
 }
 `)}
 
+  getStoryComments(returnFields: string) { return this.makeRunnable(`
+query getStoryComments( $input: PaginatedStoryInput! ) {
+  getStoryComments(input: $input) ${ returnFields } 
+}
+`)}
+
+
+
 
 
   ///////////////

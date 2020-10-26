@@ -6,6 +6,7 @@ let store = ors({
 	accountStatus: {},
 	discoveries: {},
 	stories: {},
+	storyComments: {},
 	peerAccounts: {},
 	peerMeta: {},
 	relationships: {},

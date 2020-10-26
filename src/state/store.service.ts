@@ -215,6 +215,10 @@ export default {
 		store.locationPermissions = permissions;
 	},
 
+	getComments( storyId ){
+		return store.storyComments[ storyId ];
+	},
+
 	invalidateFollowers() {
 		if( store.user.followers ){
 			store.user.followers.valid = false;

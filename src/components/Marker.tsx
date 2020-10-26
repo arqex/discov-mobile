@@ -5,14 +5,15 @@ import styleVars from './styleVars';
 const sizes = {
 	m: { width: 30, height: 45 },
 	s: {width: 20, height: 30 },
-	xs: { with: 10, height: 15 }
+	xs: { width: 10, height: 15 }
 }
 
 const colors = {
 	dark: { circle: "#FF4D55", path: "#313140" },
 	light: { circle: "#FF4D55", path: "#EEE" },
 	gray: { circle: styleVars.colors.lightText, path: styleVars.colors.lightText },
-	lightBlue: { circle: styleVars.colors.borderBlue, path: styleVars.colors.borderBlue }
+	lightBlue: { circle: styleVars.colors.borderBlue, path: styleVars.colors.borderBlue },
+	blue: { circle: styleVars.colors.secondary, path: styleVars.colors.secondary }
 }
 
 export default function Marker( props ){

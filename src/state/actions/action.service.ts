@@ -29,6 +29,8 @@ const storyDiscoveryFields = `{id storyId ownerId discovererId createdAt extra d
 const storyPageFields = page.replace('%', storyFields);
 const userDiscoveryPageFields = page.replace('%', userDiscoveryFields);
 
+const storyCommentFields = '{id storyId commenterId content deleted createdAt relatedCommentId';
+
 export default {
 	userAccountFields,
 	peerAccountFields,
@@ -50,6 +52,7 @@ export default {
 	storyDiscoveryFields,
 	storyPageFields,
 	userDiscoveryPageFields,
+	storyCommentFields,
 
 	createBatchLoader( loader ){
 		let loadPromise: any = false;
