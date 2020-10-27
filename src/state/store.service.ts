@@ -70,7 +70,7 @@ export default {
 
 	storeComment(comment) {
 		store.comments[comment.id] = comment;
-	}
+	},
 
 	storeDiscovery(discovery) {
 		discovery.lastUpdatedAt = Date.now();
