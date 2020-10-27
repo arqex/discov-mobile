@@ -69,6 +69,7 @@ export default {
 	},
 
 	storeComment(comment) {
+		comment.content = JSON.parse( comment.content );
 		store.comments[comment.id] = comment;
 	},
 
@@ -245,6 +246,9 @@ export default {
 		store.peerMeta = {};
 		store.placesByLocation = {};
 		
+		store.storyComments = {};
+		store.comments = {};
+
 		delete store.user.stories;
 		delete store.user.discoveries;
 	}

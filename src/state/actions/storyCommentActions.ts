@@ -14,7 +14,7 @@ export default function (store, api){
 			const promise = promises.stories[startAt];
 			if (promise) return promise;
 
-			promises.stories[startAt] = api.gql.getStoryComments( actionService.storyCommentFields )
+			promises.stories[startAt] = api.gql.getStoryComments( actionService.storyCommentPageFields )
 				.run( {storyId, startAt} )
 				.then( commentsPage => {
 					let ids = [];

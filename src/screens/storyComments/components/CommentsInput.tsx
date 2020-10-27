@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { TextInput, View, StyleSheet } from 'react-native';
-import { Button, styleVars } from '../../components';
-import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
+import { Button, styleVars } from '../../../components';
+import { getNavigationBarHeight } from '../../../components/utils/getNavigationBarHeight';
 
 interface CommentsInputProps {
 	text: string

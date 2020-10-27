@@ -4,8 +4,9 @@ import { Bg, ScrollScreen, Tooltip } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
 import storeService from '../../state/store.service';
 import { storyService } from '../../services/story.service';
-import CommentsTopBar from './CommentsTopBar';
-import CommentsInput from './CommentsInput';
+import CommentsTopBar from './components/CommentsTopBar';
+import CommentsInput from './components/CommentsInput';
+import Comment from './components/Comment';
 
 export default class StoryComments extends React.Component<ScreenProps> {
 
@@ -16,17 +17,23 @@ export default class StoryComments extends React.Component<ScreenProps> {
 	}
 
 	render() {
-		let story = storeService.getStory(this.getId());
+		let story = this.getStory();
+		let comments = this.getComments();
 
-		if (!story) {
+		if (!story || !comments) {
 			return this.renderLoading();
 		}
+
+		
 
 		return (
 			<Bg>
 				<ScrollScreen
 					header={this.renderHeader()}
 					topBar={this.renderTopBar()}
+					data={ comments && comments.items }
+					renderItem={ this._renderItem }
+					keyExtractor={ item => item }
 				/>
 				{ this.renderInput() }
 			</Bg>
@@ -35,9 +42,9 @@ export default class StoryComments extends React.Component<ScreenProps> {
 
 	renderLoading() {
 		return (
-			<View>
+			<Bg>
 				<Text>Loading</Text>
-			</View>
+			</Bg>
 		);
 	}
 
@@ -61,6 +68,19 @@ export default class StoryComments extends React.Component<ScreenProps> {
 	renderInput() {
 		return (
 			<CommentsInput text={ this.state.text } onChange={ this._onTextChange} />
+		);
+	}
+
+	_renderItem = ({item}) => {
+		let comment = this.props.store.comments[ item ];
+		let currentUserId = storeService.getUserId();
+
+		return (
+			<Comment
+				comment={ comment }
+				isCurrentUser={ comment.commenterId === currentUserId }
+				isStoryOwner={ comment.commenterId === this.getStory().ownerId }
+			/>
 		);
 	}
 
@@ -90,6 +110,14 @@ export default class StoryComments extends React.Component<ScreenProps> {
 			storyService.loadStory( this.getId() )
 				.then( () => {
 					this.forceUpdate()
+				})
+			;
+		}
+		let comments = this.getComments();
+		if( !comments ){
+			this.props.actions.storyComment.loadStoryComments( this.getId() )
+				.then( () => {
+					this.forceUpdate();
 				})
 			;
 		}

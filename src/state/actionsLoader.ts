@@ -17,7 +17,7 @@ let actionNames = {
   relationship: relationshipActions,
   user: userActions,
   story: storyActions,
-  storyComments: storyCommentActions
+  storyComment: storyCommentActions
 }
 
 export default function actionLoader( store, apiClient ){
