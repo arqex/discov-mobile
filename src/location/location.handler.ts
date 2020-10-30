@@ -10,7 +10,7 @@
 import { getDistance } from '../utils/maps';
 import storeService from '../state/store.service';
 import { dataService } from '../services/data.service';
-import notifications from '../services/notifications/notification.service';
+import serverMessageService from '../services/serverMessage/serverMessage.service';
 import geofenceService from './geofence.service';
 import { log } from '../utils/logger';
 
@@ -205,7 +205,7 @@ function isInGeoFence( fence, location ){
 
 function createDiscoveriesNofication( discoveries ){
   let count = Math.max( discoveries.length, storeService.getUnseenCount() );
-  notifications.close();
+  serverMessageService.close();
 
   const title = count > 1 ?
     __( 'notifications.multipleTitle', {count} ) :
@@ -217,7 +217,7 @@ function createDiscoveriesNofication( discoveries ){
     __( 'notifications.singleMessage', {name: discoveries[0].owner.displayName} )
   ;
 
-  return notifications.open({
+  return serverMessageService.open({
     title,
     message,
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQanDmDzKGJxRcOsZJjuUwmHGgeKzaOeBaGnA&usqp=CAU'
