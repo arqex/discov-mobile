@@ -1,10 +1,18 @@
+let router: any;
+let dataService: any;
+
 export default {
-  getNotification( type: string, data?: any ){
+  init( r, d ) {
+    router = r;
+    dataService = d;
+  },
+
+  handleMessage( type: string, data?: any ){
     let definition = definitions[ type ];
-    if( !definition ) return;
+    if( !definition ) return { notification: false };
 
     if( !data ){
-      return { ...definition };
+      return { notification: definition };
     }
 
     let notification = {};
@@ -12,7 +20,7 @@ export default {
       notification[ key ] = parseData( definition[key], data );
     });
 
-    return notification;
+    return { notification };
   }
 }
 

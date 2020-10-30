@@ -1,4 +1,3 @@
-import { loadOptions } from '@babel/core';
 import storeService from '../store.service';
 import actionService from './action.service';
 
@@ -14,14 +13,14 @@ export default function (store, api){
 			const promise = promises.stories[startAt];
 			if (promise) return promise;
 
-			promises.stories[startAt] = api.gql.getStoryComments( actionService.storyCommentPageFields )
+			return promises.stories[startAt] = api.gql.getStoryComments( actionService.storyCommentPageFields )
 				.run( {storyId, startAt} )
 				.then( commentsPage => {
 					let ids = [];
 					if( commentsPage && commentsPage.items ) {
 						commentsPage.items.forEach( item => {
 							storeService.storeComment( item );
-							ids.push( item.id );
+							ids.unshift( item.id );
 						});
 
 						let page = {  ...commentsPage, items: ids, lastUpdatedAt: Date.now() };
@@ -40,7 +39,18 @@ export default function (store, api){
 				.run(comment)
 				.then(item => {
 					storeService.storeComment(item);
-					store.storyComments[comment.storyId].unshift(item.id);
+					let page = store.storyComments[comment.storyId];
+					page.items.push(item.id);
+					page.total++;
+					let story = store.stories[comment.storyId];
+					if( story ){
+						if( story.aggregated.commentsCount ) {
+							story.aggregated.commentsCount++;
+						}
+						else {
+							story.aggregated.commentsCount = 1;
+						}
+					}
 				})
 			;
 		}

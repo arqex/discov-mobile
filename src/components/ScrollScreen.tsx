@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import { StyleSheet, View, Animated, ActivityIndicator, Platform, RefreshControl } from 'react-native';
+import React, { Component, RefObject } from 'react'
+import { StyleSheet, View, Animated, ActivityIndicator, Platform, RefreshControl, ScrollView, ScrollResponderEvent } from 'react-native';
 import styleVars from './styleVars';
 import interpolations from './utils/scrollInterpolation';
 import { getStatusbarHeight } from './utils/getStatusbarHeight';
@@ -18,7 +18,9 @@ interface ScrollScreenProps {
 	renderItem?: any,
 	keyExtractor?: (item: any) => string,
 	ListEmptyComponent?: any,
-	onRefresh?: () => Promise<any>
+	onRefresh?: () => Promise<any>,
+	scrollRef?: RefObject<ScrollView>,
+	onScrollLayout?: (e: ScrollResponderEvent) => any
 }
 
 export default class ScrollScreen extends Component<ScrollScreenProps> {
@@ -101,6 +103,8 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 	renderFlatList() {
 		return (
 			<Animated.FlatList
+				ref={ this.props.scrollRef }
+				onLayout={ this.props.onScrollLayout }
 				onScroll={this.scrollMapping}
 				snapToOffsets={[headerOpenHeight - headerClosedHeight]}
 				snapToEnd={false}
@@ -121,6 +125,8 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 	renderScrollView() {
 		return (
 			<Animated.ScrollView
+				ref={this.props.scrollRef}
+				onLayout={this.props.onScrollLayout}
 				onScroll={this.scrollMapping}
 				snapToOffsets={[headerOpenHeight - headerClosedHeight]}
 				snapToEnd={false}

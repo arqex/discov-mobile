@@ -9,7 +9,7 @@ import createInterceptor from './routes/routeInterceptor';
 import {routes} from './routes/routes';
 import Menu from './screens/Menu';
 import RootLoading from './RootLoading';
-import notifications from './services/notifications/notification.listener';
+import serverMessageListener from './services/serverMessage/serverMessage.listener';
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
 import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
@@ -17,7 +17,7 @@ import BackButtonHandler from './utils/BackButtonHandler';
 
 globalThis.gql_debug = true;
 
-notifications.init(router);
+serverMessageListener.init(router, dataService);
 
 class Root extends React.Component {
   state = {

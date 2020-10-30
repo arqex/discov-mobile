@@ -5,10 +5,12 @@ import { getNavigationBarHeight } from '../../../components/utils/getNavigationB
 
 interface CommentsInputProps {
 	text: string
-	onChange: (text:string) => any
+	onChange: (text:string) => any,
+	onSend: () => any,
+	isSending: boolean
 }
 
-const CommentsInput = ({text, onChange}: CommentsInputProps) => {
+const CommentsInput = ({text, onChange, onSend, isSending}: CommentsInputProps) => {
 	let [inputHeight, setInputHeight] = React.useState(19.5);
 	let inputWrapperStyles = [
 		styles.inputWrapper,
@@ -26,7 +28,10 @@ const CommentsInput = ({text, onChange}: CommentsInputProps) => {
 					placeholder="Write a comment..." />
 			</View>
 			<View style={styles.sendButton}>
-				<Button type="iconFilled" icon="send" disabled={!text.trim()} size="s" />
+				<Button type="iconFilled"
+					icon="send" disabled={!text.trim() || !!isSending }
+					size="s"
+					onPress={ onSend } />
 			</View>
 		</View>
 	);

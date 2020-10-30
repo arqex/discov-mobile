@@ -78,7 +78,7 @@ export const routes = [
 
 	{ path: '/myStories', cb: MyStories, children: [
 		{ path: '/:id', cb: OwnStory, children: [
-			{ path: '/comments', cb: StoryComments, isModal: true },
+			{ path: '/comments', cb: StoryComments },
 			{ path: '/assets', cb: AssetsViewer }
 		]}
 	]},
