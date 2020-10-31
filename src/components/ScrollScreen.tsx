@@ -20,7 +20,9 @@ interface ScrollScreenProps {
 	ListEmptyComponent?: any,
 	onRefresh?: () => Promise<any>,
 	scrollRef?: RefObject<ScrollView>,
-	onScrollLayout?: (e: ScrollResponderEvent) => any
+	onScrollLayout?: (e: ScrollResponderEvent) => any,
+	contentOffset?: any,
+	onScroll?: (e:ScrollResponderEvent) => any
 }
 
 export default class ScrollScreen extends Component<ScrollScreenProps> {
@@ -50,9 +52,15 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 		this.openOpacity = interpolations.interpolateTo0(this.deltaY)
 	}
 
-	scrollMapping = Animated.event([{
-		nativeEvent: { contentOffset: { y: this.deltaY } },
-	}], { useNativeDriver: true });
+	scrollMapping = Animated.event(
+		[{
+			nativeEvent: { contentOffset: { y: this.deltaY } },
+		}],
+		{
+			useNativeDriver: true,
+			listener: this.props.onScroll 
+		}
+	);
 
 	render() {
 		return (
@@ -61,10 +69,6 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 				{this.renderContent()}
 			</View>
 		)
-	}
-
-	_onScroll = e => {
-		// console.log( e.nativeEvent );
 	}
 
 	renderTopBar() {
@@ -117,6 +121,7 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 				renderItem={this.props.renderItem}
 				keyExtractor={this.props.keyExtractor}
 				refreshControl={ this.getRefresh() }
+				contentOffset={ this.props.contentOffset }
 				// contentContainerStyle={{ width: '100%' }}
 			/>
 		);
@@ -133,6 +138,7 @@ export default class ScrollScreen extends Component<ScrollScreenProps> {
 				decelerationRate="fast"
 				nestedScrollEnabled={true}
 				refreshControl={this.getRefresh()}
+				contentOffset={ this.props.contentOffset }
 				scrollEventThrottle={1}>
 				{this.renderScrollPadding()}
 				{this.props.children}

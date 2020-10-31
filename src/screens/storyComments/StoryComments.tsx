@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, Animated, StyleSheet, View, ScrollView, TouchableHighlight, Keyboard } from 'react-native';
+import { Text, Animated, StyleSheet, View, ScrollView, TouchableHighlight, Keyboard, ActivityIndicator } from 'react-native';
 import { Bg, ScrollScreen, Tooltip } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
 import storeService from '../../state/store.service';
@@ -14,6 +14,7 @@ export default class StoryComments extends React.Component<ScreenProps> {
 
 	state = {
 		text: '',
+		loadingMore: false,
 		isSending: false
 	}
 
@@ -30,6 +31,7 @@ export default class StoryComments extends React.Component<ScreenProps> {
 		return (
 			<Bg>
 				<ScrollScreen
+					contentOffset={{x: 0, y: 2000}}
 					onScrollLayout={ () => this.checkInitialScroll() }
 					scrollRef={ this.scroll }
 					header={this.renderHeader( comments )}
@@ -37,6 +39,7 @@ export default class StoryComments extends React.Component<ScreenProps> {
 					data={ comments && comments.items }
 					renderItem={ this._renderItem }
 					keyExtractor={ item => item }
+					onScroll={ this._onScroll }
 				/>
 				{ this.renderInput() }
 			</Bg>
@@ -52,7 +55,6 @@ export default class StoryComments extends React.Component<ScreenProps> {
 	}
 
 	renderHeader( comments ) {
-		
 		if( !comments.items.length ){
 			return (
 				<View>
@@ -63,16 +65,18 @@ export default class StoryComments extends React.Component<ScreenProps> {
 			)
 		}
 
-		if( !comments.items.hasMore ){
+		if( !comments.hasMore ){
 			return (
-				<TouchableHighlight onPress={() => this.scrollToEnd()}>
-					<View>
-						<Tooltip style={{ maxWidth: 300 }}>
-							This is the begining of the conversation.
-						</Tooltip>
-					</View>
-				</TouchableHighlight>
+				<View>
+					<Tooltip style={{ maxWidth: 300 }}>
+						This is the begining of the conversation.
+					</Tooltip>
+				</View>
 			);
+		}
+
+		if( this.state.loadingMore ){
+			return <ActivityIndicator />;
 		}
 	}
 
@@ -139,6 +143,16 @@ export default class StoryComments extends React.Component<ScreenProps> {
 		this.setState({isSending: promise});
 	}
 
+	_onScroll = e => {
+		let verticalScroll = e.nativeEvent.contentOffset.y;
+		if( this.initiallyScrolled && !this.state.loadingMore && verticalScroll < 100 ){
+			let comments = this.getComments();
+			if( comments.hasMore ){
+				this.loadComments( true );
+			}
+		}
+	}
+
 	getId() {
 		return this.props.location.params.id;
 	}
@@ -166,12 +180,17 @@ export default class StoryComments extends React.Component<ScreenProps> {
 		}
 		let comments = this.getComments();
 		if( !comments ){
-			this.props.actions.storyComment.loadStoryComments( this.getId() )
-				.then( () => {
-					this.forceUpdate();
-				})
-			;
+			this.loadComments();
 		}
+	}
+
+	loadComments( loadMore = false ){
+		loadMore && this.setState({loadingMore: true});
+		return this.props.actions.storyComment.loadStoryComments( this.getId(), loadMore )
+			.then( () => {
+				loadMore ? this.setState({loadingMore: false}) : this.forceUpdate();
+			})
+		;
 	}
 
 	initiallyScrolled = false;

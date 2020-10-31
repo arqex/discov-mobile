@@ -17,8 +17,8 @@ const CommentsTopBar = ({story, onBack}: CommentsTopBarProps) => {
 		<View style={ styles.content }>
 			<View style={ styles.avatar }>
 				<AccountAvatar accountId={story.ownerId}
-					border={ 1 }
-					borderColor={ styleVars.colors.borderBlue } />
+					border={ 2 }
+					borderColor="blue" />
 			</View>
 			<View>
 				<View style={styles.place}>

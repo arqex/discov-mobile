@@ -24,7 +24,6 @@ let promises = {
 }
 
 export default function (store, api) {
-
 	return {
 		loadUserDiscoveries(loadMore) {
 			let startAt = storeService.getStartAt(store.user.discoveries, loadMore);
@@ -44,7 +43,7 @@ export default function (store, api) {
 					let ids = [];
 
 					discoveryPage.items.forEach( item => {
-						storeService.storeStory(item.story);
+						storeService.storeStory(item.story, item.id);
 						storeService.storeDiscovery( item );
 						ids.push(item.id);
 					});

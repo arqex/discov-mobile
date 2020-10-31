@@ -1,6 +1,8 @@
+import messageNotifications from './messageNotifications';
+import handlers from './messageHandlers';
+
 let router: any;
 let dataService: any;
-
 export default {
   init( r, d ) {
     router = r;
@@ -8,49 +10,27 @@ export default {
   },
 
   handleMessage( type: string, data?: any ){
-    let definition = definitions[ type ];
-    if( !definition ) return { notification: false };
+    let handler = handlers[type];
+    let notification = handler ?
+      handler( router, dataService, data ) :
+      messageNotifications[type]
+    ;
 
-    if( !data ){
-      return { notification: definition };
-    }
-
-    let notification = {};
-    Object.keys( definition ).forEach( key => {
-      notification[ key ] = parseData( definition[key], data );
-    });
-
-    return { notification };
+    return {
+      notification: poblateNotification( notification, data )
+    };
   }
 }
 
-const definitions = {
-  newFollower: {
-    title: 'You have a new follower!',
-    message: '%displayName% started to follow you.',
-    image: '%avatarPic%',
-    action: '/myPeople/myFollowers/%id%'
-  },
-  newFollowers: {
-    title: 'You have new followers',
-    message: '%displayName% and %count% more started to follow you.',
-    image: '%avatarPic%',
-    action: '/myPeople/myFollowers/%id%'
-  },
-  storyDiscovered: {
-    title: 'Your story has been discovered',
-    message: '%displayName% has found the story in %location%',
-    image: '%avatarPic%',
-    action: '/myStories/%storyId%'
-  },
-  storiesDiscovered: {
-    title: 'Your followers are on fire!',
-    message: '%displayName% has found the story in %location%',
-    image: '%avatarPic%',
-    action: '/myStories/%storyId%'
-  }
-}
+function poblateNotification( definition, data ){
+  if( !definition ) return false;
 
+  let notification = {};
+  Object.keys( definition ).forEach( key => {
+    notification[ key ] = parseData( definition[key], data );
+  });
+  return notification;
+}
 
 function parseData( str, data ){
   let toReplace = str.match(/%[^%]+%/g);

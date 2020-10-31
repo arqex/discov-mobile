@@ -15,7 +15,7 @@ export default {
 
 	getStartAt( paginatedList, loadMore ){
 		if( !loadMore || !paginatedList || !paginatedList.lastItemAt ){
-			return;
+			return '';
 		}
 
 		return paginatedList.lastItemAt;
@@ -60,10 +60,13 @@ export default {
 		return store.stories[storyId];
 	},
 
-	storeStory(story) {
+	storeStory(story, discoveryId) {
 		story.lastUpdatedAt = Date.now();
 		story.content = JSON.parse( story.content );
 		story.aggregated = JSON.parse( story.aggregated );
+		if( discoveryId ){
+			story.discoveryId;
+		}
 		delete story.owner;
 		store.stories[story.id] = story;
 	},

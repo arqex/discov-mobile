@@ -42,7 +42,10 @@ export default class Comment extends React.Component<CommentProps> {
     
     return (
       <View style={styles.avatar}>
-        <AccountAvatar size={ AVATAR_SIZE } accountId={comment.commenterId} />
+        <AccountAvatar size={ AVATAR_SIZE }
+          accountId={comment.commenterId}
+          border={2}
+          borderColor="blue" />
       </View>
     );
   }
@@ -54,7 +57,7 @@ export default class Comment extends React.Component<CommentProps> {
     let metaStyles = [
       styles.meta,
       isCurrentUser && styles.currentUserMeta
-    ]
+    ];
 
     return (
       <View style={ metaStyles }>
