@@ -3,6 +3,8 @@ import { Text } from 'react-native';
 import AccountProvider from '../../../providers/AccountProvider';
 
 function CommentOwner( props ){
+  if( !props.account ) return null;
+
   return (
     <Text>{ props.account.displayName }</Text>
   ); 

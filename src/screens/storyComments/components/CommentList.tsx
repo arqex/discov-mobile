@@ -96,7 +96,6 @@ class CommentList extends React.Component<CommentListProps> {
 				this.props.onLoadMore();
 			}
 		}
-    console.log( e.nativeEvent.contentOffset.y );
   }
 }
 
