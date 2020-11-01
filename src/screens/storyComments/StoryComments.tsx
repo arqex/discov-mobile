@@ -1,16 +1,21 @@
 import * as React from 'react';
-import { Text, Animated, StyleSheet, View, ScrollView, TouchableHighlight, Keyboard, ActivityIndicator } from 'react-native';
-import { Bg, ScrollScreen, Tooltip } from '../../components';
+import { Text, StyleSheet, View, Keyboard, ActivityIndicator } from 'react-native';
+import { Bg, Tooltip } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
 import storeService from '../../state/store.service';
-import { storyService } from '../../services/story.service';
 import CommentsTopBar from './components/CommentsTopBar';
 import CommentsInput from './components/CommentsInput';
-import Comment from './components/Comment';
+import StoryProvider from '../../providers/StoryProvider';
+import CommentList from './components/CommentList';
 
-export default class StoryComments extends React.Component<ScreenProps> {
+interface StoryCommentsProps extends ScreenProps {
+	storyId: string,
+	story: any
+}
 
-	animatedScrollValue = new Animated.Value(0)
+class StoryComments extends React.Component<StoryCommentsProps> {
+
+	scroll = React.createRef<CommentList>()
 
 	state = {
 		text: '',
@@ -18,29 +23,13 @@ export default class StoryComments extends React.Component<ScreenProps> {
 		isSending: false
 	}
 
-	scroll = React.createRef<ScrollView>();
-
 	render() {
-		let story = this.getStory();
-		let comments = this.getComments();
-
-		if (!story || !comments) {
-			return this.renderLoading();
-		}
+		const {story} = this.props;
 
 		return (
 			<Bg>
-				<ScrollScreen
-					contentOffset={{x: 0, y: 2000}}
-					onScrollLayout={ () => this.checkInitialScroll() }
-					scrollRef={ this.scroll }
-					header={this.renderHeader( comments )}
-					topBar={this.renderTopBar()}
-					data={ comments && comments.items }
-					renderItem={ this._renderItem }
-					keyExtractor={ item => item }
-					onScroll={ this._onScroll }
-				/>
+				{ this.renderTopBar(story) }
+				{ this.renderCommentList(story) }
 				{ this.renderInput() }
 			</Bg>
 		);
@@ -80,34 +69,34 @@ export default class StoryComments extends React.Component<ScreenProps> {
 		}
 	}
 
-	renderTopBar() {
+	renderTopBar( story ) {
 		return (
-			<CommentsTopBar story={ this.getStory() }
+			<CommentsTopBar
+				story={ story }
 				onBack={ this._goBack } />
+		);
+	}
+
+	renderCommentList( story ){
+		let currentUserId = storeService.getUserId();
+		return (
+			<CommentList
+				ref={ this.scroll }
+				storyId={ story.id }
+				story={ story }
+				currentUserId={ currentUserId }
+				isStoryOwner={ story.ownerId === currentUserId }
+				isLoadingMore={ this.state.loadingMore }
+				onLoadMore={ this._loadMoreComments } />
 		);
 	}
 
 	renderInput() {
 		return (
 			<CommentsInput text={ this.state.text }
-				onChange={ this._onTextChange}
+				onChange={ this._onTextChange }
 				onSend={ this._sendComment }
 				isSending={ this.state.isSending } />
-		);
-	}
-
-	_renderItem = ({item}) => {
-		let comment = this.props.store.comments[ item ];
-		let currentUserId = storeService.getUserId();
-
-		return (
-			<Comment
-				comment={ comment }
-				isCurrentUser={ comment.commenterId === currentUserId }
-				isStoryOwner={ comment.commenterId === this.getStory().ownerId }
-				storeService={ storeService }
-				actions={ this.props.actions }
-			/>
 		);
 	}
 
@@ -120,7 +109,7 @@ export default class StoryComments extends React.Component<ScreenProps> {
 		if( !text ) return;
 
 		const comment = {
-			storyId: this.getStory().id,
+			storyId: this.props.storyId,
 			commenterId: storeService.getUserId(),
 			content: {
 				type: 'text',
@@ -132,7 +121,7 @@ export default class StoryComments extends React.Component<ScreenProps> {
 			.then( res => {
 				console.log( res );
 				Keyboard.dismiss();
-				setTimeout( () => this.scrollToEnd(), 200);
+				setTimeout( () => this.scroll.current.scrollToEnd(), 200);
 				this.setState({
 					text: '',
 					isSending: false
@@ -143,69 +132,32 @@ export default class StoryComments extends React.Component<ScreenProps> {
 		this.setState({isSending: promise});
 	}
 
-	_onScroll = e => {
-		let verticalScroll = e.nativeEvent.contentOffset.y;
-		if( this.initiallyScrolled && !this.state.loadingMore && verticalScroll < 100 ){
-			let comments = this.getComments();
-			if( comments.hasMore ){
-				this.loadComments( true );
-			}
-		}
-	}
-
-	getId() {
-		return this.props.location.params.id;
-	}
-
-	getStory() {
-		return storeService.getStory(this.getId());
-	}
-
-	getComments() {
-		return storeService.getComments(this.getId());
-	}
-
 	_goBack = () => {
 		this.props.router.back();
 	}
 
-	componentDidMount() {
-		let story = this.getStory();
-		if( !story ){
-			storyService.loadStory( this.getId() )
-				.then( () => {
-					this.forceUpdate()
-				})
-			;
-		}
-		let comments = this.getComments();
-		if( !comments ){
-			this.loadComments();
-		}
-	}
+	_loadMoreComments = () => {
+		if( this.state.loadingMore ) return;
 
-	loadComments( loadMore = false ){
-		loadMore && this.setState({loadingMore: true});
-		return this.props.actions.storyComment.loadStoryComments( this.getId(), loadMore )
-			.then( () => {
-				loadMore ? this.setState({loadingMore: false}) : this.forceUpdate();
+		this.setState({loadingMore: true});
+		return this.props.actions.storyComment.loadStoryComments( this.props.storyId, true )
+			.finally( () => {
+				setTimeout( this.setState({loadingMore: false}), 200 );
 			})
 		;
 	}
-
-	initiallyScrolled = false;
-	checkInitialScroll(){
-		if( !this.initiallyScrolled && this.scroll.current ){
-			this.initiallyScrolled = true;
-			setTimeout( () => this.scrollToEnd(), 200 );
-		}
-	}
-
-	scrollToEnd() {
-		console.log('Scrolling!');
-		this.scroll.current.getNode().scrollToEnd();
-	}
 };
+
+const Provided = StoryProvider( StoryComments );
+
+export default function StoryCommentsScreen(props) {
+	return (
+		<Provided
+			{...props}
+			storyId={ props.location.params.id } />
+	);
+}
+
 
 const styles = StyleSheet.create({
 	container: {

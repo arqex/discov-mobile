@@ -6,14 +6,16 @@ let promises = {
 };
 
 export default function (store, api){
-
 	return {
 		loadStoryComments(storyId, loadMore) {
+			if( !promises.stories[storyId] ){
+				promises.stories[storyId] = {};
+			} 
 			const startAt = storeService.getStartAt(store.storyComments[storyId], loadMore);
-			const promise = promises.stories[startAt];
+			const promise = promises.stories[storyId][startAt];
 			if (promise) return promise;
 
-			return promises.stories[startAt] = api.gql.getStoryComments( actionService.storyCommentPageFields )
+			return promises.stories[storyId][startAt] = api.gql.getStoryComments( actionService.storyCommentPageFields )
 				.run( {storyId, startAt} )
 				.then( commentsPage => {
 					let ids = [];
@@ -36,8 +38,10 @@ export default function (store, api){
 							story.aggregated.commentsCount = commentsPage.total;
 						}
 					}
-					delete promises.stories[storyId];
 					return commentsPage;
+				})
+				.finally( () => {
+					delete promises.stories[storyId][storyId];
 				})
 			;
 		},

@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Marker, TopBar, Text, styleVars } from '../../../components';
+import { Marker, TopBar, Text } from '../../../components';
 import AccountAvatar from '../../components/AccountAvatar';
-
 
 interface CommentsTopBarProps {
 	story: any,

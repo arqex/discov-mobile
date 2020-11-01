@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { View, Text, StyleSheet} from 'react-native';
 import { styleVars } from '../../../components';
+import StoryCommentProvider from '../../../providers/StoryCommentProvider';
 import AccountAvatar from '../../components/AccountAvatar';
+import CommentOwner from './CommentOwner';
 
 interface CommentProps {
-  comment: any,
-  isCurrentUser: boolean,
+  commentId: string,
+  data: any,
+  currentUserId: string,
   isStoryOwner: boolean,
   storeService: any,
   actions: any
@@ -14,16 +17,18 @@ interface CommentProps {
 const AVATAR_SIZE = 40;
 const MARGIN = 20;
 
-export default class Comment extends React.Component<CommentProps> {
+class Comment extends React.Component<CommentProps> {
   render() {
+    let isCurrentUser = this.isCurrentUser();
+
     let containerStyle = [
       styles.container,
-      this.props.isCurrentUser && styles.currentUserContainer
+      isCurrentUser && styles.currentUserContainer
     ];
 
     let commentStyle = [
       styles.comment,
-      this.props.isCurrentUser && styles.currentUserComment
+      isCurrentUser && styles.currentUserComment
     ];
 
     return (
@@ -38,7 +43,7 @@ export default class Comment extends React.Component<CommentProps> {
   }
 
   renderAvatar() {
-    const { comment } = this.props;
+    const comment = this.props.data;
     
     return (
       <View style={styles.avatar}>
@@ -51,8 +56,7 @@ export default class Comment extends React.Component<CommentProps> {
   }
 
   renderMeta() {
-    const { isCurrentUser } = this.props;
-    const account = this.getAccount();
+    const isCurrentUser  = this.isCurrentUser();
 
     let metaStyles = [
       styles.meta,
@@ -61,17 +65,27 @@ export default class Comment extends React.Component<CommentProps> {
 
     return (
       <View style={ metaStyles }>
-        <Text>{ isCurrentUser ? 'Me' : account && account.displayName || ' ' }</Text>
+        { this.renderUserName( isCurrentUser ) }
       </View>
     );
   }
+  
+  renderUserName( isCurrentUser ){
+    if( isCurrentUser ){
+      return <Text>Me</Text>;
+    }
+
+    return <CommentOwner accountId={ this.props.data.commenterId } />;
+  }
 
   renderBubble() {
-    const {comment, isCurrentUser } = this.props;
+    const isCurrentUser  = this.isCurrentUser();
+    const comment = this.props.data;
     const bubbleStyle = [
       styles.bubble,
       isCurrentUser && styles.currentUserBubble
     ];
+    
     return (
       <View style={ bubbleStyle }>
         <Text>{ comment.content.text } </Text>
@@ -79,33 +93,12 @@ export default class Comment extends React.Component<CommentProps> {
     )
   }
 
-  componentDidMount() {
-    this.checkAccountLoad();
-  }
-
-  componentDidUpdate() {
-    this.checkAccountLoad();
-  }
-
-  loadPromise: any = false;
-  checkAccountLoad(){
-    const {actions, comment, storeService } = this.props;
-
-    let account = this.getAccount();
-    if( !account && !this.loadPromise ){
-      this.loadPromise = actions.account.load( comment.commenterId )
-        .finally( () => {
-          this.loadPromise = false;
-        })
-      ;
-    }
-  }
-
-  getAccount() {
-    const { storeService, comment } = this.props;
-    return storeService.getAccount( comment.commenterId );
+  isCurrentUser() {
+    return this.props.data.commenterId === this.props.currentUserId;
   }
 };
+
+export default StoryCommentProvider( Comment );
 
 const styles = StyleSheet.create({
   container: {
