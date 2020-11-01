@@ -22,7 +22,7 @@ export function errorHandler( e, isFatal ) {
 	}
 
 	handledFatal = Date.now();
-	
+	let message = e && (e.stack || e.message) || 'No error message';
 	let payload = {
 		type: isFatal ? 'mobileError' : 'mobileFatal',
 		location: router.location,
@@ -30,10 +30,10 @@ export function errorHandler( e, isFatal ) {
 			os: Platform.OS,
 			version: Platform.Version
 		},
-		errorMessage: e && e.message,
+		errorMessage: message,
 		error: e
 	}
-	log( e && e.message || e );
+	log( message || e );
 	console.warn( 'ERROR', e.body, payload );
 	sendErrorReport( payload );
 }

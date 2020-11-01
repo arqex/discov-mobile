@@ -80,5 +80,11 @@ export function GenericProvider( WrappedComponent, methods: GenericProviderMetho
     }
 
     _onDataChange = () => this.forceUpdate()
+
+    componentWillUnmount() {
+      if( this.lastData ){
+        this.lastData.removeChangeListener( this._onDataChange );
+      }
+    }
   }
 }

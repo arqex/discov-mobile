@@ -97,6 +97,21 @@ class CommentList extends React.Component<CommentListProps> {
 			}
 		}
   }
+
+  lastId;
+  componentDidMount() {
+    this.lastId = this.getLastCommentId();
+  }
+  componentDidUpdate() {
+    if( this.lastId !== this.getLastCommentId() ){
+      this.lastId = this.getLastCommentId();
+      setTimeout( () => this.scrollToEnd(), 100 );
+    }
+  }
+  getLastCommentId() {
+    let { items } = this.props.data;
+    return items[ items.length - 1 ];
+  }
 }
 
 const styles = StyleSheet.create({

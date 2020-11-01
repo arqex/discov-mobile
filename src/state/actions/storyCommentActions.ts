@@ -41,15 +41,18 @@ export default function (store, api){
 					return commentsPage;
 				})
 				.finally( () => {
-					delete promises.stories[storyId][storyId];
+					delete promises.stories[storyId][startAt];
 				})
 			;
 		},
 		refreshStoryComments( storyId ){
-			const promise = promises.stories[''];
+			if( !promises.stories[storyId] ){
+				promises.stories[storyId] = {};
+			} 
+			const promise = promises.stories[storyId][''];
 			if (promise) return promise;
 
-			return promises.stories[''] = api.gql.getStoryComments( actionService.storyCommentPageFields )
+			return promises.stories[storyId][''] = api.gql.getStoryComments( actionService.storyCommentPageFields )
 				.run( {storyId} )
 				.then( commentsPage => {
 					if( commentsPage && commentsPage.items ) {
@@ -68,11 +71,10 @@ export default function (store, api){
 							story.aggregated.commentsCount = commentsPage.total;
 						}
 					}
-					delete promises.stories[storyId];
 					return commentsPage;
 				})
-				.catch( err => {
-					delete promises.stories[storyId];
+				.finally( err => {
+					delete promises.stories[storyId][''];
 				})
 			;
 		},
