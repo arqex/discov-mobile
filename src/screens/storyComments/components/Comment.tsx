@@ -76,7 +76,7 @@ class Comment extends React.Component<CommentProps> {
   
   renderUserName( isCurrentUser ){
     if( isCurrentUser ){
-      return <Text>Me</Text>;
+      return <Text type="bold">Me</Text>;
     }
 
     return <CommentOwner accountId={ this.props.comment.commenterId } />;

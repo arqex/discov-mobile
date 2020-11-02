@@ -17,6 +17,8 @@ const CommentsInput = ({text, onChange, onSend, isSending}: CommentsInputProps) 
 		{ height: Math.min( 120, inputHeight + 20.5 ) }
 	];
 
+	console.log( 'height', inputHeight, inputWrapperStyles[1].height );
+
 	return (
 		<View style={styles.bottomBar}>
 			<View style={inputWrapperStyles}>
@@ -64,6 +66,6 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	sendButton: {
-		marginBottom: 4
+		marginBottom: 8
 	}
 });
