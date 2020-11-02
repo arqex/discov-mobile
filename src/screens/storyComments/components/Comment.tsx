@@ -1,13 +1,14 @@
 import * as React from 'react';
-import { View, Text, StyleSheet} from 'react-native';
-import { styleVars } from '../../../components';
+import { View, StyleSheet} from 'react-native';
+import { styleVars, Text } from '../../../components';
 import StoryCommentProvider from '../../../providers/StoryCommentProvider';
 import AccountAvatar from '../../components/AccountAvatar';
 import CommentOwner from './CommentOwner';
+import moment from 'moment';
 
 interface CommentProps {
   commentId: string,
-  data: any,
+  comment: StoryComment,
   currentUserId: string,
   isStoryOwner: boolean,
   storeService: any,
@@ -43,11 +44,12 @@ class Comment extends React.Component<CommentProps> {
   }
 
   renderAvatar() {
-    const comment = this.props.data;
+    const comment = this.props.comment;
     
     return (
       <View style={styles.avatar}>
-        <AccountAvatar size={ AVATAR_SIZE }
+        <AccountAvatar
+          size={ AVATAR_SIZE }
           accountId={comment.commenterId}
           border={2}
           borderColor="blue" />
@@ -66,6 +68,8 @@ class Comment extends React.Component<CommentProps> {
     return (
       <View style={ metaStyles }>
         { this.renderUserName( isCurrentUser ) }
+        <Text type="subtitle"> - </Text>
+        <Text type="subtitle">{ this.getDate() }</Text>
       </View>
     );
   }
@@ -75,12 +79,30 @@ class Comment extends React.Component<CommentProps> {
       return <Text>Me</Text>;
     }
 
-    return <CommentOwner accountId={ this.props.data.commenterId } />;
+    return <CommentOwner accountId={ this.props.comment.commenterId } />;
+  }
+
+  getDate(){
+    const { comment } = this.props;
+    const date = moment(comment.createdAt);
+    const now = new Date();
+    if( date.isSame( now, 'day') ){
+      return date.format('HH:mm');
+    }
+    else if ( date.clone().add(1, 'day').isSame( now, 'day') ){
+      return 'yesterday';
+    }
+    else if( date.isSame( now, 'year') ){
+      return date.format( 'MM MMM' );
+    }
+    else {
+      return date.format( "MMMM 'YY" );
+    }
   }
 
   renderBubble() {
     const isCurrentUser  = this.isCurrentUser();
-    const comment = this.props.data;
+    const comment = this.props.comment;
     const bubbleStyle = [
       styles.bubble,
       isCurrentUser && styles.currentUserBubble
@@ -88,13 +110,13 @@ class Comment extends React.Component<CommentProps> {
     
     return (
       <View style={ bubbleStyle }>
-        <Text>{ comment.content.text } </Text>
+        <Text>{ comment.content.text }</Text>
       </View>
     )
   }
 
   isCurrentUser() {
-    return this.props.data.commenterId === this.props.currentUserId;
+    return this.props.comment.commenterId === this.props.currentUserId;
   }
 };
 
@@ -121,10 +143,13 @@ const styles = StyleSheet.create({
   },
   meta: {
     marginTop: 4,
-    marginStart: 4
+    marginStart: 4,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   currentUserMeta: {
-    marginEnd: 4
+    marginEnd: 4,
+    flexDirection: 'row-reverse'
   },
   bubble: {
     backgroundColor: 'white',

@@ -4,6 +4,7 @@ import { Bg } from '../components';
 
 export interface GenericProviderMethods {
   getId: (props: any) => string
+  getPropName?: () => string
   getData: (props: any, id: string) => any
   needsLoad: (props: any) => boolean
   loadData: (props: any, id: string) => Promise<any>
@@ -12,9 +13,11 @@ export interface GenericProviderMethods {
 
 export function GenericProvider( WrappedComponent, methods: GenericProviderMethods ){
   return class Provider extends React.Component {
+    getPropName = methods.getPropName || (() => 'data');
     render() {
       const data = methods.getData( this.props, methods.getId( this.props ) );
       const needsLoad = methods.needsLoad( this.props );
+
 
       if( needsLoad ){
         return methods.renderLoading ?
@@ -24,7 +27,8 @@ export function GenericProvider( WrappedComponent, methods: GenericProviderMetho
       }
       else {
         return (
-          <WrappedComponent { ...this.props } data={ data } />
+          <WrappedComponent { ...this.props }
+            { ...{[this.getPropName()]: data} } />
         );
       }
     }
@@ -85,6 +89,14 @@ export function GenericProvider( WrappedComponent, methods: GenericProviderMetho
       if( this.lastData ){
         this.lastData.removeChangeListener( this._onDataChange );
       }
+    }
+
+    shouldComponentUpdate( nextProps ){
+      let nextId = methods.getId( nextProps );
+      if( nextId !== this.lastId ) return true;
+
+      let nextData = methods.getData( nextProps, nextId );
+      return nextData !== this.lastData;
     }
   }
 }

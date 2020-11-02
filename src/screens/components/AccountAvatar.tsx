@@ -1,45 +1,39 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import Avatar from '../../components/Avatar';
 import AccountProvider from '../../providers/AccountProvider';
 
 interface AccountAvatarProps {
+	accountId: string,
 	account: any,
 	size?: number,
 	border?: number,
 	borderColor?: 'white' | 'red' | 'blue' | 'light'
 }
 
-const AccountAvatar = (props: AccountAvatarProps) => {
-	const account = props.account;
-	const size = props.size || 42;
-
-	if (!account) {
-		return renderLoading( size );
+class AccountAvatar extends React.Component<AccountAvatarProps> {
+	render() {
+		const { account, size = 42} = this.props;
+		return (
+			<Avatar name={account.displayName}
+				pic={account.avatarPic}
+				size={size}
+				border={this.props.border}
+				borderColor={this.props.borderColor} />
+		);
 	}
 
-	return (
-		<Avatar name={account.displayName}
-			pic={account.avatarPic}
-			size={ size }
-			border={ props.border }
-			borderColor={ props.borderColor } />
-	);
-};
+	static renderLoading(props) {
+		let styles = {
+			width: props.size, height: props.size,
+			borderRadius: props.size / 2,
+			borderWidth: 2,
+			borderColor: '#fff',
+			backgroundColor: '#ddd'
+		};
 
-function renderLoading( size ) {
-	let styles = {
-		width: size, height: size,
-		borderRadius: size / 2,
-		borderWidth: 2,
-		borderColor: '#fff',
-		backgroundColor: '#ddd'
-	};
-
-	return <View style={ styles }></View>;
+		return <View style={styles}></View>;
+	}
 }
 
 export default AccountProvider(AccountAvatar);
-
-const styles = StyleSheet.create({
-});

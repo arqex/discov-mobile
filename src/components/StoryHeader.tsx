@@ -8,6 +8,8 @@ import Marker from './Marker';
 import StoryImages from '../screens/components/StoryImages';
 import memoizeOne from 'memoize-one';
 import moment from 'moment';
+import AccountAvatar from '../screens/components/AccountAvatar';
+import LoadingText from './LoadingText';
 
 const DAY_DATE_TIME = 6 * 30 * 20 * 60 * 60000; // 6 months
 
@@ -22,14 +24,9 @@ interface StoryHeaderProps {
 }
 
 class StoryHeader extends React.Component<StoryHeaderProps> {
-
 	render() {
 		let account = this.props.account;
 		let story = this.props.story;
-
-		if( !account ){
-			return this.renderLoading();
-		}
 
 		return (
 			<View style={styles.container}>
@@ -145,13 +142,24 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 		);
 	}
 
-	renderLoading( ) {
+	static renderLoading(props) {
 		return (
-			<View style={styles.container} >
-				<Text>Loading</Text>
+			<View style={styles.container}>
+				<View style={styles.avatar}>
+					<AccountAvatar
+						accountId={props.accountId}
+						size={60}
+						border={2}
+						borderColor="blue" />
+				</View>
+				<View style={styles.texts}>
+					<View style={styles.name}>
+						<LoadingText type="title">Some name</LoadingText>
+					</View>
+				</View>
 			</View>
 		);
-	}
+	};
 }
 
 const styles = StyleSheet.create({
