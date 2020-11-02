@@ -42,33 +42,7 @@ class StoryComments extends React.Component<StoryCommentsProps> {
 			</Bg>
 		);
 	}
-
-	renderHeader( comments ) {
-		if( !comments.items.length ){
-			return (
-				<View>
-					<Tooltip style={{ maxWidth: 300 }}>
-						There are no comments yet. Be the first in leaving one.
-				</Tooltip>
-				</View>
-			)
-		}
-
-		if( !comments.hasMore ){
-			return (
-				<View>
-					<Tooltip style={{ maxWidth: 300 }}>
-						This is the begining of the conversation.
-					</Tooltip>
-				</View>
-			);
-		}
-
-		if( this.state.loadingMore ){
-			return <ActivityIndicator />;
-		}
-	}
-
+	
 	renderTopBar( story ) {
 		return (
 			<CommentsTopBar

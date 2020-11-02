@@ -19,16 +19,18 @@ class CommentList extends React.Component<CommentListProps> {
   
   render() {
     let comments = this.props.data;
-    
+
     return (
       <FlatList
-        contentOffset={{x: 0, y: 4000}}
-        onLayout={ this._checkInitialScroll }
+        contentOffset={{x: 0, y: 10000}}
+        onLayout={ this._onLayout }
         ref={ this.scroll }
         data={ comments.items }
         renderItem={ this._renderItem }
         keyExtractor={ this._keyExtractor }
         onScroll={ this._onScroll }
+        onContentSizeChange={ this._onContentSizeChange }
+        scrollEventThrottle={ 100 }
         ListHeaderComponent={ this.renderHeader(comments) } />
     );
   }
@@ -75,9 +77,18 @@ class CommentList extends React.Component<CommentListProps> {
   
   _keyExtractor = item => item;
 
+  lastHeight = 0;
+	_onLayout = (e) => {
+    this.checkInitialScroll();
+    let height = e.nativeEvent.layout.height;
+    this.relativeScroll( this.lastHeight - height, true );
+    this.lastHeight = height;
+    console.log( 'height', height );
+  }
+
   initiallyScrolled = false;
-	_checkInitialScroll = () => {
-		if( !this.initiallyScrolled && this.scroll.current ){
+  checkInitialScroll() {
+    if( !this.initiallyScrolled && this.scroll.current ){
 			this.initiallyScrolled = true;
 			setTimeout( () => this.scrollToEnd(), 200 );
 		}
@@ -87,15 +98,55 @@ class CommentList extends React.Component<CommentListProps> {
 		console.log('Scrolling!');
 		this.scroll.current.scrollToEnd();
   }
+
+  relativeScroll( diff, animated ){
+    if( diff > 0 ){
+      console.log( 'Relative scroll', diff, this.lastScroll + diff );
+      this.scroll.current.scrollToOffset({
+        offset:this.lastScroll + diff,
+        animated: animated
+      });
+    }
+  }
   
   _onScroll = e => {
-		let verticalScroll = e.nativeEvent.contentOffset.y;
-		if( this.initiallyScrolled && verticalScroll < 100 ){
+    // console.log( 'Scrolling', e.nativeEvent.contentOffset.y );
+    this.checkLoadMore( e.nativeEvent.contentOffset.y );
+    this.checkStickToBottom( e.nativeEvent.contentOffset.y );
+    if( this.blockedByScroll && !this.props.isLoadingMore ){
+      this.blockedByScroll = false;
+      this.forceUpdate();
+    }
+  }
+
+  _onMomentumScrollEnd = e => {
+    // console.log( 'Finished scrolling', e.nativeEvent.contentOffset.y );
+    this.checkLoadMore( e.nativeEvent.contentOffset.y );
+    this.checkStickToBottom( e.nativeEvent.contentOffset.y );
+  }
+
+  contentSize = 0;
+  _onContentSizeChange = (width, height) => {
+    // console.log( 'Content size change', height );
+    if( this.contentSize ){
+      // this.relativeScroll( height - this.contentSize, false );
+    }
+    this.contentSize = height;
+  }
+
+  checkLoadMore( scrollOffset ){
+    if( this.initiallyScrolled && scrollOffset < 100 ){
 			let comments = this.props.data;
 			if( comments.hasMore ){
 				this.props.onLoadMore();
 			}
 		}
+  }
+
+  lastScroll = 0;
+  checkStickToBottom( scrollOffset ){
+    // console.log('Sticking?', scrollOffset, this.lastHeight);
+    this.lastScroll = scrollOffset;
   }
 
   lastId;
@@ -111,6 +162,15 @@ class CommentList extends React.Component<CommentListProps> {
   getLastCommentId() {
     let { items } = this.props.data;
     return items[ items.length - 1 ];
+  }
+
+  blockedByScroll = true;
+  shouldComponentUpdate( nextProps ){
+    let blocked = this.blockedByScroll;
+    if( nextProps.isLoadingMore ){
+      this.blockedByScroll = true;
+    }
+    return !blocked;
   }
 }
 

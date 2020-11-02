@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { TextInput, View, StyleSheet } from 'react-native';
+import { TextInput, View, StyleSheet, Platform } from 'react-native';
 import { Button, styleVars } from '../../../components';
 import { getNavigationBarHeight } from '../../../components/utils/getNavigationBarHeight';
 
@@ -10,19 +10,22 @@ interface CommentsInputProps {
 	isSending: boolean
 }
 
-const CommentsInput = ({text, onChange, onSend, isSending}: CommentsInputProps) => {
-	let [inputHeight, setInputHeight] = React.useState(19.5);
-	let inputWrapperStyles = [
-		styles.inputWrapper,
-		{ height: Math.min( 120, inputHeight + 20.5 ) }
-	];
+// This value is set by observing the initial height of the input on both OS
+const initialInputHeight = Platform.OS === 'android' ? 40.2 : 19.5;
 
-	console.log( 'height', inputHeight, inputWrapperStyles[1].height );
+const CommentsInput = ({text, onChange, onSend, isSending}: CommentsInputProps) => {
+	let [inputHeight, setInputHeight] = React.useState( initialInputHeight );
+
+	let inputStyles = [
+		styles.input,
+		isSending && {opacity: .6},
+		{ height: inputHeight }
+	];
 
 	return (
 		<View style={styles.bottomBar}>
-			<View style={inputWrapperStyles}>
-				<TextInput style={styles.input}
+			<View style={ getWrapperStyles(inputHeight) }>
+				<TextInput style={inputStyles}
 					value={ text }
 					onChangeText={ onChange }
 					multiline
@@ -31,13 +34,22 @@ const CommentsInput = ({text, onChange, onSend, isSending}: CommentsInputProps) 
 			</View>
 			<View style={styles.sendButton}>
 				<Button type="iconFilled"
-					icon="send" disabled={!text.trim() || !!isSending }
+					icon="send"
+					disabled={!text.trim() || !!isSending }
 					size="s"
 					onPress={ onSend } />
 			</View>
 		</View>
 	);
 };
+
+function getWrapperStyles( inputHeight ){
+	let offset = Platform.OS === 'android' ? 8 : 20.5;
+	return [
+		styles.input,
+		{height: Math.min( 120, inputHeight + offset )}
+	];
+}
 
 export default CommentsInput;
 
@@ -58,7 +70,7 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 		minHeight: 40,
 		justifyContent: 'center',
-		fontSize: 16
+		fontSize: 16,
 	},
 	input: {
 		minWidth: 0,
@@ -66,6 +78,6 @@ const styles = StyleSheet.create({
 		flex: 1
 	},
 	sendButton: {
-		marginBottom: 8
+		marginBottom: 4
 	}
 });

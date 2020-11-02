@@ -30,7 +30,7 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 
 		let heights = this.getHeights();
 
-		this.deltaY.setValue( -this.getInitialScroll() );
+		this.deltaY.setValue( this.getInitialScroll() );
 		
 		this.paddingTranslate = this.deltaY.interpolate({
 			inputRange: [0, -heights.scrollSnapPoint],
@@ -70,7 +70,7 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 				<Animated.ScrollView
 					ref="scroll"
 					bounces={ false }
-					contentOffset={ {x: 0, y: -this.getInitialScroll() } }
+					contentOffset={ {x: 0, y: this.getInitialScroll() } }
 					onScroll={ this.scrollMapping }
 					onMomentumScrollEnd={ this._onScrollEnd }
 					snapToOffsets={[ -heights.scrollSnapPoint ]}
@@ -183,7 +183,7 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 		if( this.props.initialMode === 'bigMap' ){
 			return 0;
 		}
-		return this.getHeights().scrollSnapPoint;
+		return -this.getHeights().scrollSnapPoint;
 	}
 
 	closeMap() {
@@ -205,7 +205,6 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 	}
 
 	_onScrollEnd = e => {
-		
 		console.log( e.nativeEvent.contentOffset, this.getHeights() );
 	}
 }

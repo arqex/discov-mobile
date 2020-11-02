@@ -156,6 +156,8 @@ const styles = StyleSheet.create({
     marginStart: -10,
     marginEnd: 30,
     padding: 8,
+    paddingTop: 4,
+    paddingBottom: 5,
     borderWidth: 1,
     borderColor: styleVars.colors.borderBlue,
     borderTopEndRadius: 4,
