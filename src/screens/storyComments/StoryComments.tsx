@@ -118,7 +118,7 @@ class StoryComments extends React.Component<StoryCommentsProps> {
 		this.setState({loadingMore: true});
 		return this.props.actions.storyComment.loadStoryComments( this.props.storyId, true )
 			.finally( () => {
-				setTimeout( this.setState({loadingMore: false}), 200 );
+				setTimeout( () => this.setState({loadingMore: false}), 200 );
 			})
 		;
 	}

@@ -102,15 +102,16 @@ export default class StoryScreen extends Component<StoryScreenProps> {
 	}
 
 	_navigateToImages = () => {
-		this.props.router.navigate(
-			`${this.props.location.pathname}/assets`
-		);
+		this.props.router.navigate(`${this.getStoryPath()}/assets`);
 	}
 
 	_navigateToComments = () => {
-		this.props.router.navigate(
-			`${this.props.location.pathname}/comments`
-		);
+		this.props.router.navigate(`${this.getStoryPath()}/comments`);
+	}
+
+	getStoryPath = () => {
+		let { location } = this.props;
+		return `${location.matchIds[0]}/${location.params.id}`;
 	}
 }
 

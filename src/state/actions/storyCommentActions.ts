@@ -24,12 +24,12 @@ export default function (store, api){
 
 						commentsPage.items.forEach( item => {
 							storeService.storeComment( item );
-							ids.unshift( item.id );
+							ids.push( item.id );
 						});
 
 						let page = {  ...commentsPage, items: ids, lastUpdatedAt: Date.now() };
 						if(startAt && currentComments){
-							page.items = page.items.concat(currentComments.items);
+							page.items = currentComments.items.concat(page.items);
 						}
 						store.storyComments[storyId] = page;
 
@@ -59,7 +59,7 @@ export default function (store, api){
 						let ids = [];
 						commentsPage.items.forEach( item => {
 							storeService.storeComment( item );
-							ids.unshift( item.id );
+							ids.push( item.id );
 						});
 
 						ids = mergeIds( ids, store.storyComments[storyId] );
@@ -84,7 +84,7 @@ export default function (store, api){
 				.then(item => {
 					storeService.storeComment(item);
 					let page = store.storyComments[comment.storyId];
-					page.items.push(item.id);
+					page.items.unshift(item.id);
 					page.total++;
 					let story = store.stories[comment.storyId];
 					if( story ){
