@@ -167,6 +167,11 @@ query getStoryComments( $input: PaginatedStoryInput! ) {
 }
 `)}
 
+  getDiscoveryByStoryAndDiscoverer(returnFields: string) { return this.makeRunnable(`
+query getDiscoveryByStoryAndDiscoverer( $input: StoryDiscovererInput! ) {
+  getDiscoveryByStoryAndDiscoverer(input: $input) ${ returnFields } 
+}
+`)}
 
 
 

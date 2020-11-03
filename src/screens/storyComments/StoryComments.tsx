@@ -95,7 +95,6 @@ class StoryComments extends React.Component<StoryCommentsProps> {
 			.then( res => {
 				console.log( res );
 				Keyboard.dismiss();
-				setTimeout( () => this.scroll.current.scrollToEnd(), 200);
 			})
 			.finally( () => {
 				this.setState({

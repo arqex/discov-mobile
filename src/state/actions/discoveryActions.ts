@@ -108,6 +108,15 @@ export default function (store, api) {
 					throw( err );
 				})
 			;
+		},
+		loadByStoryAndDiscoverer( storyId, discovererId ){
+			return api.gql.getDiscoveryByStoryAndDiscoverer( actionService.userDiscoveryFields )
+				.run({storyId, discovererId})
+				.then( discovery => {
+					storeService.storeDiscovery( discovery );
+					return discovery;
+				})
+			;
 		}
 	}
 }

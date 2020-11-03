@@ -78,7 +78,7 @@ class CommentList extends React.Component<CommentListProps> {
 
   scrollToEnd() {
 		console.log('Scrolling!');
-		this.scroll.current.scrollToEnd();
+		this.scroll.current.scrollToOffset({offset: 0});
   }
 
   initialized = false;

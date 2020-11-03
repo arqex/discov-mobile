@@ -11,7 +11,7 @@ function getRedirectPath( store, data ){
 
   // This route should load the discovery using the storyId
   // and then redirect to the right discovery route
-  return `/unknownDiscovery/${data.storyId}`;
+  return `/unknownDiscovery?storyId=${data.storyId}&subpath=/comments`;
 }
 
 export default function handleNewComment( router, dataService, data ){

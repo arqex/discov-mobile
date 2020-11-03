@@ -33,6 +33,7 @@ import LocationReport from '../screens/locationReport/LocationReport';
 import BgReport from '../screens/locationReport/BgReport';
 import AssetsViewer from '../screens/assetsViewer/AssetsViewer';
 import StoryComments from '../screens/storyComments/StoryComments';
+import UnknownDiscovery from '../screens/unknownDiscovery/UnknownDiscovery';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -89,6 +90,8 @@ export const routes = [
 	{ path: '/bgReport', cb: BgReport },
 
 	{ path: '/accountModal', cb: PeerAccountModal, isModal: true },
+
+	{ path: '/unknownDiscovery', cb: UnknownDiscovery },
 
 	{ path: '/componentGallery', cb: Gallery},
 	{ path: '/*', cb: UnknownScreen }
