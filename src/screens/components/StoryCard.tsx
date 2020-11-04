@@ -37,7 +37,7 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		return (
 			<View style={ styles.background }>
 				<Touchable style={ styles.container }
-					onPress={ this._goToDiscovery }>
+					onPress={ this._goToDetails }>
 					{ this.renderBanner() }
 					<View style={ styles.header }>
 						<StoryHeader accountId={ story.ownerId }
@@ -150,8 +150,9 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		}
 	}
 
-	goToStory( subpath ){
-		this.props.router.navigate(`${this.props.rootPath}/${this.props.story.id}${subpath}` );
+	goToDetails( subpath ){
+		const { discovery, story, rootPath } = this.props;
+		this.props.router.navigate(`${rootPath}/${ discovery ? discovery.id : story.id }${subpath}` );
 	}
 
 	getImageAsset(){
@@ -164,11 +165,11 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 		}
 	}
 
-	_goToDiscovery = () => {
-		this.goToStory('');
+	_goToDetails = () => {
+		this.goToDetails('');
 	}
 	_goToComments = () => {
-		this.goToStory(`/comments`);
+		this.goToDetails(`/comments`);
 	}
 
 	_onReveal = () => {
@@ -178,7 +179,7 @@ class StoryCard extends React.PureComponent<StoryCardProps> {
 			seen: true
 		};
 
-		this._goToDiscovery();
+		this._goToDetails();
 		this.props.actions.discovery.updateDiscoveryExtra( discovery.id, extra );
 	}
 };

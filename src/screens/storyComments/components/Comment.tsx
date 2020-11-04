@@ -90,7 +90,7 @@ class Comment extends React.Component<CommentProps> {
       return date.format('HH:mm');
     }
     else if ( date.clone().add(1, 'day').isSame( now, 'day') ){
-      return 'yesterday';
+      return 'Yesterday';
     }
     else if( date.isSame( now, 'year') ){
       return date.format( 'MM MMM' );

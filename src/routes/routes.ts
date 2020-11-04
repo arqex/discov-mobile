@@ -33,6 +33,7 @@ import LocationReport from '../screens/locationReport/LocationReport';
 import BgReport from '../screens/locationReport/BgReport';
 import AssetsViewer from '../screens/assetsViewer/AssetsViewer';
 import StoryComments from '../screens/storyComments/StoryComments';
+import DiscoveryCommentsScreen from '../screens/storyComments/DiscoveryComments';
 import UnknownDiscovery from '../screens/unknownDiscovery/UnknownDiscovery';
 
 export const routes = [
@@ -59,7 +60,7 @@ export const routes = [
 	{
 		path: '/myDiscoveries', cb: MyDiscoveries, children: [
 			{ path: '/:id', cb: OwnDiscovery, children: [
-				{ path: '/comments', cb: StoryComments },
+				{ path: '/comments', cb: DiscoveryCommentsScreen },
 				{ path: '/assets', cb: AssetsViewer }
 			]}
 		]

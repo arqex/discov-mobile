@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ActivityIndicator } from 'react-native';
 import { Bg } from '../../components';
+import { log } from '../../utils/logger';
 import { ScreenProps } from '../../utils/ScreenProps';
 
 /*
@@ -13,7 +14,7 @@ import { ScreenProps } from '../../utils/ScreenProps';
 export default class UnknownDiscovery extends React.Component<ScreenProps> {
 	constructor( props: ScreenProps ){
 		super( props );
-		this.loadDiscovery( props.actions, props.location.query.storyId, props.store.user.id );
+		this.loadDiscovery( props.actions, props.location.query, props.store.user.id );
 		props.actions.discovery.load
 	}
 	render() {
@@ -23,14 +24,16 @@ export default class UnknownDiscovery extends React.Component<ScreenProps> {
 			</Bg>
 		);
 	}
-	loadDiscovery( actions, storyId, discovererId ){
+	loadDiscovery( actions, query, discovererId ){
 		const { router } = this.props;
-		actions.discovery.loadByStoryAndDiscoverer(storyId, discovererId)
+		log('Loading discovery', query.storyId, discovererId );
+		actions.discovery.loadByStoryAndDiscoverer(query.storyId, discovererId)
 			.then( discovery => {
-				const subPath = router.location.query.subpath || '';
-				router.navigate(`/myDiscoveries/${discovery.id}${subPath}`);
+				log('Discovery loaded');
+				router.navigate(`/myDiscoveries/${discovery.id}${query.subpath || ''}`);
 			})
 			.catch( err => {
+				log('Discovery error');
 				console.error( err );
 				router.navigate(`/myStories`);
 			})

@@ -43,7 +43,6 @@ export default function (store, api) {
 					let ids = [];
 
 					discoveryPage.items.forEach( item => {
-						storeService.storeStory(item.story, item.id);
 						storeService.storeDiscovery( item );
 						ids.push(item.id);
 					});
@@ -87,7 +86,6 @@ export default function (store, api) {
 		},
 
 		updateDiscoveryExtra( id, extra ) {
-
 			// Update extra optimistically
 			setTimeout( () => {
 				let discovery = store.discoveries[id];
@@ -106,6 +104,14 @@ export default function (store, api) {
 				.catch( err => {
 					console.log( 'DISCOVERY EXTRA ERROR', err );
 					throw( err );
+				})
+			;
+		},
+		load( id ){
+			return api.gql.getSingleDiscovery( actionService.userDiscoveryFields )
+				.run( id )
+				.then( discovery => {
+					storeService.storeDiscovery( discovery )
 				})
 			;
 		},

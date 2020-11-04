@@ -1,3 +1,5 @@
+import { log } from "../../../utils/logger";
+
 function getRedirectPath( store, data ){
   if( store.user.id === data.ownerId ){
     return `/myStories/${data.storyId}/comments`;
@@ -23,6 +25,8 @@ export default function handleNewComment( router, dataService, data ){
     dataService.getActions().storyComment.refreshStoryComments( data.storyId );
     return;
   }
+
+  log( 'Route is not the same than the expected', router.location.pathname, redirectRoute);
 
   // Otherwise, remove the story and comments from the cache so we force the
   // reload when the user visits them

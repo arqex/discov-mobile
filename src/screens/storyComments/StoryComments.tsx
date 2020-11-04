@@ -123,11 +123,11 @@ class StoryComments extends React.Component<StoryCommentsProps> {
 	}
 };
 
-const Provided = StoryProvider( StoryComments );
+export const ProvidedStoryComments = StoryProvider( StoryComments );
 
 export default function StoryCommentsScreen(props) {
 	return (
-		<Provided
+		<ProvidedStoryComments
 			{...props}
 			storyId={ props.location.params.id } />
 	);

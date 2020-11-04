@@ -60,14 +60,24 @@ export default {
 		return store.stories[storyId];
 	},
 
+	getDiscovery( discoveryId ){
+		return store.discoveries[ discoveryId ];
+	},
+
 	storeStory(story, discoveryId) {
 		story.lastUpdatedAt = Date.now();
 		story.content = JSON.parse( story.content );
 		story.aggregated = JSON.parse( story.aggregated );
 		if( discoveryId ){
-			story.discoveryId;
+			story.discoveryId = discoveryId;
 		}
-		delete story.owner;
+		if( story.owner ){
+			if( story.owner.id ) {
+				story.ownerId = story.owner.id;
+				this.storeStory(story.owner, story.id);
+			}
+			delete story.owner;
+		}
 		store.stories[story.id] = story;
 	},
 
@@ -78,9 +88,21 @@ export default {
 
 	storeDiscovery(discovery) {
 		discovery.lastUpdatedAt = Date.now();
-		delete discovery.story;
-		delete discovery.owner;
-		delete discovery.discoverer;
+		if( discovery.story ){
+			if( discovery.story.id ){
+				discovery.storyId = discovery.story.id;
+				this.storeStory(discovery.story, discovery.id);
+			}
+			delete discovery.story;
+		}
+		if( discovery.discoverer ){
+			if( discovery.discoverer.id ) {
+				discovery.discovererId = discovery.discoverer.id;
+				this.storeAccount(discovery.discoverer);
+			}
+			delete discovery.discoverer;
+		}
+		
 		discovery.extra = JSON.parse(discovery.extra);
 		store.discoveries[discovery.id] = discovery;
 	},

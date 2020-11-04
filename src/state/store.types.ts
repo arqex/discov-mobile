@@ -61,5 +61,12 @@ interface StoryComment {
 	commenterId: string
 	createdAt: string
 	deleted: boolean
-	
+}
+
+interface Discovery {
+	id: string
+	storyId: string
+	discovererId: string
+	seen: boolean
+	createdAt: Date
 }

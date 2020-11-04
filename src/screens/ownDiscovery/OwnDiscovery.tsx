@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { storyService } from '../../services/story.service';
 import storeService from '../../state/store.service';
 import StoryScreen from '../components/StoryScreen';
 
-export default class OwnStory extends Component<ScreenProps> {
-
+export default class OwnDiscovery extends Component<ScreenProps> {
 	state = {
 		region: {
 			latitude: 34,
@@ -15,15 +13,15 @@ export default class OwnStory extends Component<ScreenProps> {
 			longitudeDelta: 1
 		}
 	};
-
 	render() {
-		let story = storeService.getStory(this.getId());
+		const discovery = this.getDiscovery();
 
-		if (!story) {
+		if (!discovery) {
 			return this.renderLoading();
 		}
 
 		const currentPosition = storeService.getCurrentPosition();
+		const story = storeService.getStory( discovery.storyId );
 
 		return (
 			<StoryScreen
@@ -53,13 +51,12 @@ export default class OwnStory extends Component<ScreenProps> {
 	}
 
 	componentDidMount() {
-		let story = storeService.getStory(this.getId());
-		if (!story) {
-			storyService.loadStory(this.getId())
-				.then(() => {
-					this.forceUpdate()
-				})
-			;
+		if (!this.getDiscovery() ) {
+			this.props.actions.discovery.load( this.getId() );
 		}
+	}
+
+	getDiscovery() {
+		return storeService.getDiscovery( this.getId() );
 	}
 }
