@@ -53,15 +53,21 @@ class StoryComments extends React.Component<StoryCommentsProps> {
 
 	renderCommentList( story ){
 		let currentUserId = storeService.getUserId();
+		// All these nested views make the comment list stick to
+		// the top when there are few messages
 		return (
-			<CommentList
-				ref={ this.scroll }
-				storyId={ story.id }
-				story={ story }
-				currentUserId={ currentUserId }
-				isStoryOwner={ story.ownerId === currentUserId }
-				isLoadingMore={ this.state.loadingMore }
-				onLoadMore={ this._loadMoreComments } />
+			<View style={{ flex: 1 }}>
+				<View style={{ flex: 0, justifyContent: 'flex-end' }}>
+					<CommentList
+						ref={ this.scroll }
+						storyId={ story.id }
+						story={ story }
+						currentUserId={ currentUserId }
+						isStoryOwner={ story.ownerId === currentUserId }
+						isLoadingMore={ this.state.loadingMore }
+						onLoadMore={ this._loadMoreComments } />
+				</View>
+			</View>
 		);
 	}
 

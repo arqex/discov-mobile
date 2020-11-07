@@ -65,6 +65,11 @@ export default {
 	},
 
 	storeStory(story, discoveryId) {
+		let currentStory = store.stories[story.id];
+		if (!discoveryId && currentStory && currentStory.discoveryId ){
+			discoveryId = currentStory.discoveryId;
+		}
+
 		story.lastUpdatedAt = Date.now();
 		story.content = JSON.parse( story.content );
 		story.aggregated = JSON.parse( story.aggregated );
