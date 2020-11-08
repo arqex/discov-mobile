@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { TopBar, MapScreen, Text, StoryHeader, Separator, AvatarGroup, Button, styleVars, Wrapper} from '../../components';
+import { Bg, TopBar, MapScreen, Text, StoryHeader, Separator, AvatarGroup, Button, styleVars, Wrapper} from '../../components';
 import MapPanel from './MapPanel';
 import memoize from 'memoize-one';
 import storeService from '../../state/store.service';
@@ -28,15 +28,17 @@ export default class StorySummary extends Component<ScreenProps, StorySummarySta
 		const story = this.getStory();
 		
 		return (
-			<MapScreen top={ this.renderTopBar() }
-				map={ this.renderMap(story) }
-				layout={ this.props.layout }
-				allowScroll={ false }
-				allowBigMap={ false }>
-				<MapPanel style={ styles.panel }>
-					{ this.renderContent( story ) }
-				</MapPanel>
-			</MapScreen>
+			<Bg>
+				<MapScreen top={ this.renderTopBar() }
+					map={ this.renderMap(story) }
+					layout={ this.props.layout }
+					allowScroll={ false }
+					allowBigMap={ false }>
+					<MapPanel style={ styles.panel }>
+						{ this.renderContent( story ) }
+					</MapPanel>
+				</MapScreen>
+			</Bg>
 		);
 	}
 

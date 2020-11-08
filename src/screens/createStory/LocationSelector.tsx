@@ -67,6 +67,7 @@ export default class LocationSelector extends React.PureComponent<LocationSelect
 				<ListItem
 					title={ this.getSelectTitle() }
 					subtitle={this.getSelectSubtitle()}
+					disabled={!this.getSelectSubtitle()}
 					pre={icon}
 					post={editButton}
 					style={ [styles.listItem, styles.currentSelectionWrapper] }

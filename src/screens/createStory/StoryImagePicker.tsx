@@ -123,41 +123,45 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 		let images = this.props.images;
 
 		imagesToAdd.forEach(image => {
+			let filename = image.filename || 'im' + Math.round(Math.random() * 100000);
 			images.push({
 				path: image.path,
-				filename: image.filename || 'im' + Math.round(Math.random() * 100000),
+				filename,
 				uploaded: 0
 			});
 
+			image.filename = filename;
 			this.uploadImage( image )
 		});
 	}
 
 	uploadImage( image ){
 		let onProgress = percentage => {
-			let stored = this.findImage( image.filename );
+			let stored = this.findImage( image.path );
 			stored && (stored.uploaded = percentage);
+			this.forceUpdate();
 		}
 
 		uploadImage( image, 'story', onProgress )
 			.then( res => {
 				console.log( res );
 
-				let stored = this.findImage(image.filename);
+				let stored = this.findImage(image.path);
 				if( stored ){
 					stored.uploaded = 100;
 					stored.uri = res.imageUrl;
 					stored.size = res.size;
 				}
+				this.forceUpdate();
 			})
 		;
 	}
 
-	findImage( filename ){
+	findImage( path ){
 		const images = this.props.images;
 		let i = images.length;
 		while( i-- ){
-			if( images[i].filename === filename ){
+			if( images[i].path === path ){
 				return images[i];
 			}
 		}

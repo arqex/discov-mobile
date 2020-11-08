@@ -12,7 +12,8 @@ export interface ListItemProps {
 	style?: any,
 	onPress?: any,
 	titleColor?: string,
-	theme?: 'light' | 'dark'
+	theme?: 'light' | 'dark',
+	disabled?: boolean
 }
 
 const ListItem = (props: ListItemProps) => {
@@ -52,8 +53,13 @@ const ListItem = (props: ListItemProps) => {
 		);
 	}
 
+	let contentStyles = [
+		styles.container,
+		props.disabled && styles.disabledContainer,
+	].concat( props.style );
+
 	let content = (
-		<View style={[styles.container].concat( props.style )}>
+		<View style={ contentStyles }>
 			{ pre }
 			<View style={ styles.texts }>
 				{ overtitle }
@@ -66,7 +72,7 @@ const ListItem = (props: ListItemProps) => {
 
 	if( props.onPress ){
 		return (
-			<Touchable onPress={ props.onPress }>
+			<Touchable onPress={ props.onPress } disabled={ props.disabled }>
 				{ content }
 			</Touchable>
 		);
@@ -86,6 +92,9 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'space-between'
+	},
+	disabledContainer: {
+		opacity: .6
 	},
 	texts: {
 		flex: 1,
