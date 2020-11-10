@@ -8,7 +8,7 @@ import locationHandler from '../../location/location.handler';
 export default class LocationReport extends Component<ScreenProps> {
 	render() {
     let store = this.props.store;
-    let locations = store && store.locationReport || [];
+    let locations = store && store.locationReportOld || [];
     let fenceData = locationHandler.getFenceData();
 
     return (
@@ -42,7 +42,7 @@ export default class LocationReport extends Component<ScreenProps> {
   }
 
   _clearLocationReport = () => {
-    store.locationReport = [];
+    store.locationReportOld = [];
     this.forceUpdate();
   }
   

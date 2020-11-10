@@ -240,13 +240,14 @@ export default {
 		});
 
 		let currentReport = store.locationReport;
-		if( currentReport ){
+		if( currentReport && !currentReport.slice ){
 			let limit = Math.min( 200 - order.length, currentReport.order.length );
 			let i = 0;
 			while( i < limit ){
 				let id = currentReport.order[i];
 				order.push( id );
 				items[ id ] = currentReport.items[id];
+				i++;
 			}
 		}
 
@@ -272,12 +273,13 @@ export default {
 				// we can exit
 				if( started ) return;
 			}
+			i++;
 		}
 	},
 
 	addLocationReportOld( loc, isBgFetch = false){
-		console.log('##### Adding to location report', store.locationReport && store.locationReport.length );
-		let locations = store.locationReport && store.locationReport.slice ? store.locationReport.slice() : [];
+		console.log('##### Adding to location report', store.locationReportOld && store.locationReportOld.length );
+		let locations = store.locationReportOld && store.locationReportOld.slice ? store.locationReportOld.slice() : [];
 
 		locations.unshift({
 			isBgFetch,

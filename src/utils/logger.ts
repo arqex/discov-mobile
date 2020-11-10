@@ -33,7 +33,7 @@ function _saveLogLine( method, type, args ){
 	console[method].apply( console, args );
 	store.logList = logList;
 
-	loggerReporter.report( store, logLine );
+	// loggerReporter.report( store, logLine );
 }
 
 

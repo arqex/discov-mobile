@@ -13,7 +13,6 @@ import { dataService } from '../services/data.service';
 import serverMessageService from '../services/serverMessage/serverMessage.service';
 import geofenceService from './geofence.service';
 import { log } from '../utils/logger';
-import store from '../state/store';
 
 let hasPendingDiscoveries = true;
 let lastUpdate = Date.now();
@@ -38,17 +37,22 @@ export default {
     storeService.addLocationReportOld( location, isBackgroundLocation);
     storeService.storeCurrentPosition( location );
 
+    log('----- Position stored');
     // Check if we have new discoveries
     let apiClient = dataService.getApiClient();
     if (apiClient && apiClient.getAuthStatus() === 'IN') {
-      checkDiscoveries(location, setTrackingMode);
+
+      log('----- Status IN');
+     return checkDiscoveries(location, setTrackingMode);
     }
     else {
       console.log('----- API client not authenticated on location');
+      return Promise.resolve('LOGGED_OUT');
     }
   },
 
   resetFence(){
+    hasPendingDiscoveries = true;
     destroyFences();
   },
 
@@ -58,24 +62,23 @@ export default {
       distanceFromOutOfFence: storeService.getFenceDistance()
     };
   }
-
 }
 
 function checkDiscoveries( location, setTrackingMode ){
-  console.log('Location received');
+  log('Location received');
 
   if( !dataService.getActions() ){
-    console.log('----- Actions not ready yet');
+    log('----- Actions not ready yet');
     return Promise.resolve({error: 'actions_not_ready'});
   }
 
   if( !hasAvailableDiscoveries() ){
-    console.log('----- Nothing to discover');
+    log('----- Nothing to discover');
     return Promise.resolve({error: 'nothing_to_discover'});
   }
 
   if( isInGeoFence( passiveFence, location ) ){
-    console.log('----- Location in fence');
+    log('----- Location in fence');
     return Promise.resolve({error: 'location_in_fence'});
   }
 
@@ -184,8 +187,9 @@ function fenceContainsFence( container, fence ){
 }
 
 function destroyFences(){
-  console.log( 'Destroying fences');
+  log( 'Destroying fences');
   passiveFence = false;
+  lastRequested = 0;
   geofenceService.removeStaleRegion();
 }
 
@@ -242,9 +246,11 @@ function classifyLocations( locations, source ){
   let items = [];
   locations.forEach( location => {
     items.push({
-      ...location,
+      ...location.coords,
+      timestamp: location.timestamp,
       batchId,
-      id: getRandomId()
+      id: getRandomId(),
+      source
     })
   });
 

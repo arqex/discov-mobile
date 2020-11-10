@@ -26,19 +26,19 @@ TaskManager.defineTask(LOCATION_TASK, locationUpdate => {
   if (locationUpdate.error) return console.log(locationUpdate.error);
 
   let locations = locationUpdate.data.locations;
-  log(`**** ${locations.length} NEW LOCATIONS`);
+  if( !locations[0] ){
+    log('*** NO LOCATIONS', locationUpdate.data );
+    return;
+  }
 
-  let location = locations[0];
-  if (!location) return;
-
-  locationHandler.onLocation(location.coords, setTrackingMode);
+  locationHandler.onLocations(locations, setTrackingMode, 'LOCATION_TASK');
 });
 
 // We need also to register the geofence task
 let exiting = false;
 let exitingTimer: any = false;
 TaskManager.defineTask(GEOFENCING_TASK, event => {
-  log('Geofence event', event.data);
+  log('Geofence event', JSON.stringify(event.data) );
   if (event.error) return console.warn(event.error);
 
   if (geofenceService.isExitEvent(event)) {
@@ -52,9 +52,12 @@ TaskManager.defineTask(GEOFENCING_TASK, event => {
       exitingTimer = false;
       if (exiting) {
         exiting = false;
-        console.log('destroying geofence');
+        log('Exiting geofence, updating location...');
         locationHandler.resetFence();
-        setTrackingMode('active');
+        updateCurrentLocation('GEOFENCE');
+      }
+      else {
+        log('Aborting geofence exiting');
       }
     }, 1000);
   }
@@ -183,7 +186,7 @@ function getPermissions() {
   ;
 }
 
-function updateCurrentLocation(){
+function updateCurrentLocation( source ){
   return isLocationReady()
     .then( isReady => {
       // Not having the permissions will make no change
@@ -191,7 +194,7 @@ function updateCurrentLocation(){
 
       return locationService.getCurrentLocation()
         .then( location => {
-          return locationHandler.onLocation( location.coords, setTrackingMode );
+          return locationHandler.onLocations( [location], setTrackingMode, source );
         })
         .catch( err => {
           log( 'LocationError', JSON.stringify(err) );
@@ -219,12 +222,6 @@ async function onBgFetchEvent() {
         return bgLog('User not logged in');
       }
 
-      storeService.addLocationReport({
-        latitude: 0,
-        longitude: 0,
-        accuracy: 0
-      }, true);
-
       bgLog('User is in place');
 
       if( AppState.currentState === 'background' ){
@@ -243,5 +240,6 @@ export default {
   requestPermissions,
   getPermissions,
   updateCurrentLocation,
-  isPermissionGranted
+  isPermissionGranted,
+  resetFence: locationHandler.resetFence
 }

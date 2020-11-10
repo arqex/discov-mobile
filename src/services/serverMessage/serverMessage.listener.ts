@@ -36,6 +36,7 @@ const serverMessageListener = {
 		});
 	
 		serverMessageService.onNotificationReceived( message => {
+			log('Server msg received', message.data.type );
 			let result = serverMessageHandler.handleMessage( message.data.type, message.data );
 			if( result.notification ){
 				serverMessageService.open( result.notification );
