@@ -1,7 +1,6 @@
 
 import * as Location from 'expo-location';
 
-
 let GEOFENCE_TASK: string;
 function setTaskName( name ){
   GEOFENCE_TASK = name;

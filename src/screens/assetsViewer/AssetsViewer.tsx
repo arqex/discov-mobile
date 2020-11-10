@@ -90,8 +90,12 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 	}
 
 	getStory() {
-		let storyId = this.props.location.params.id;
-		return storeService.getStory(storyId);
+		let id = this.props.location.params.id;
+		if( isDiscoveryId( id ) ){
+			let discovery = storeService.getDiscovery( id );
+			id = discovery.storyId;
+		}
+		return storeService.getStory(id);
 	}
 
 	getImages() {
@@ -144,3 +148,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center'
 	}
 });
+
+
+function isDiscoveryId( id ){
+	return id && id.endsWith('di');
+}

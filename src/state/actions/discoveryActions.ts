@@ -60,7 +60,7 @@ export default function (store, api) {
 		discoverAround( currentPosition ){
 			let location = locationToLng( currentPosition );
 			if( !location || !location.lat || !location.lng ){
-				console.log('CANT DISCOVER AROUND WITH A GOOD LOCATION', currentPosition );
+				log('CANT DISCOVER AROUND WITH A GOOD LOCATION', currentPosition );
 				return Promise.resolve({});
 			}
 

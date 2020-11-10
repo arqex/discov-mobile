@@ -26,9 +26,12 @@ export default {
     storeService.addLocationReport( location, isBackgroundLocation);
     storeService.storeCurrentPosition( location );
 
+    log('----- Position stored');
     // Check if we have new discoveries
     let apiClient = dataService.getApiClient();
     if (apiClient && apiClient.getAuthStatus() === 'IN') {
+
+      log('----- Status IN');
       checkDiscoveries(location, setTrackingMode);
     }
     else {
@@ -37,6 +40,7 @@ export default {
   },
 
   resetFence(){
+    hasPendingDiscoveries = true;
     destroyFences();
   },
 
@@ -46,24 +50,23 @@ export default {
       distanceFromOutOfFence: storeService.getFenceDistance()
     };
   }
-
 }
 
 function checkDiscoveries( location, setTrackingMode ){
-  console.log('Location received');
+  log('Location received');
 
   if( !dataService.getActions() ){
-    console.log('----- Actions not ready yet');
+    log('----- Actions not ready yet');
     return Promise.resolve( false );
   }
 
   if( !hasAvailableDiscoveries() ){
-    console.log('----- Nothing to discover');
+    log('----- Nothing to discover');
     return Promise.resolve( false );
   }
 
   if( isInGeoFence( passiveFence, location ) ){
-    console.log('----- Location in fence');
+    log('----- Location in fence');
     return Promise.resolve( false );
   }
 
@@ -172,8 +175,9 @@ function fenceContainsFence( container, fence ){
 }
 
 function destroyFences(){
-  console.log( 'Destroying fences');
+  log( 'Destroying fences');
   passiveFence = false;
+  lastRequested = 0;
   geofenceService.removeStaleRegion();
 }
 

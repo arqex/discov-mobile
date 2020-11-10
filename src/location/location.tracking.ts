@@ -38,7 +38,7 @@ TaskManager.defineTask(LOCATION_TASK, locationUpdate => {
 let exiting = false;
 let exitingTimer: any = false;
 TaskManager.defineTask(GEOFENCING_TASK, event => {
-  log('Geofence event', event.data);
+  log('Geofence event', JSON.stringify(event.data) );
   if (event.error) return console.warn(event.error);
 
   if (geofenceService.isExitEvent(event)) {
@@ -52,9 +52,12 @@ TaskManager.defineTask(GEOFENCING_TASK, event => {
       exitingTimer = false;
       if (exiting) {
         exiting = false;
-        console.log('destroying geofence');
+        log('Exiting geofence, updating location...');
         locationHandler.resetFence();
-        setTrackingMode('active');
+        updateCurrentLocation();
+      }
+      else {
+        log('Aborting geofence exiting');
       }
     }, 1000);
   }
@@ -243,5 +246,6 @@ export default {
   requestPermissions,
   getPermissions,
   updateCurrentLocation,
-  isPermissionGranted
+  isPermissionGranted,
+  resetFence: locationHandler.resetFence
 }
