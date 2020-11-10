@@ -13,6 +13,7 @@ import { dataService } from '../services/data.service';
 import serverMessageService from '../services/serverMessage/serverMessage.service';
 import geofenceService from './geofence.service';
 import { log } from '../utils/logger';
+import store from '../state/store';
 
 let hasPendingDiscoveries = true;
 let lastUpdate = Date.now();
@@ -20,10 +21,21 @@ let currentlyInFence = false;
 let passiveFence;
 
 export default {
+  onLocations: function onLocations( locations, setTrackingMode, source ){
+    log(`----- Receiving ${locations.length} location(s)`);
+
+    const classifiedLocations = classifyLocations( locations, source );
+    storeService.addLocationReport( classifiedLocations.items );
+
+    this.onLocation( locations[0].coords, setTrackingMode ).then( result => {
+      storeService.setLocationResult( classifiedLocations.batchId, result );
+    });
+  },
+
   onLocation: function onLocation( location, setTrackingMode, isBackgroundLocation? ){
     log('----- Receiving location');
     // Render location available in the store for the rest of the app
-    storeService.addLocationReport( location, isBackgroundLocation);
+    storeService.addLocationReportOld( location, isBackgroundLocation);
     storeService.storeCurrentPosition( location );
 
     // Check if we have new discoveries
@@ -54,32 +66,32 @@ function checkDiscoveries( location, setTrackingMode ){
 
   if( !dataService.getActions() ){
     console.log('----- Actions not ready yet');
-    return Promise.resolve( false );
+    return Promise.resolve({error: 'actions_not_ready'});
   }
 
   if( !hasAvailableDiscoveries() ){
     console.log('----- Nothing to discover');
-    return Promise.resolve( false );
+    return Promise.resolve({error: 'nothing_to_discover'});
   }
 
   if( isInGeoFence( passiveFence, location ) ){
     console.log('----- Location in fence');
-    return Promise.resolve( false );
+    return Promise.resolve({error: 'location_in_fence'});
   }
 
   // From here we have a location out of the fence, we are close to
   // a discovery
   if( !inRequestPause() ){
     log('----- In request pause');
-    return Promise.resolve( false );
+    return Promise.resolve({error: 'in_pause'});
   }
   
   log('----- Getting discoveries!');
-
   return dataService.getActions().discovery.discoverAround( location )
     .then( res => onDiscoveryResponse( res, location, setTrackingMode ) )
     .then( () => {
-      console.log('----- End location update');
+      log('----- End location update');
+      return {error: false};
     })
   ;
 }
@@ -222,4 +234,23 @@ function createDiscoveriesNofication( discoveries ){
     message,
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQanDmDzKGJxRcOsZJjuUwmHGgeKzaOeBaGnA&usqp=CAU'
   });
+}
+
+
+function classifyLocations( locations, source ){
+  let batchId = getRandomId();
+  let items = [];
+  locations.forEach( location => {
+    items.push({
+      ...location,
+      batchId,
+      id: getRandomId()
+    })
+  });
+
+  return { batchId, items };
+}
+
+function getRandomId(){
+  return '' + Math.random();
 }

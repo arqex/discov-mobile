@@ -230,7 +230,52 @@ export default {
 		return store.distanceFromOutOfFence;
 	},
 
-	addLocationReport( loc, isBgFetch = false){
+	addLocationReport( locations ){
+		let order = [];
+		let items = {};
+
+		locations.forEach( l => {
+			order.push( l.id );
+			items[ l.id ] = l;
+		});
+
+		let currentReport = store.locationReport;
+		if( currentReport ){
+			let limit = Math.min( 200 - order.length, currentReport.order.length );
+			let i = 0;
+			while( i < limit ){
+				let id = currentReport.order[i];
+				order.push( id );
+				items[ id ] = currentReport.items[id];
+			}
+		}
+
+		store.locationReport = { order, items };
+	},
+
+	setLocationResult( batchId, result ){
+		let { order, items } = store.locationReport;
+		let started = false;
+		let i = 0;
+
+		while( i < order.length ){
+			let id = order[i];
+			if( items[id].batchId === batchId ){
+				items[id].result = result;
+				if( !started ){
+					started = true;
+				}
+			}
+			else {
+				// Once we started to add the results if the 
+				// item doesn't belong to the batch anymore
+				// we can exit
+				if( started ) return;
+			}
+		}
+	},
+
+	addLocationReportOld( loc, isBgFetch = false){
 		console.log('##### Adding to location report', store.locationReport && store.locationReport.length );
 		let locations = store.locationReport && store.locationReport.slice ? store.locationReport.slice() : [];
 
@@ -243,8 +288,10 @@ export default {
 		});
 
 		locations = locations.slice(0,100);
-		store.locationReport = locations;
+		store.locationReportOld = locations;
 	},
+
+
 
 	setLocationPermissions( permissions ){
 		store.locationPermissions = permissions;
