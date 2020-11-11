@@ -17,7 +17,7 @@ const colors = {
 }
 
 export default function Marker( props ){
-	let color = colors[ props.color ] || colors.dark;
+	let color = colors[ props.color ] || props.color || colors.dark;
 	let size = sizes[ props.size ] || sizes.m;
 
 	return (

@@ -32,12 +32,23 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 	}
 
 	renderMarkers( locations ){
-		return locations.order.map( (id) => {
+		let locationCount = locations.order.length;
+
+		return locations.order.map( (id,i) => {
 			let location = locations.items[id];
+			let coords = location.coords ? location.coords : location
+			let st = [
+				styles.placeMarker,
+				{ backgroundColor: colorFromIndex(i, locationCount) }
+			];
 			return (
 				<Marker
 					key={ id }
-					coordinate={ location } />
+					coordinate={ coords }>
+						<View style={styles.placeMarkerWrapper}>
+							<View style={st} />
+						</View>
+				</Marker>
 			);
 		});
 	}
@@ -153,5 +164,21 @@ const styles = StyleSheet.create({
 	result: {
 		width: 70,
 		alignItems: 'flex-end'
-	}
+	},
+  placeMarkerWrapper: {
+		width: 20, height: 20,
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
+	placeMarker: {
+		width: 16, height: 16,
+		borderWidth: 2,
+		borderColor: '#fff',
+		borderRadius: 8,
+		backgroundColor: '#999'
+	},
+	placeMarker_current: {
+		backgroundColor: '#09f',
+		zIndex: 3
+	},
 });
