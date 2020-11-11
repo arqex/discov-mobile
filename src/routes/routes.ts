@@ -30,6 +30,7 @@ import ShareStory from '../screens/createStory/ShareStory';
 import StorySummary from '../screens/createStory/StorySummary';
 import OwnDiscovery from '../screens/ownDiscovery/OwnDiscovery';
 import LocationReport from '../screens/locationReport/LocationReport';
+import NewLocationReport from '../screens/newLocationReport/NewLocationReport';
 import BgReport from '../screens/locationReport/BgReport';
 import AssetsViewer from '../screens/assetsViewer/AssetsViewer';
 import StoryComments from '../screens/storyComments/StoryComments';
@@ -88,6 +89,7 @@ export const routes = [
 	{ path: '/settings', cb: Settings },
 
 	{ path: '/locationReport', cb: LocationReport },
+	{ path: '/newLocationReport', cb: NewLocationReport },
 	{ path: '/bgReport', cb: BgReport },
 
 	{ path: '/accountModal', cb: PeerAccountModal, isModal: true },

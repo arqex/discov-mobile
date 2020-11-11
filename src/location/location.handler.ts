@@ -13,6 +13,7 @@ import { dataService } from '../services/data.service';
 import serverMessageService from '../services/serverMessage/serverMessage.service';
 import geofenceService from './geofence.service';
 import { log } from '../utils/logger';
+import { AppState } from 'react-native';
 
 let hasPendingDiscoveries = true;
 let lastUpdate = Date.now();
@@ -244,13 +245,17 @@ function createDiscoveriesNofication( discoveries ){
 function classifyLocations( locations, source ){
   let batchId = getRandomId();
   let items = [];
+  let initiator = source;
+  if( source === 'LOCATION_TASK' ){
+    initiator = AppState.currentState === 'active' ? 'FORE_TASK' : 'BG_TASK';
+  }
   locations.forEach( location => {
-    items.push({
+    items.unshift({
       ...location.coords,
       timestamp: location.timestamp,
       batchId,
       id: getRandomId(),
-      source
+      initiator
     })
   });
 

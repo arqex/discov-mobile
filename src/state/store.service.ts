@@ -240,7 +240,7 @@ export default {
 		});
 
 		let currentReport = store.locationReport;
-		if( currentReport && !currentReport.slice ){
+		if( currentReport && !currentReport.slice && currentReport.order ){
 			let limit = Math.min( 200 - order.length, currentReport.order.length );
 			let i = 0;
 			while( i < limit ){
