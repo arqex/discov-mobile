@@ -85,6 +85,26 @@
           <action android:name="com.google.firebase.MESSAGING_EVENT" />
         </intent-filter>
       </service>
+
+      <!-- My own location receiver-->
+      <receiver android:name=".bglocation.BgLocationStarter" android:exported="true">
+        <intent-filter>
+          <action android:name="android.intent.action.BOOT_COMPLETED" />
+        </intent-filter>
+        <intent-filter>
+          <action android:name="android.intent.action.MAIN" />
+          <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        <intent-filter>
+          <action android:name="discovRestartLocation" />
+        </intent-filter>
+      </receiver>
+      
+      <service
+          android:name=".bglocation.IntervalLocationService"
+          android:enabled="true" />
+      <service android:name=".bglocation.LocationRetrieverService" />
+      <service android:name=".bglocation.HeadlessJSLocationService" />
     </application>
 
 </manifest>

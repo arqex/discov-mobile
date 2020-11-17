@@ -12,7 +12,7 @@ import StoryMap from '../components/StoryMap';
 import NoLocationScreen from '../components/NoLocationScreen';
 import EditLocationModal from './EditLocationModal';
 import SearchPlacePanel from './SearchPlacePanel';
-import locationTracking from '../../location/location.tracking';
+// import locationTracking from '../../location/location.tracking';
 import BackButtonHandler from '../../utils/BackButtonHandler';
 
 // Stores the temporal data in store.storyInProgress
@@ -43,7 +43,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		super(props);
 
 		// refresh permissions
-		locationTracking.getPermissions();
+		// locationTracking.getPermissions();
 
 		let story = this.getStory();
 		let location = story.location && lngToLocation(story.location) || this.props.position;

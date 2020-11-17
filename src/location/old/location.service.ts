@@ -4,6 +4,9 @@
 
 import * as Location from 'expo-location';
 import { log } from '../utils/logger';
+import AndroidLocationListener from './AndroidLocationListener';
+
+// AndroidLocationListener.start();
 
 let LOCATION_TASK: string;
 function setTaskName( name ){
