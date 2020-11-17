@@ -252,5 +252,9 @@ export default {
       passiveFence: passiveFence,
       distanceFromOutOfFence: storeService.getFenceDistance()
     };
-  }
+	},
+	resetFence(){
+    hasPendingDiscoveries = true;
+    destroyFences();
+  },
 }
