@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, Linking } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, Text, Button, styleVars } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
-// import locationTracking from '../../location/location.tracking';
+import locationManager from '../../location/location.manager';
 
 interface NoLocationScreenProps extends ScreenProps {
 
@@ -77,13 +77,12 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 
 	_askForPermission = () => {
 		this.setState({loading: true});
-		/*
-		locationTracking.requestPermissions()
+		
+		locationManager.requestPermissions()
 			.then( () => {
 				this.setState({loading: false});
 			})
 		;
-		*/
 	}
 
 	_openSettings = () => {

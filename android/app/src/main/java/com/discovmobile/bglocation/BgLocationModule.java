@@ -48,7 +48,7 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
 
     @ReactMethod
     public void startBackgroundLocation() {
-        ContextCompat.startForegroundService(mContext, mIntervalLocationServiceIntent);
+        mContext.startService( mIntervalLocationServiceIntent );
     }
 
     @ReactMethod

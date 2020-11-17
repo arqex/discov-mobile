@@ -5,13 +5,14 @@ import { dataService } from '../services/data.service';
 import serverMessageService from '../services/serverMessage/serverMessage.service';
 import { log } from '../utils/logger';
 import { AppState } from 'react-native';
+import * as Location from 'expo-location';
 
 let hasPendingDiscoveries = true;
 let lastUpdate = Date.now();
 let currentlyInFence = false;
 let passiveFence;
 
-locationService.addListener( clbk => {
+locationService.addListener( location => {
 	log('----- Receiving location');
 	// Render location available in the store for the rest of the app
 	storeService.addLocationReportOld(location, false);
@@ -227,4 +228,29 @@ function classifyLocations(locations, source) {
 
 function getRandomId() {
 	return '' + Math.random();
+}
+
+export default {
+	requestPermissions() {
+		return Location.requestPermissionsAsync()
+			.then( permissions => {
+				storeService.setLocationPermissions(permissions);
+				return permissions;
+			})
+		;
+	},
+	getPermissions() {
+		return Location.getPermissionsAsync()
+			.then( permissions => {
+				storeService.setLocationPermissions(permissions);
+				return permissions;
+			})
+		;
+	},
+	getFenceData() {
+    return {
+      passiveFence: passiveFence,
+      distanceFromOutOfFence: storeService.getFenceDistance()
+    };
+  }
 }
