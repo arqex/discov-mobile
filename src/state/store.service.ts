@@ -256,7 +256,9 @@ export default {
 
 	setLocationResult( id, result ){
 		let { items } = store.locationReport;
-		items[id] && (items[id].result = result);
+		if( items[id] ) {
+			items[id].result = result;
+		}
 	},
 
 	addLocationReportOld( loc, isBgFetch = false){
