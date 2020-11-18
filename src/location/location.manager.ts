@@ -12,30 +12,33 @@ let lastUpdate = Date.now();
 let currentlyInFence = false;
 let passiveFence;
 
-locationService.addListener( location => {
+locationService.addListener( result => {
+	let location = {
+		...result,
+		id: getRandomId()
+	};
+
 	log('----- Receiving location');
 	// Render location available in the store for the rest of the app
 	storeService.addLocationReportOld(location, false);
+	storeService.addLocationReport( [location] )
 	storeService.storeCurrentPosition(location);
-
 	log('----- Position stored');
-	// Check if we have new discoveries
-	let apiClient = dataService.getApiClient();
-	if (apiClient && apiClient.getAuthStatus() === 'IN') {
 
-		log('----- Status IN');
-		return checkDiscoveries(location);
-	}
-	else {
-		console.log('----- API client not authenticated on location');
-		return Promise.resolve('LOGGED_OUT');
-	}
+	return checkDiscoveries( location )
+		.then( result => {
+			storeService.setLocationResult( location.id , result);
+		})
+	;
 });
 
 
 function checkDiscoveries(location) {
-	log('Location received');
-
+	let apiClient = dataService.getApiClient();
+	if (!apiClient || apiClient.getAuthStatus() !== 'IN') {
+		log('----- User logged out');
+		return Promise.resolve({ error: 'LOGGED_OUT' });
+	}
 	if (!dataService.getActions()) {
 		log('----- Actions not ready yet');
 		return Promise.resolve({ error: 'actions_not_ready' });

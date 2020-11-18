@@ -235,8 +235,8 @@ export default {
 		let items = {};
 
 		locations.forEach( l => {
-			order.push( l.id );
-			items[ l.id ] = l;
+			order.push(l.id);
+			items[l.id] = l;
 		});
 
 		let currentReport = store.locationReport;
@@ -254,27 +254,9 @@ export default {
 		store.locationReport = { order, items };
 	},
 
-	setLocationResult( batchId, result ){
-		let { order, items } = store.locationReport;
-		let started = false;
-		let i = 0;
-
-		while( i < order.length ){
-			let id = order[i];
-			if( items[id].batchId === batchId ){
-				items[id].result = result;
-				if( !started ){
-					started = true;
-				}
-			}
-			else {
-				// Once we started to add the results if the 
-				// item doesn't belong to the batch anymore
-				// we can exit
-				if( started ) return;
-			}
-			i++;
-		}
+	setLocationResult( id, result ){
+		let { items } = store.locationReport;
+		items[id] && (items[id].result = result);
 	},
 
 	addLocationReportOld( loc, isBgFetch = false){
@@ -330,6 +312,7 @@ export default {
 
 		delete store.user.stories;
 		delete store.user.discoveries;
+		delete store.locationReport;
 	}
 }
 

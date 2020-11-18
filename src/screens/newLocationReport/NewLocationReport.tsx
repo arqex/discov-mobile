@@ -48,7 +48,7 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 		let rowStyle = [
 			styles.row,
 			{
-				backgroundColor: this.getRowColor(location.batchId),
+				backgroundColor: '#fff', // this.getRowColor(location.batchId),
 				borderLeftColor: colorFromIndex(index, locations.order.length )
 			}
 		];

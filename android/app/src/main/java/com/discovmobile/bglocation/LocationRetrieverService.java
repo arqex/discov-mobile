@@ -1,24 +1,25 @@
 package com.discovmobile.bglocation;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.discovmobile.MainActivity;
 
@@ -28,8 +29,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
-
-import java.util.Date;
 
 public class LocationRetrieverService extends IntentService {
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
@@ -45,9 +44,17 @@ public class LocationRetrieverService extends IntentService {
         mGson = new Gson();
     }
 
-
     protected void onHandleIntent(@Nullable Intent intent) {
-        retrieveUsingForegroundNotification();
+        if( isPermissionGranted() ){
+            retrieveUsingForegroundNotification();
+        }
+        else {
+            Log.i ("BgLocation", "Permission not granted to get the background locaiton.");
+        }
+    }
+
+    protected boolean isPermissionGranted(){
+        return ContextCompat.checkSelfPermission( getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void retrieveUsingForegroundNotification() {
@@ -114,7 +121,7 @@ public class LocationRetrieverService extends IntentService {
     private void onLocationReceived( LocationResult locationResult ){
         if (locationResult != null) {
             for (Location location : locationResult.getLocations()) {
-                handleLocationCoordinates(createCoordinates(location.getLatitude(), location.getLongitude()));
+                handleLocation( new BgLocation(location) );
                 mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             }
         }
@@ -122,30 +129,19 @@ public class LocationRetrieverService extends IntentService {
         closeNotification();
     }
 
-    private void handleLocationCoordinates( LocationCoordinates coordinates ) {
-        broadcastLocationReceived( coordinates );
+    private void handleLocation(BgLocation location ) {
+        broadcastLocationReceived( location );
     }
 
-    private void broadcastLocationReceived(LocationCoordinates locationCoordinates) {
-        Intent eventIntent = new Intent(IntervalLocationService.LOCATION_EVENT_NAME);
-        eventIntent.putExtra(IntervalLocationService.LOCATION_EVENT_DATA_NAME, mGson.toJson(locationCoordinates));
-        getApplicationContext().sendBroadcast(eventIntent);
-
+    private void broadcastLocationReceived(BgLocation location) {
         Intent headlessIntent = new Intent(getApplicationContext(), HeadlessJSLocationService.class );
         Bundle bundle = new Bundle();
-        bundle.putString("location", mGson.toJson((locationCoordinates)));
+        bundle.putString("location", mGson.toJson( location ));
         headlessIntent.putExtras(bundle);
         getApplicationContext().startService((headlessIntent));
     }
 
     private void closeNotification() {
         stopForeground(true );
-    }
-
-    private LocationCoordinates createCoordinates(double latitude, double longitude) {
-        return new LocationCoordinates()
-                .setLatitude(latitude)
-                .setLongitude(longitude)
-                .setTimestamp(new Date().getTime());
     }
 }
