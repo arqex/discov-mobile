@@ -46,10 +46,11 @@ public class LocationRetrieverService extends IntentService {
 
     protected void onHandleIntent(@Nullable Intent intent) {
         if( isPermissionGranted() ){
+            Log.i ("BgLocation", "Permission granted, getting location.");
             retrieveUsingForegroundNotification();
         }
         else {
-            Log.i ("BgLocation", "Permission not granted to get the background locaiton.");
+            Log.i ("BgLocation", "Permission not granted to get the background location.");
         }
     }
 
@@ -65,6 +66,7 @@ public class LocationRetrieverService extends IntentService {
     private void openNotification() {
         createNotificationChannel();
         Notification notification = createNotification();
+        Log.i ("BgLocation", "Starting notification.");
         startForeground(NOTIFICATION_ID, notification);
     }
 
@@ -98,6 +100,7 @@ public class LocationRetrieverService extends IntentService {
 
     @SuppressLint("MissingPermission")
     protected void retrieveLocation() {
+        Log.i ("BgLocation", "Getting location.");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
         mLocationCallback = createLocationRequestCallback();
 
@@ -120,10 +123,14 @@ public class LocationRetrieverService extends IntentService {
 
     private void onLocationReceived( LocationResult locationResult ){
         if (locationResult != null) {
+            Log.i ("BgLocation", "Location received.");
             for (Location location : locationResult.getLocations()) {
                 handleLocation( new BgLocation(location) );
                 mFusedLocationClient.removeLocationUpdates(mLocationCallback);
             }
+        }
+        else {
+            Log.w ("BgLocation", "No location received.");
         }
 
         closeNotification();
@@ -134,6 +141,7 @@ public class LocationRetrieverService extends IntentService {
     }
 
     private void broadcastLocationReceived(BgLocation location) {
+        Log.i ("BgLocation", "Sending location to headless.");
         Intent headlessIntent = new Intent(getApplicationContext(), HeadlessJSLocationService.class );
         Bundle bundle = new Bundle();
         bundle.putString("location", mGson.toJson( location ));
@@ -142,6 +150,12 @@ public class LocationRetrieverService extends IntentService {
     }
 
     private void closeNotification() {
+        Log.i ("BgLocation", "Closing notification.");
         stopForeground(true );
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.i ("BgLocation", "Destroying location retriever service.");
     }
 }

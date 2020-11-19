@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
@@ -38,6 +39,9 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
 
     BgLocationModule(@Nonnull ReactApplicationContext reactContext) {
         super(reactContext);
+
+        Log.i ("BgLocation", "Creating bg location module.");
+
         mContext = reactContext;
         mIntervalLocationServiceIntent = new Intent(mContext, IntervalLocationService.class);
         mGson = new Gson();
@@ -48,6 +52,7 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
 
     @ReactMethod
     public void startBackgroundLocation() {
+        Log.i ("BgLocation", "Trying to init the interval location service.");
         mContext.startService( mIntervalLocationServiceIntent );
     }
 

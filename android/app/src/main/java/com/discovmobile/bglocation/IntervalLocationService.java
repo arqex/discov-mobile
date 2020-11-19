@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -23,12 +24,32 @@ public class IntervalLocationService extends Service {
 
 	@Override
 	public void onCreate() {
+		Log.i ("BgLocation", "Creating interval location service.");
 		super.onCreate();
     	mAlarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
 	}
 
 	@Override
+	public void onTaskRemoved(Intent rootIntent) {
+		super.onTaskRemoved(rootIntent);
+		Log.i ("BgLocation", "Removing task interval location");
+		Intent restartIntent = new Intent( getApplicationContext(), BgLocationStarter.class );
+		sendBroadcast(restartIntent);
+		Log.i ("BgLocation", "Restart intent sent.");
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.i ("BgLocation", "Destroying interval location service");
+		Intent restartIntent = new Intent( getApplicationContext(), BgLocationStarter.class );
+		sendBroadcast(restartIntent);
+		Log.i ("BgLocation", "Restart intent sent.");
+	}
+
+	@Override
 	public int onStartCommand(Intent intent, int flags, int startId){
+		Log.i ("BgLocation", "Creating repeating alarm for the location.");
 		createPendingIntent();
 
 		mAlarmManager.setRepeating(
@@ -38,7 +59,7 @@ public class IntervalLocationService extends Service {
 			mLocationRetrieverPendingIntent
 		);
 
-		return START_NOT_STICKY;
+		return START_STICKY;
 	}
 
 	@Nullable
@@ -48,6 +69,7 @@ public class IntervalLocationService extends Service {
 	}
 
 	private void createPendingIntent(){
+		Log.i ("BgLocation", "Creating interval location service.");
         Intent i = new Intent(getApplicationContext(), LocationRetrieverService.class);
 		mLocationRetrieverPendingIntent = PendingIntent.getService(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 	}
