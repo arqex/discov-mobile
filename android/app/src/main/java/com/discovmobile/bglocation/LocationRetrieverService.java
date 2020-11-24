@@ -134,7 +134,7 @@ public class LocationRetrieverService extends IntentService {
 
     private void handleLocation(BgLocation location ) {
         setGeofence( location );
-        LocationHelper.sendLocationToHeadless( getApplicationContext(), location );
+        // LocationHelper.sendLocationToHeadless( getApplicationContext(), location );
     }
 
     private void closeNotification() {

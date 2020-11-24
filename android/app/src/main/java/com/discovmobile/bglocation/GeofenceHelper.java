@@ -26,6 +26,7 @@ public class GeofenceHelper extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.i("BgLocation", "Geofence event received");
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
 
         if (geofencingEvent.hasError()) {
@@ -34,7 +35,6 @@ public class GeofenceHelper extends BroadcastReceiver {
             return;
         }
 
-        Log.i("BgLocation", "Geofence event received");
         BgLocation location = new BgLocation( geofencingEvent.getTriggeringLocation() );
         setFence( context, location );
         LocationHelper.sendLocationToHeadless( context, location );
@@ -99,7 +99,7 @@ public class GeofenceHelper extends BroadcastReceiver {
         if (geofencePendingIntent != null) {
             return geofencePendingIntent;
         }
-        Intent intent = new Intent(context, this.getClass());
+        Intent intent = new Intent("DISCOV_GEOFENCE");
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
         // calling addGeofences() and removeGeofences().
         geofencePendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.
