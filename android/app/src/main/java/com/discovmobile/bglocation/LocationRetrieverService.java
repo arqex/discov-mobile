@@ -45,7 +45,7 @@ public class LocationRetrieverService extends IntentService {
     }
 
     protected void onHandleIntent(@Nullable Intent intent) {
-        if( isPermissionGranted() ){
+        if( LocationHelper.isLocationPermissionGranted( getApplicationContext() ) ){
             Log.i ("BgLocation", "Permission granted, getting location.");
             retrieveUsingForegroundNotification();
         }
@@ -54,12 +54,8 @@ public class LocationRetrieverService extends IntentService {
         }
     }
 
-    protected boolean isPermissionGranted(){
-        return ContextCompat.checkSelfPermission( getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED;
-    }
-
     private void retrieveUsingForegroundNotification() {
-        openNotification();
+        LocationHelper.openNotification( this );
         retrieveLocation(); // when the location is retrieved the notificaiton should be closed
     }
 
@@ -137,21 +133,25 @@ public class LocationRetrieverService extends IntentService {
     }
 
     private void handleLocation(BgLocation location ) {
-        broadcastLocationReceived( location );
-    }
-
-    private void broadcastLocationReceived(BgLocation location) {
-        Log.i ("BgLocation", "Sending location to headless.");
-        Intent headlessIntent = new Intent(getApplicationContext(), HeadlessJSLocationService.class );
-        Bundle bundle = new Bundle();
-        bundle.putString("location", mGson.toJson( location ));
-        headlessIntent.putExtras(bundle);
-        getApplicationContext().startService((headlessIntent));
+        setGeofence( location );
+        LocationHelper.sendLocationToHeadless( getApplicationContext(), location );
     }
 
     private void closeNotification() {
         Log.i ("BgLocation", "Closing notification.");
         stopForeground(true );
+    }
+
+    private GeofenceHelper geofence;
+    private void setGeofence( BgLocation location ){
+        if( GeofenceHelper.isFenceSet() ) {
+            Log.i("BgLocation", "Geofence already set");
+            return;
+        }
+
+        Log.i("BgLocation", "Starting geofence");
+        geofence = new GeofenceHelper();
+        geofence.start( getApplicationContext(), location );
     }
 
     @Override

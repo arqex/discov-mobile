@@ -9,7 +9,12 @@ public class BgLocationStarter extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("BgLocation", "Start intent received");
-        Intent service = new Intent(context, IntervalLocationService.class);
-        context.startService(service);
+        setAlarm( context );
     }
+
+    private void setAlarm( Context context ) {
+        AlarmStarter starter = new AlarmStarter();
+        starter.start( context );
+    }
+
 }
