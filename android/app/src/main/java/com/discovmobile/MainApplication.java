@@ -2,6 +2,10 @@ package com.discovmobile;
 
 import android.app.Application;
 
+import androidx.annotation.NonNull;
+import androidx.work.Configuration;
+import androidx.work.WorkManager;
+
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
@@ -27,7 +31,7 @@ import com.microsoft.codepush.react.CodePush;
 
 import com.discovmobile.bglocation.BgLocationPackage;
 
-public class MainApplication extends Application implements ReactApplication {
+public class MainApplication extends Application implements ReactApplication, Configuration.Provider {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList(),
     null
@@ -70,5 +74,13 @@ public class MainApplication extends Application implements ReactApplication {
   public void onCreate() {
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
+  }
+
+  @NonNull
+  @Override
+  public Configuration getWorkManagerConfiguration() {
+    return new Configuration.Builder()
+            .setMinimumLoggingLevel(android.util.Log.DEBUG)
+            .build();
   }
 }

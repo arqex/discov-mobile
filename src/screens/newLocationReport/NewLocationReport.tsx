@@ -68,7 +68,7 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 			<View style={ rowStyle }>
 				{ this.renderDate( location.timestamp ) }
 				<View style={ styles.source }>
-					<Text>{ location.initiator }</Text>
+					<Text>{ location.source || 'Unknown' }</Text>
 				</View>
 				{ this.renderResult( location.result ) }
 			</View>

@@ -36,8 +36,9 @@ public class GeofenceHelper extends BroadcastReceiver {
         }
 
         BgLocation location = new BgLocation( geofencingEvent.getTriggeringLocation() );
+        geofencingClient = LocationServices.getGeofencingClient(context);
         setFence( context, location );
-        LocationHelper.sendLocationToHeadless( context, location );
+        LocationHelper.sendLocationToHeadless( context, location, "Geofence" );
     }
 
     private GeofencingClient geofencingClient;
@@ -60,13 +61,14 @@ public class GeofenceHelper extends BroadcastReceiver {
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();
 
+        GeofenceHelper.fenceSet = true;
+
         if( LocationHelper.isLocationPermissionGranted( context ) ){
             Log.i("BgLocation", "Setting geofence");
             geofencingClient.addGeofences(getGeofencingRequest(fence), getGeofencePendingIntent(context))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        GeofenceHelper.fenceSet = true;
                         Log.i("BgLocation", "Geofence added properly.");
                     }
                 })
@@ -89,6 +91,7 @@ public class GeofenceHelper extends BroadcastReceiver {
 
     private GeofencingRequest getGeofencingRequest( Geofence fence ) {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
+        builder.setInitialTrigger(1);
         builder.addGeofence( fence );
         return builder.build();
     }
@@ -99,7 +102,7 @@ public class GeofenceHelper extends BroadcastReceiver {
         if (geofencePendingIntent != null) {
             return geofencePendingIntent;
         }
-        Intent intent = new Intent("DISCOV_GEOFENCE");
+        Intent intent = new Intent(context, this.getClass());
         // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
         // calling addGeofences() and removeGeofences().
         geofencePendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.

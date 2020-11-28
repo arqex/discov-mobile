@@ -54,5 +54,6 @@ public class IntervalLocationService extends Service {
 		Log.i("BgLocation", "Destroying interval location Service. Trying to restart bg location");
 		Intent restartIntent = new Intent("restartDiscovLocation");
 		sendBroadcast(restartIntent);
+		LocationWorker.enqueueWork( getApplicationContext() );
 	}
 }

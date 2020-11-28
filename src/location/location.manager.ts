@@ -12,9 +12,10 @@ let lastUpdate = Date.now();
 let currentlyInFence = false;
 let passiveFence;
 
-locationService.addListener( result => {
+locationService.addListener( (result, source) => {
 	let location = {
 		...result,
+		source,
 		id: getRandomId()
 	};
 

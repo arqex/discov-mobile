@@ -8,6 +8,7 @@ import android.util.Log;
 
 import androidx.core.content.ContextCompat;
 
+import com.discovmobile.bgtasks.BgAlarmTask;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -33,7 +34,8 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
     private static final String CONST_JS_LOCATION_TIME = "JS_LOCATION_TIME_KEY";
 
     private Context mContext;
-    private Intent mIntervalLocationServiceIntent;
+    // private Intent mIntervalLocationServiceIntent;
+    private Intent mAlarmTaskServiceIntent;
     private BroadcastReceiver mEventReceiver;
     private Gson mGson;
 
@@ -43,7 +45,8 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
         Log.i ("BgLocation", "Creating bg location module.");
 
         mContext = reactContext;
-        mIntervalLocationServiceIntent = new Intent(mContext, IntervalLocationService.class);
+        //mIntervalLocationServiceIntent = new Intent(mContext, IntervalLocationService.class);mAlarmTaskServiceIntent;
+        mAlarmTaskServiceIntent = new Intent(mContext, BgAlarmTask.class);
         mGson = new Gson();
         createEventReceiver();
         registerEventReceiver();
@@ -53,12 +56,12 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
     @ReactMethod
     public void startBackgroundLocation() {
         Log.i ("BgLocation", "Trying to init the interval location service.");
-        mContext.startService( mIntervalLocationServiceIntent );
+        mContext.startService( mAlarmTaskServiceIntent );
     }
 
     @ReactMethod
     public void stopBackgroundLocation() {
-        mContext.stopService(mIntervalLocationServiceIntent);
+        mContext.stopService(mAlarmTaskServiceIntent);
     }
 
     @Nullable

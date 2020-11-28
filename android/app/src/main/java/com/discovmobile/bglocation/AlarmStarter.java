@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 
 public class AlarmStarter {
@@ -17,10 +18,9 @@ public class AlarmStarter {
         createPendingIntent(context);
         createAlarmManager(context);
 
-        mAlarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            System.currentTimeMillis(),
-            POLL_INTERVAL,
+        mAlarmManager.set(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + POLL_INTERVAL,
             mLocationRetrieverPendingIntent
         );
     }

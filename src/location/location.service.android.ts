@@ -1,10 +1,15 @@
 import { AppRegistry } from 'react-native';
+import { log } from '../utils/logger';
 
 let clbks = [];
 AppRegistry.registerHeadlessTask('HeadlessLocationListener', () => async (taskData) => {
-	let data = JSON.parse( taskData.location );
-
-	clbks.forEach( clbk => clbk(data) );
+	if (taskData.location) {
+		let data = JSON.parse(taskData.location);
+		clbks.forEach(clbk => clbk(data, taskData.source));
+	}
+	else if( taskData.signal ){
+		log(`!!!Signal received: ${ taskData.signal}`);
+	}
 });
 
 export default {

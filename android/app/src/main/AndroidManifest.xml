@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.discovmobile">
+    package="com.discovmobile"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
@@ -107,13 +108,26 @@
         </intent-filter>
       </receiver>
 
-      
+        <service android:name=".bgtasks.BgAlarmTask"
+            android:enabled="true"
+            android:exported="true" />
+        <service android:name=".bgtasks.HeadlessJSLocationService" />
+
+      <!--
       <service
           android:name=".bglocation.IntervalLocationService"
           android:enabled="true"
           android:exported="true" />
       <service android:name=".bglocation.LocationRetrieverService" />
       <service android:name=".bglocation.HeadlessJSLocationService" />
+      -->
+      
+      <provider
+        android:name="androidx.work.impl.WorkManagerInitializer"
+        android:authorities="com.discovmobile.workmanager-init"
+        tools:node="remove"/>
+
+
     </application>
 
 </manifest>

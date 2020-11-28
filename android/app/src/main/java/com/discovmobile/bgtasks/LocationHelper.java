@@ -1,4 +1,4 @@
-package com.discovmobile.bglocation;
+package com.discovmobile.bgtasks;
 
 import android.Manifest;
 import android.app.ActivityManager;
@@ -18,20 +18,24 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.discovmobile.MainActivity;
+import com.discovmobile.bgtasks.BgLocation;
+import com.discovmobile.bgtasks.HeadlessJSLocationService;
 import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LocationHelper {
     public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static final int NOTIFICATION_ID = 1;
 
-    static void sendLocationToHeadless(Context context, BgLocation location, String source) {
-        Log.i ("BgLocation", "Sending location to headless.");
+    static void sendToHeadless(Context context, HashMap<String, String> map ){
         Intent headlessIntent = new Intent(context, HeadlessJSLocationService.class );
         Bundle bundle = new Bundle();
-        bundle.putString("location", (new Gson()).toJson( location ));
-        bundle.putString("source", source);
+        for (Map.Entry<String, String> set : map.entrySet()) {
+            bundle.putString(set.getKey(), set.getValue());
+        }
         headlessIntent.putExtras(bundle);
         if ( LocationHelper.needForegroundService(context) ) {
             Log.i("BgLocation", "Starting service as foreground");
@@ -40,6 +44,21 @@ public class LocationHelper {
             Log.i("BgLocation", "Starting service as background");
             context.startService(headlessIntent);
         }
+    }
+
+    static void sendSignalToHeadless(Context context, String signal) {
+        Bglog.i( "Sending signal to headless.");
+        HashMap<String, String> payload = new HashMap<String, String>();
+        payload.put("signal", signal);
+        LocationHelper.sendToHeadless( context, payload );
+    }
+
+    static void sendLocationToHeadless(Context context, BgLocation location, String source) {
+        Log.i ("BgLocation", "Sending location to headless.");
+        HashMap<String, String> payload = new HashMap<String, String>();
+        payload.put("location", (new Gson()).toJson( location ));
+        payload.put("source", source);
+        LocationHelper.sendToHeadless( context, payload );
     }
 
     static boolean needForegroundService( Context context ) {
