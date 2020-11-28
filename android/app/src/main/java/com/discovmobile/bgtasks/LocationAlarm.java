@@ -14,7 +14,7 @@ public class LocationAlarm {
 
         // Create intent
         Intent i = new Intent(context, BgAlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Alarm manager
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);

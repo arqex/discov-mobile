@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
-import androidx.core.content.ContextCompat;
-
-import com.discovmobile.bgtasks.BgAlarmTask;
+import com.discovmobile.bgtasks.BgTask;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
@@ -46,7 +44,7 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
 
         mContext = reactContext;
         //mIntervalLocationServiceIntent = new Intent(mContext, IntervalLocationService.class);mAlarmTaskServiceIntent;
-        mAlarmTaskServiceIntent = new Intent(mContext, BgAlarmTask.class);
+        mAlarmTaskServiceIntent = new Intent(mContext, BgTask.class);
         mGson = new Gson();
         createEventReceiver();
         registerEventReceiver();
