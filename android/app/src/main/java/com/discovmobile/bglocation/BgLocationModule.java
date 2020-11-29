@@ -46,8 +46,8 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
         //mIntervalLocationServiceIntent = new Intent(mContext, IntervalLocationService.class);mAlarmTaskServiceIntent;
         mAlarmTaskServiceIntent = new Intent(mContext, BgTask.class);
         mGson = new Gson();
-        createEventReceiver();
-        registerEventReceiver();
+        // createEventReceiver();
+        // registerEventReceiver();
         startBackgroundLocation();
     }
 

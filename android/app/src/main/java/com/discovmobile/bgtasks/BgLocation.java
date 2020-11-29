@@ -2,6 +2,8 @@ package com.discovmobile.bgtasks;
 
 import android.location.Location;
 
+import com.google.gson.Gson;
+
 public class BgLocation {
     public double altitude;
     public double bearing;
@@ -19,5 +21,13 @@ public class BgLocation {
         longitude = location.getLongitude();
         speed = location.getSpeed();
         timestamp = location.getTime();
+    }
+
+    public String stringify(){
+        return (new Gson()).toJson( this );
+    }
+
+    public static BgLocation fromString( String strigified ){
+        return (new Gson()).fromJson( strigified, BgLocation.class );
     }
 }

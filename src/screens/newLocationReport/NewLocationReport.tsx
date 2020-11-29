@@ -11,11 +11,22 @@ const bgColors = ['#ffffff', '#fafafa'];
 class NewLocationReport extends React.Component<NewLocationReportProps> {
 	render() {
 		let locations = this.getLocations();
+		let initialRegion;
+		if( locations.order.length ) {
+			let loc = locations.items[ locations.order[0] ];
+			initialRegion = {
+				latitude: loc.latitude,
+				longitude: loc.longitude,
+				latitudeDelta: 0.0322,
+				longitudeDelta: 0.0321,
+			}
+		}
 
 		return (
 			<Bg style={ styles.container }>
 				<View style={ styles.map }>
 					<MapView
+						initialRegion={ initialRegion }
 						style={{ display: 'flex', flexGrow: 1, width: windowWidth }}>
 							{ this.renderMarkers( locations ) }
 					</MapView>

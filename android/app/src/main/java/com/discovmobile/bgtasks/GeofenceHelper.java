@@ -57,7 +57,7 @@ public class GeofenceHelper extends BroadcastReceiver {
                 // Set the request ID of the geofence. This is a string to identify this
                 // geofence.
                 .setRequestId(FENCE_NAME)
-                .setCircularRegion( location.latitude, location.longitude,50 )
+                .setCircularRegion( location.latitude, location.longitude,100 )
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT)
                 .build();

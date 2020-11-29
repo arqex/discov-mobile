@@ -9,6 +9,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,16 +19,17 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.discovmobile.MainActivity;
-import com.discovmobile.bgtasks.BgLocation;
-import com.discovmobile.bgtasks.HeadlessJSLocationService;
+import com.discovmobile.R;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 public class LocationHelper {
-    public static final String CHANNEL_ID = "ForegroundServiceChannel";
+    public static final String CHANNEL_ID = "DiscovLocationChannel";
     public static final int NOTIFICATION_ID = 1;
 
     static void sendToHeadless(Context context, HashMap<String, String> map ){
@@ -38,16 +40,16 @@ public class LocationHelper {
         }
         headlessIntent.putExtras(bundle);
         if ( LocationHelper.needForegroundService(context) ) {
-            Log.i("BgLocation", "Starting service as foreground");
+            Bglog.i( "Starting service as foreground");
             context.startForegroundService(headlessIntent);
         } else {
-            Log.i("BgLocation", "Starting service as background");
+            Bglog.i( "Starting service as background");
             context.startService(headlessIntent);
         }
     }
 
     static void sendSignalToHeadless(Context context, String signal) {
-        Bglog.i( "Sending signal to headless.");
+        Bglog.i( "Sending signal to headless: " + signal);
         HashMap<String, String> payload = new HashMap<String, String>();
         payload.put("signal", signal);
         LocationHelper.sendToHeadless( context, payload );
@@ -92,6 +94,10 @@ public class LocationHelper {
                 NotificationManager.IMPORTANCE_DEFAULT
             );
 
+            serviceChannel.enableVibration(false);
+            serviceChannel.setSound(null, null);
+            serviceChannel.enableLights(false);
+
             NotificationManager manager = service.getSystemService(NotificationManager.class);
             manager.createNotificationChannel(serviceChannel);
         }
@@ -101,6 +107,9 @@ public class LocationHelper {
 
         Notification notification = new NotificationCompat.Builder(service, CHANNEL_ID)
                 .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.icon)
+                .setContentTitle("You are close to discover a story!")
+                .setContentText("Location is now active to discovery as soon as you get into the discovery area.")
                 .build();
 
         Log.i ("BgLocation", "Starting notification.");
@@ -110,4 +119,5 @@ public class LocationHelper {
     static void closeNotification( Service service ) {
         service.stopForeground( true );
     }
+
 }

@@ -12,7 +12,7 @@ public class HeadlessJSLocationService extends HeadlessJsTaskService {
     @Override
     public void onHeadlessJsTaskStart(int taskId) {
         super.onHeadlessJsTaskStart(taskId);
-        Log.i("BgLocation", "Starting headless task");
+        Bglog.i( "Starting headless task");
         if( LocationHelper.needForegroundService( getApplicationContext() ) ){
             LocationHelper.openNotification(this );
         }
@@ -21,7 +21,7 @@ public class HeadlessJSLocationService extends HeadlessJsTaskService {
     @Override
     public void onHeadlessJsTaskFinish(int taskId) {
         super.onHeadlessJsTaskFinish(taskId);
-        Log.i("BgLocation", "Headless task finished");
+        Bglog.i( "Headless task finished");
         if( LocationHelper.needForegroundService( getApplicationContext() ) ){
             LocationHelper.closeNotification(this );
         }
@@ -44,6 +44,6 @@ public class HeadlessJSLocationService extends HeadlessJsTaskService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("BgLocation", "Destroying headless service.");
+        Bglog.i( "Destroying headless service.");
     }
 }

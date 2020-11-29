@@ -7,6 +7,7 @@ buildscript {
         compileSdkVersion = 28
         targetSdkVersion = 27
         supportLibVersion = "28.0.0"
+        kotlinVersion = "1.3.72"
     }
     repositories {
         google()
@@ -14,6 +15,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.3.0'
+
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
 
         // For push notifications
         classpath 'com.google.gms:google-services:4.3.3'
