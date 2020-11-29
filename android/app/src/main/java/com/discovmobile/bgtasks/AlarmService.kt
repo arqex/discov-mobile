@@ -10,7 +10,8 @@ import android.os.SystemClock
 class AlarmService: BroadcastReceiver() {
     companion object {
         val POLL_INTERVAL = 60000
-        fun start(context: Context){
+        @JvmStatic
+        fun start(context: Context?){
             Bglog.i("Setting alarm")
 
             // Create intent
@@ -18,7 +19,7 @@ class AlarmService: BroadcastReceiver() {
             val pendingIntent = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
 
             // Alarm manager
-            val manager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val manager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
             // Set alarm
             manager.set(
@@ -38,7 +39,7 @@ class AlarmService: BroadcastReceiver() {
             updateLocation(context)
         }
         // Restart alarm
-        LocationAlarm.start(context)
+        AlarmService.start(context)
     }
 
     fun updateLocation(context: Context){

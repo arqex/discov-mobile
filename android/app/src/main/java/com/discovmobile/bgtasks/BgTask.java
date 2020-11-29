@@ -24,14 +24,14 @@ public class BgTask extends Service {
 
     private void startAlarm() {
         Bglog.i("Starting alarm task");
-        LocationAlarm.start( getApplicationContext() );
+        AlarmService.start( getApplicationContext() );
     }
 
     private void startGeofence() {
         LocationRetriever retriever = new LocationRetriever(new BgLocationListener() {
             @Override
             void onLocation(BgLocation location) {
-                setGeofence( location );
+             GeofenceService.start( getApplicationContext(), location );
             }
         });
 
@@ -45,18 +45,6 @@ public class BgTask extends Service {
 
     private void startWorker() {
         LocationWorker.enqueueWork( getApplicationContext() );
-    }
-
-    private GeofenceHelper geofence;
-    private void setGeofence( BgLocation location ){
-        if( GeofenceHelper.isFenceSet() ) {
-            Bglog.i( "Geofence already set");
-            return;
-        }
-
-        Bglog.i( "Starting geofence");
-        geofence = new GeofenceHelper();
-        geofence.start( getApplicationContext(), location );
     }
 
     @Nullable

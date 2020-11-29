@@ -100,8 +100,8 @@
             android:enabled="true"
             android:exported="true" />
         <service android:name=".bgtasks.HeadlessJSLocationService" />
-        <receiver android:name=".bgtasks.BgAlarmReceiver" />
-        <receiver android:name=".bgtasks.GeofenceHelper" android:exported="true" />
+        <receiver android:name=".bgtasks.AlarmService" />
+        <receiver android:name=".bgtasks.GeofenceService" android:exported="true" />
         <receiver android:name=".bgtasks.ActivityTransitionHelper" android:exported="true" />
       <!--
       <service
