@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.discovmobile.bgtasks.utils.Bglog
 import com.google.android.gms.location.*
 import java.util.*
 
@@ -27,7 +28,7 @@ class ActivityTransitionHelper: BroadcastReceiver() {
             val result = ActivityTransitionResult.extractResult(intent)
             for (event in result!!.transitionEvents) {
                 val activityType = if (event.transitionType == ActivityTransition.ACTIVITY_TRANSITION_ENTER) "still" else "moving"
-                LocationHelper.sendSignalToHeadless(context, "activity_$activityType")
+                HeadlessService.sendSignal(context, "activity_$activityType")
                 Bglog.i("Transitition event! $event")
             }
         } else {

@@ -17,29 +17,13 @@ import androidx.core.content.ContextCompat;
 
 import com.discovmobile.MainActivity;
 import com.discovmobile.R;
-import com.google.gson.Gson;
+import com.discovmobile.bgtasks.utils.Bglog;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class LocationHelper {
     public static final String CHANNEL_ID = "DiscovLocationChannel";
     public static final int NOTIFICATION_ID = 1;
-
-    static void sendSignalToHeadless(Context context, String signal) {
-        Bglog.i( "Sending signal to headless: " + signal);
-        HashMap<String, String> payload = new HashMap<String, String>();
-        payload.put("signal", signal);
-        HeadlessService.send( context, payload );
-    }
-
-    static void sendLocationToHeadless(Context context, BgLocation location, String source) {
-        Bglog.i ("Sending location to headless.");
-        HashMap<String, String> payload = new HashMap<String, String>();
-        payload.put("location", (new Gson()).toJson( location ));
-        payload.put("source", source);
-        HeadlessService.send( context, payload );
-    }
 
     static boolean needForegroundService( Context context ) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !LocationHelper.isAppOnForeground( context );

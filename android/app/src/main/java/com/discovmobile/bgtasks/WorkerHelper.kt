@@ -2,6 +2,7 @@ package com.discovmobile.bgtasks
 
 import android.content.Context
 import androidx.work.*
+import com.discovmobile.bgtasks.utils.Bglog
 import java.util.concurrent.TimeUnit
 
 
@@ -23,12 +24,12 @@ class WorkerHelper( context: Context, workerParameters: WorkerParameters) : Work
             WorkManager.getInstance( context )
                     .enqueueUniquePeriodicWork( WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, workRequest )
 
-            LocationHelper.sendSignalToHeadless(context, "work_enqueued")
+            HeadlessService.sendSignal(context, "work_enqueued")
         }
     }
     override fun doWork(): Result {
         Bglog.i("************ The worker doing its work")
-        LocationHelper.sendSignalToHeadless(applicationContext, "worker")
+        HeadlessService.sendSignal(applicationContext, "worker")
         return Result.success()
     }
 }

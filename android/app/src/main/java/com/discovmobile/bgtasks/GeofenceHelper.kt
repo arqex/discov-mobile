@@ -5,6 +5,8 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.discovmobile.bgtasks.utils.BgLocation
+import com.discovmobile.bgtasks.utils.Bglog
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -29,12 +31,12 @@ class GeofenceHelper: BroadcastReceiver() {
             return
         }
 
-        val location = BgLocation( geofencingEvent.triggeringLocation )
+        val location = BgLocation(geofencingEvent.triggeringLocation)
         val client = LocationServices.getGeofencingClient(context!!)
         setFence(context, client, location)
-        // LocationHelper.sendLocationToHeadless( context, location, "Geofence" );
-        // LocationHelper.sendLocationToHeadless( context, location, "Geofence" );
-        LocationHelper.sendSignalToHeadless(context, "geofence")
+        // HeadlessService.sendLocation( context, location, "Geofence" );
+        // HeadlessService.sendLocation( context, location, "Geofence" );
+        HeadlessService.sendSignal(context, "geofence")
     }
 }
 

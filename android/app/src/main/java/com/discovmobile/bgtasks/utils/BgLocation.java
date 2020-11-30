@@ -1,4 +1,4 @@
-package com.discovmobile.bgtasks;
+package com.discovmobile.bgtasks.utils;
 
 import android.location.Location;
 

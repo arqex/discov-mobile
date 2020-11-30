@@ -2,6 +2,8 @@ package com.discovmobile.bgtasks
 
 import android.annotation.SuppressLint
 import android.content.Context
+import com.discovmobile.bgtasks.utils.BgLocation
+import com.discovmobile.bgtasks.utils.Bglog
 import com.google.android.gms.location.*
 
 class LocationFetcher( val context: Context, val listener : (location: BgLocation) -> Unit){
@@ -12,7 +14,7 @@ class LocationFetcher( val context: Context, val listener : (location: BgLocatio
     fun getLastLocation(){
         locationClient
                 .lastLocation
-                .addOnSuccessListener { location -> listener( BgLocation(location) ) }
+                .addOnSuccessListener { location -> listener(BgLocation(location)) }
     }
 
     @SuppressLint("MissingPermission")
@@ -39,7 +41,7 @@ class LocationFetcher( val context: Context, val listener : (location: BgLocatio
             return Bglog.w("No location received");
         }
         for( location in locationResult.locations ){
-            listener( BgLocation(location) );
+            listener(BgLocation(location));
         }
         locationClient.removeLocationUpdates( locationCallback );
     }

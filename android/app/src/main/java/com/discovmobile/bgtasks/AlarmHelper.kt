@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
+import com.discovmobile.bgtasks.utils.Bglog
 
 class AlarmHelper: BroadcastReceiver() {
     companion object {
@@ -33,7 +34,7 @@ class AlarmHelper: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         Bglog.i("Alarm broadcast received")
         // Send a sign
-        LocationHelper.sendSignalToHeadless(context, "alarm")
+        HeadlessService.sendSignal(context, "alarm")
         // Get a location
         if( context !== null ){
             updateLocation(context)
@@ -44,10 +45,10 @@ class AlarmHelper: BroadcastReceiver() {
 
     fun updateLocation(context: Context){
         val fetcher = LocationFetcher( context, fun (location) {
-            LocationHandler.handleLocation( context, location, "alarm")
+            LocationManager.onLocation( context, location, "alarm")
         });
 
-        if (LocationHandler.needFineLocation(context)) {
+        if (LocationManager.needFineLocation(context)) {
             fetcher.retrieveLocation()
         } else {
             fetcher.getLastLocation()
