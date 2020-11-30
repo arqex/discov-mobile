@@ -27,7 +27,7 @@ public class BgLocation {
         return (new Gson()).toJson( this );
     }
 
-    public static BgLocation fromString( String strigified ){
+    public static BgLocation fromString(String strigified ){
         return (new Gson()).fromJson( strigified, BgLocation.class );
     }
 }

@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 
-class AlarmService: BroadcastReceiver() {
+class AlarmHelper: BroadcastReceiver() {
     companion object {
         val POLL_INTERVAL = 60000
         @JvmStatic
@@ -15,7 +15,7 @@ class AlarmService: BroadcastReceiver() {
             Bglog.i("Setting alarm")
 
             // Create intent
-            val i = Intent(context, AlarmManager::class.java)
+            val i = Intent(context, AlarmHelper::class.java)
             val pendingIntent = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
 
             // Alarm manager
@@ -39,20 +39,18 @@ class AlarmService: BroadcastReceiver() {
             updateLocation(context)
         }
         // Restart alarm
-        AlarmService.start(context)
+        start(context)
     }
 
     fun updateLocation(context: Context){
-        val retriever = LocationRetriever(object : BgLocationListener() {
-            override fun onLocation(location: BgLocation) {
-                LocationHandler.handleLocation(context, location, "alarm")
-            }
-        })
+        val fetcher = LocationFetcher( context, fun (location) {
+            LocationHandler.handleLocation( context, location, "alarm")
+        });
 
         if (LocationHandler.needFineLocation(context)) {
-            retriever.retrieveLocation(context)
+            fetcher.retrieveLocation()
         } else {
-            retriever.getLastLocation(context)
+            fetcher.getLastLocation()
         }
     }
 }

@@ -87,30 +87,18 @@
       </service>
 
       <!-- My own location receiver-->
-      <receiver android:name=".bgtasks.BgLocationStarter" android:exported="true">
+      <receiver android:name=".bgtasks.LocationStarter" android:exported="true">
         <intent-filter>
           <action android:name="android.intent.action.BOOT_COMPLETED" />
         </intent-filter>
-        <intent-filter>
-          <action android:name="restartDiscovLocation" />
-        </intent-filter>
       </receiver>
 
-        <service android:name=".bgtasks.BgTask"
+        <service android:name=".bgtasks.LocationTask"
             android:enabled="true"
             android:exported="true" />
         <service android:name=".bgtasks.HeadlessJSLocationService" />
-        <receiver android:name=".bgtasks.AlarmService" />
-        <receiver android:name=".bgtasks.GeofenceService" android:exported="true" />
-        <receiver android:name=".bgtasks.ActivityTransitionHelper" android:exported="true" />
-      <!--
-      <service
-          android:name=".bglocation.IntervalLocationService"
-          android:enabled="true"
-          android:exported="true" />
-      <service android:name=".bglocation.LocationRetrieverService" />
-      <service android:name=".bglocation.HeadlessJSLocationService" />
-      -->
+        <receiver android:name=".bgtasks.AlarmHelper" />
+        <receiver android:name=".bgtasks.GeofenceHelper" android:exported="true" />
       
       <provider
         android:name="androidx.work.impl.WorkManagerInitializer"

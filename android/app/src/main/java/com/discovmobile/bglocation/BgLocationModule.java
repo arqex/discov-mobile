@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
 
-import com.discovmobile.bgtasks.BgTask;
-import com.facebook.react.bridge.Arguments;
+import com.discovmobile.bgtasks.LocationTask;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -16,15 +15,11 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static com.discovmobile.bglocation.IntervalLocationService.LOCATION_EVENT_DATA_NAME;
 
-public class BgLocationModule extends ReactContextBaseJavaModule implements LocationEventReceiver, JSEventSender {
+public class BgLocationModule extends ReactContextBaseJavaModule implements JSEventSender {
     private static final String MODULE_NAME = "BgLocation";
     private static final String CONST_JS_LOCATION_EVENT_NAME = "JS_LOCATION_EVENT_NAME";
     private static final String CONST_JS_LOCATION_LAT = "JS_LOCATION_LAT_KEY";
@@ -44,7 +39,7 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
 
         mContext = reactContext;
         //mIntervalLocationServiceIntent = new Intent(mContext, IntervalLocationService.class);mAlarmTaskServiceIntent;
-        mAlarmTaskServiceIntent = new Intent(mContext, BgTask.class);
+        mAlarmTaskServiceIntent = new Intent(mContext, LocationTask.class);
         mGson = new Gson();
         // createEventReceiver();
         // registerEventReceiver();
@@ -62,52 +57,10 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements Loca
         mContext.stopService(mAlarmTaskServiceIntent);
     }
 
-    @Nullable
-    @Override
-    public Map<String, Object> getConstants() {
-        final Map<String, Object> constants = new HashMap<>();
-        constants.put(CONST_JS_LOCATION_EVENT_NAME, IntervalLocationService.JS_LOCATION_EVENT_NAME);
-        constants.put(CONST_JS_LOCATION_LAT, IntervalLocationService.JS_LOCATION_LAT_KEY);
-        constants.put(CONST_JS_LOCATION_LON, IntervalLocationService.JS_LOCATION_LON_KEY);
-        constants.put(CONST_JS_LOCATION_TIME, IntervalLocationService.JS_LOCATION_TIME_KEY);
-        return constants;
-    }
-
     @Nonnull
     @Override
     public String getName() {
         return MODULE_NAME;
-    }
-
-    @Override
-    public void createEventReceiver() {
-        mEventReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                LocationCoordinates locationCoordinates = mGson.fromJson(
-                        intent.getStringExtra(LOCATION_EVENT_DATA_NAME), LocationCoordinates.class);
-                WritableMap eventData = Arguments.createMap();
-                eventData.putDouble(
-                        IntervalLocationService.JS_LOCATION_LAT_KEY,
-                        locationCoordinates.getLatitude());
-                eventData.putDouble(
-                        IntervalLocationService.JS_LOCATION_LON_KEY,
-                        locationCoordinates.getLongitude());
-                eventData.putDouble(
-                        IntervalLocationService.JS_LOCATION_TIME_KEY,
-                        locationCoordinates.getTimestamp());
-                // if you actually want to send events to JS side, it needs to be in the "Module"
-                sendEventToJS(getReactApplicationContext(),
-                        IntervalLocationService.JS_LOCATION_EVENT_NAME, eventData);
-            }
-        };
-    }
-
-    @Override
-    public void registerEventReceiver() {
-        IntentFilter eventFilter = new IntentFilter();
-        eventFilter.addAction(IntervalLocationService.LOCATION_EVENT_NAME);
-        mContext.registerReceiver(mEventReceiver, eventFilter);
     }
 
     @Override

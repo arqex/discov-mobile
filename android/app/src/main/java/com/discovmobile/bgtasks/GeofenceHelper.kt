@@ -9,10 +9,10 @@ import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 
-class GeofenceService: BroadcastReceiver() {
+class GeofenceHelper: BroadcastReceiver() {
     companion object {
         @JvmStatic
-        fun start( context: Context, location: BgLocation ){
+        fun start( context: Context, location: BgLocation){
             Bglog.i("Start geofencing signal received")
             val client = LocationServices.getGeofencingClient(context)
             setFence(context, client, location)
@@ -29,7 +29,7 @@ class GeofenceService: BroadcastReceiver() {
             return
         }
 
-        val location = BgLocation(geofencingEvent.triggeringLocation)
+        val location = BgLocation( geofencingEvent.triggeringLocation )
         val client = LocationServices.getGeofencingClient(context!!)
         setFence(context, client, location)
         // LocationHelper.sendLocationToHeadless( context, location, "Geofence" );
@@ -71,6 +71,6 @@ private fun getRequest(fence: Geofence): GeofencingRequest{
 }
 
 private fun getPendingIntent(context: Context?): PendingIntent{
-    val intent = Intent(context, GeofenceService::class.java)
+    val intent = Intent(context, GeofenceHelper::class.java)
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 }

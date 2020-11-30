@@ -2,7 +2,6 @@ package com.discovmobile.bgtasks
 
 import android.content.Context
 import android.content.SharedPreferences
-import java.util.*
 
 class Storage {
     companion object {
