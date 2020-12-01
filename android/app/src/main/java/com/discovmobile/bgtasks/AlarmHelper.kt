@@ -10,14 +10,16 @@ import com.discovmobile.bgtasks.utils.Bglog
 
 class AlarmHelper: BroadcastReceiver() {
     companion object {
-        val POLL_INTERVAL = 60000
+        final val ALARM_ID = 0
+        final val POLL_INTERVAL = 60000
+
         @JvmStatic
         fun start(context: Context?){
             Bglog.i("Setting alarm")
 
             // Create intent
             val i = Intent(context, AlarmHelper::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, i, PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(context, ALARM_ID, i, PendingIntent.FLAG_UPDATE_CURRENT)
 
             // Alarm manager
             val manager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager

@@ -8,10 +8,7 @@ import com.discovmobile.bgtasks.utils.Bglog
 class LocationTask: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Bglog.i("Starting location service")
-        AlarmHelper.start( applicationContext )
-        ActivityTransitionHelper.start( applicationContext )
-        WorkerHelper.start( applicationContext )
-        startGeofence()
+        LocationStarter.startAll( applicationContext );
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -23,11 +20,5 @@ class LocationTask: Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null;
-    }
-
-    fun startGeofence() {
-        LocationFetcher( applicationContext, fun(location) {
-            GeofenceHelper.start( applicationContext, location )
-        }).retrieveLocation()
     }
 }

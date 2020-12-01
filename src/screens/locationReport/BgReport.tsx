@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, ScrollView, FlatList } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Wrapper } from '../../components';
+import { Wrapper, Button } from '../../components';
+import { log } from '../../utils/logger';
 
 export default class LocationReport extends Component<ScreenProps> {
 	render() {
@@ -11,6 +12,7 @@ export default class LocationReport extends Component<ScreenProps> {
 		return (
 			<Wrapper padding="40 10">
 				<Text>Logs</Text>
+				<Button onPress={ this._sendLastLocation }>Send last location to server</Button>
 				<FlatList contentContainerStyle={styles.container}
 					data={ logs }
 					renderItem={ this._renderLog }
@@ -41,17 +43,32 @@ export default class LocationReport extends Component<ScreenProps> {
 	renderItems( items ){
 		if( items && items.map ){
 			return (
-				<View style={ styles.items }>
+				<ScrollView horizontal style={ styles.items }>
 					{ items.map( it => <Text style={styles.item}>{it}</Text> ) }
-				</View>
+				</ScrollView>
 			);
 		}
 		else {
 			return (
-				<View style={ styles.items }>
+				<ScrollView horizontal style={ styles.items }>
 					<Text>{ JSON.stringify( items ) }</Text>
-				</View>
+				</ScrollView>
 			)
+		}
+	}
+
+	_sendLastLocation = () => {
+		let lastLocation = this.props.store.currentPosition;
+
+		if( lastLocation.coords ){
+			this.props.actions.discovery.discoverAround(lastLocation.coords)
+				.then( res => {
+					log('Last location ok');
+				})
+				.catch( err => {
+					log('Error last location', err);
+				})
+			;
 		}
 	}
 }

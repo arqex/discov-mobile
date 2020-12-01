@@ -9,10 +9,13 @@ class LocationManager {
     @JvmStatic
     fun onLocation(context: Context, location: BgLocation, source: String) {
       val lastLocation = Storage.getLastLocation(context)
-      if(needToUpdateLocation(lastLocation, location)){
+      if( needToUpdateLocation(lastLocation, location) ){
         HeadlessService.sendLocation( context, location, source )
         Storage.setLastLocation( context, location )
+        GeofenceHelper.start( context, location )
+        MovementHelper.reportMoving(context)
       }
+      MovementHelper.reportStill(context)
     }
 
     @JvmStatic

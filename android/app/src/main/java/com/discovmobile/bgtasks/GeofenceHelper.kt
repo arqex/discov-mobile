@@ -24,19 +24,21 @@ class GeofenceHelper: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         Bglog.i("Geofence event received")
         val geofencingEvent = GeofencingEvent.fromIntent(intent)
-
         if (geofencingEvent.hasError()) {
-            val errorMessage = GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode)
-            Bglog.e(errorMessage)
+            Bglog.e(GeofenceStatusCodes.getStatusCodeString(geofencingEvent.errorCode))
             return
         }
 
         val location = BgLocation(geofencingEvent.triggeringLocation)
         val client = LocationServices.getGeofencingClient(context!!)
         setFence(context, client, location)
-        // HeadlessService.sendLocation( context, location, "Geofence" );
-        // HeadlessService.sendLocation( context, location, "Geofence" );
         HeadlessService.sendSignal(context, "geofence")
+        HeadlessService.sendLocation( context, location, "Geofence" )
+
+        // Restart background tasks, but the geofence
+        LocationStarter.startAll( context, true );
+        // Report moving
+        MovementHelper.reportMoving(context)
     }
 }
 
@@ -44,7 +46,8 @@ private val FENCE_NAME = "discov_geofence"
 
 @SuppressLint("MissingPermission")
 private fun setFence(context: Context?, client: GeofencingClient, location: BgLocation){
-    val fence = Geofence.Builder() // Set the request ID of the geofence. This is a string to identify this
+    val fence = Geofence.Builder()
+            // Set the request ID of the geofence. This is a string to identify this
             // geofence.
             .setRequestId(FENCE_NAME)
             .setCircularRegion(location.latitude, location.longitude, 100f)
