@@ -7,8 +7,8 @@ import com.discovmobile.bgtasks.utils.Bglog
 import com.google.android.gms.location.*
 
 class LocationFetcher( val context: Context, val listener : (location: BgLocation) -> Unit){
-    val locationCallback = createLocationRequestCallback()
-    val locationClient = LocationServices.getFusedLocationProviderClient(context)
+    private val locationCallback = createLocationRequestCallback()
+    private val locationClient = LocationServices.getFusedLocationProviderClient(context)
 
     @SuppressLint("MissingPermission")
     fun getLastLocation(){
@@ -28,7 +28,7 @@ class LocationFetcher( val context: Context, val listener : (location: BgLocatio
                 .requestLocationUpdates( locationRequest, locationCallback, null )
     }
 
-    fun createLocationRequestCallback(): LocationCallback {
+    private fun createLocationRequestCallback(): LocationCallback {
         return object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 onLocationReceived(locationResult)

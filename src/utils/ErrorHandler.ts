@@ -25,7 +25,7 @@ export function errorHandler( e, isFatal ) {
 	let message = e && (e.stack || e.message) || 'No error message';
 	let payload = {
 		type: isFatal ? 'mobileError' : 'mobileFatal',
-		location: router.location,
+		location: router && router.location,
 		platform: {
 			os: Platform.OS,
 			version: Platform.Version

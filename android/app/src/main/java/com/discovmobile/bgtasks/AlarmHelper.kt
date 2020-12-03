@@ -5,8 +5,10 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.SystemClock
 import com.discovmobile.bgtasks.utils.Bglog
+
 
 class AlarmHelper: BroadcastReceiver() {
     companion object {
@@ -35,19 +37,22 @@ class AlarmHelper: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         Bglog.i("Alarm broadcast received")
+
         // Send a sign
         HeadlessService.sendSignal(context, "alarm")
+
         // Get a location
         if( context !== null ){
             updateLocation(context)
         }
+
         // Restart alarm
         start(context)
     }
 
     fun updateLocation(context: Context){
-        val fetcher = LocationFetcher( context, fun (location) {
-            LocationManager.onLocation( context, location, "alarm")
+        val fetcher = LocationFetcher(context, fun(location) {
+            LocationManager.onLocation(context, location, "alarm")
         });
 
         if (LocationManager.needFineLocation(context)) {
@@ -55,5 +60,11 @@ class AlarmHelper: BroadcastReceiver() {
         } else {
             fetcher.getLastLocation()
         }
+    }
+
+    private fun isNetworkAvailable( context: Context?): Boolean {
+        val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+        val activeNetworkInfo = connectivityManager?.activeNetworkInfo
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected
     }
 }

@@ -1,9 +1,7 @@
 package com.discovmobile.bglocation;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.util.Log;
 
 import com.discovmobile.bgtasks.LocationTask;
@@ -13,7 +11,6 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.google.gson.Gson;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,10 +24,7 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements JSEv
     private static final String CONST_JS_LOCATION_TIME = "JS_LOCATION_TIME_KEY";
 
     private Context mContext;
-    // private Intent mIntervalLocationServiceIntent;
     private Intent mAlarmTaskServiceIntent;
-    private BroadcastReceiver mEventReceiver;
-    private Gson mGson;
 
     BgLocationModule(@Nonnull ReactApplicationContext reactContext) {
         super(reactContext);
@@ -38,11 +32,7 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements JSEv
         Log.i ("BgLocation", "Creating bg location module.");
 
         mContext = reactContext;
-        //mIntervalLocationServiceIntent = new Intent(mContext, IntervalLocationService.class);mAlarmTaskServiceIntent;
         mAlarmTaskServiceIntent = new Intent(mContext, LocationTask.class);
-        mGson = new Gson();
-        // createEventReceiver();
-        // registerEventReceiver();
         startBackgroundLocation();
     }
 
