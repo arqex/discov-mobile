@@ -1,11 +1,15 @@
 package com.discovmobile.bgtasks
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import com.discovmobile.bgtasks.utils.*
 import java.util.*
 
 class LocationManager {
   companion object {
+    val FINE_LOCATION_INTERVAL = 2 * 60 * 60 * 1000 // Two hours
+
     @JvmStatic
     fun onLocation(context: Context, location: BgLocation, source: String) {
       val lastLocation = Storage.getLastLocation(context)
@@ -32,8 +36,14 @@ class LocationManager {
       if( lastLocation == null ) return true
 
       val diff = Date().time - lastLocation.timestamp;
-      Bglog.i("Time difference $diff")
-      return false;
+      Bglog.i("Time difference $diff");
+
+      return MovementHelper.isMoving( context ) // || diff > 2 * FINE_LOCATION_INTERVAL;
     }
   }
+}
+
+fun getActiveNetwork(context: Context): NetworkInfo? {
+  val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+  return cm.activeNetworkInfo
 }

@@ -52,10 +52,22 @@ class Storage {
             return getStore( context ).getLong("lastMovingAt", 0);
         }
         @JvmStatic
-        fun setLastMovingAt( context: Context, timestamp: Long ){
-            getStore( context )
+        fun setLastMovingAt( context: Context, timestamp: Long ) {
+            getStore(context)
                     .edit()
                     .putLong("lastMovingAt", timestamp)
+                    .apply()
+        }
+
+        @JvmStatic
+        fun getLastNetworkConnectionType( context: Context ): Long{
+            return getStore( context ).getLong("lastConnectionType", 0);
+        }
+        @JvmStatic
+        fun setLastNetworkConnectionType( context: Context, timestamp: Long ){
+            getStore( context )
+                    .edit()
+                    .putLong("lastConnectionType", timestamp)
                     .apply()
         }
     }
