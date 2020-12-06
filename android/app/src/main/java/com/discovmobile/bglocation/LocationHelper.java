@@ -1,4 +1,4 @@
-package com.discovmobile.bgtasks;
+package com.discovmobile.bglocation;
 
 import android.Manifest;
 import android.app.ActivityManager;
@@ -17,7 +17,7 @@ import androidx.core.content.ContextCompat;
 
 import com.discovmobile.MainActivity;
 import com.discovmobile.R;
-import com.discovmobile.bgtasks.utils.Bglog;
+import com.discovmobile.bglocation.utils.Bglog;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class LocationHelper {
     public static final String CHANNEL_ID = "DiscovLocationChannel";
     public static final int NOTIFICATION_ID = 1;
 
-    static boolean needForegroundService( Context context ) {
+    static public boolean needForegroundService( Context context ) {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !LocationHelper.isAppOnForeground( context );
     }
 

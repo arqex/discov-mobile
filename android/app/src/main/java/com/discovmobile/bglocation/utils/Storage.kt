@@ -1,4 +1,4 @@
-package com.discovmobile.bgtasks.utils
+package com.discovmobile.bglocation.utils
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -14,7 +14,7 @@ class Storage {
         fun getLastLocation( context: Context ): BgLocation? {
             val location = getStore(context).getString("lastLocation", null );
             if( location == null ) return null;
-            return BgLocation.fromString( location );
+            return BgLocation.fromString(location);
         }
         @JvmStatic
         fun setLastLocation( context: Context, location: BgLocation){
@@ -60,15 +60,65 @@ class Storage {
         }
 
         @JvmStatic
-        fun getLastNetworkConnectionType( context: Context ): Long{
-            return getStore( context ).getLong("lastConnectionType", 0);
+        fun getLastNetworkConnectionType( context: Context ): String {
+            return getStore( context ).getString("lastConnectionType", "none");
         }
         @JvmStatic
-        fun setLastNetworkConnectionType( context: Context, timestamp: Long ){
+        fun setLastNetworkConnectionType( context: Context, networkType: String ){
             getStore( context )
                     .edit()
-                    .putLong("lastConnectionType", timestamp)
+                    .putString("lastConnectionType", networkType)
                     .apply()
         }
+        @JvmStatic
+        fun getLastLocationSource( context: Context ): String {
+            return getStore( context ).getString("lastLocationSource", "none");
+        }
+        @JvmStatic
+        fun setLastLocationSource( context: Context, networkType: String ){
+            getStore( context )
+                    .edit()
+                    .putString("lastLocationSource", networkType)
+                    .apply()
+        }
+
+        @JvmStatic
+        fun getDistanceToDiscovery( context: Context ): Float {
+            return getStore( context ).getFloat("distanceToDiscovery", -1f);
+        }
+        @JvmStatic
+        fun setDistanceToDiscovery( context: Context, networkType: Float ){
+            getStore( context )
+                    .edit()
+                    .putFloat("distanceToDiscovery", networkType)
+                    .apply()
+        }
+
+        @JvmStatic
+        fun getTrackingMode( context: Context ): Int {
+            return getStore( context ).getInt("trackingMode", 2);
+        }
+        @JvmStatic
+        fun setTrackingMode( context: Context, networkType: Int ){
+            getStore( context )
+                    .edit()
+                    .putInt("trackingMode", networkType)
+                    .apply()
+        }
+
+        @JvmStatic
+        fun getTrackingDismissedAt( context: Context ): Long {
+            return getStore( context ).getLong("trackingDismissedAt", 0);
+        }
+        @JvmStatic
+        fun setTrackingDismissedAt( context: Context, timestamp: Long ){
+            getStore( context )
+                    .edit()
+                    .putLong("trackingDismissedAt", timestamp)
+                    .apply()
+        }
+
+
+
     }
 }

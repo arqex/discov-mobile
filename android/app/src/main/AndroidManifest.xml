@@ -87,18 +87,19 @@
       </service>
 
       <!-- My own location receiver-->
-      <receiver android:name=".bgtasks.LocationStarter" android:exported="true">
+      <receiver android:name=".bglocation.LocationStarter" android:exported="true">
         <intent-filter>
           <action android:name="android.intent.action.BOOT_COMPLETED" />
         </intent-filter>
       </receiver>
 
-        <service android:name=".bgtasks.LocationTask"
+        <service android:name=".bglocation.LocationTask"
             android:enabled="true"
             android:exported="true" />
-        <service android:name=".bgtasks.HeadlessService" />
-        <receiver android:name=".bgtasks.AlarmHelper" />
-        <receiver android:name=".bgtasks.GeofenceHelper" android:exported="true" />
+        <service android:name=".bglocation.HeadlessService" />
+        <service android:name=".bglocation.TrackHelper" />
+        <receiver android:name=".bglocation.AlarmHelper" />
+        <receiver android:name=".bglocation.GeofenceHelper" android:exported="true" />
       
       <provider
         android:name="androidx.work.impl.WorkManagerInitializer"

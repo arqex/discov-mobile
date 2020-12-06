@@ -1,19 +1,21 @@
-package com.discovmobile.bgtasks
+package com.discovmobile.bglocation
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.discovmobile.bgtasks.utils.Bglog
-import com.discovmobile.bgtasks.utils.Storage
+import com.discovmobile.bglocation.utils.Bglog
+import com.discovmobile.bglocation.utils.Storage
 import com.google.android.gms.location.*
 import java.util.*
+import kotlin.collections.HashMap
 
 class MovementHelper: BroadcastReceiver() {
     companion object {
         const val STILL = 0
         const val MOVING = 1
         val MOVEMENT_INERTIA = 5 * 60 * 1000
+        val clbks = HashMap<String, (mode: Int) -> Unit>()
 
         @JvmStatic
         fun start( context: Context ) {
@@ -35,6 +37,9 @@ class MovementHelper: BroadcastReceiver() {
         fun reportMoving( context: Context ){
             if( !isMoving(context) ){
                 Storage.setMovingState( context, MOVING);
+                for( entry in clbks ){
+                    entry.value( MOVING );
+                }
             }
             Storage.setLastMovingAt( context, Date().time );
         }
@@ -45,12 +50,25 @@ class MovementHelper: BroadcastReceiver() {
                 val lastMovingAt = Storage.getLastMovingAt(context)
                 if( lastMovingAt + MOVEMENT_INERTIA < Date().time ){
                     // After the inertia we confirm we are still
-                    Storage.setMovingState(context, STILL);
+                    Storage.setMovingState(context, STILL)
+                    for( entry in clbks ){
+                        entry.value( STILL );
+                    }
                     return false
                 }
                 return true
             }
             return false
+        }
+
+        @JvmStatic
+        fun addChangeListener( key: String, clbk: (mode: Int) -> Unit ){
+            clbks.set(key, clbk)
+        }
+
+        @JvmStatic
+        fun removeChangeListener( key: String ){
+            clbks.remove(key)
         }
     }
 
@@ -79,7 +97,7 @@ class MovementHelper: BroadcastReceiver() {
         }
 
         // Make sure bg tasks are alive
-        LocationStarter.startAll( context, true );
+        LocationStarter.startAll(context, true);
     }
 }
 

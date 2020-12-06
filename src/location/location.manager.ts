@@ -4,7 +4,7 @@ import storeService from '../state/store.service';
 import { dataService } from '../services/data.service';
 import serverMessageService from '../services/serverMessage/serverMessage.service';
 import { log } from '../utils/logger';
-import { AppState } from 'react-native';
+import { AppState, NativeModules } from 'react-native';
 import * as Location from 'expo-location';
 
 let hasPendingDiscoveries = true;
@@ -65,11 +65,11 @@ function checkDiscoveries(location) {
 	log('----- Getting discoveries!');
 	return dataService.getActions().discovery.discoverAround(location)
 		.then(res => onDiscoveryResponse(res, location))
-		.then(() => {
+		.then(res => {
 			log('----- End location update');
-			return { error: false };
+			return { error: res && res.error || false };
 		})
-		;
+	;
 }
 
 const STALE_UPDATE_TIME = 5 * 60 * 1000;
@@ -82,7 +82,7 @@ function onDiscoveryResponse(res, location) {
 	console.log('On discovery response');
 
 
-	if (!res || !res.discoveries) return;
+	if (!res || !res.discoveries) return {error: "discovery_error"};
 
 	// Notify new discoveries 
 	if (res.discoveries && res.discoveries.length) {
@@ -94,6 +94,8 @@ function onDiscoveryResponse(res, location) {
 	}
 
 	const distanceToDiscovery = res.closestDiscoveryDistance;
+
+	NativeModules.BgLocation.setDistanceToDiscovery( distanceToDiscovery );
 
 	hasPendingDiscoveries = distanceToDiscovery !== -1;
 	lastUpdate = Date.now();

@@ -1,10 +1,10 @@
-package com.discovmobile.bgtasks
+package com.discovmobile.bglocation
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import com.discovmobile.bgtasks.utils.BgLocation
-import com.discovmobile.bgtasks.utils.Bglog
+import com.discovmobile.bglocation.utils.BgLocation
+import com.discovmobile.bglocation.utils.Bglog
 import com.facebook.react.HeadlessJsTaskService
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.jstasks.HeadlessJsTaskConfig
@@ -25,7 +25,7 @@ class HeadlessService: HeadlessJsTaskService() {
             }
 
             intent.putExtras(bundle);
-            if( LocationHelper.needForegroundService(context) ){
+            if(LocationHelper.needForegroundService(context)){
                 Bglog.i("Starting headless service as foreground")
                 context.startForegroundService(intent)
             }
@@ -51,15 +51,15 @@ class HeadlessService: HeadlessJsTaskService() {
     override fun onHeadlessJsTaskStart(taskId: Int) {
         super.onHeadlessJsTaskStart(taskId)
         Bglog.i("Starting headless task")
-        if( LocationHelper.needForegroundService( applicationContext ) ){
-            LocationHelper.openNotification( this )
+        if(LocationHelper.needForegroundService(applicationContext)){
+            LocationHelper.openNotification(this)
         }
     }
 
     override fun onHeadlessJsTaskFinish(taskId: Int) {
         super.onHeadlessJsTaskFinish(taskId)
         Bglog.i("Headless task finished")
-        if( LocationHelper.needForegroundService(applicationContext)){
+        if(LocationHelper.needForegroundService(applicationContext)){
             LocationHelper.closeNotification(this)
         }
     }

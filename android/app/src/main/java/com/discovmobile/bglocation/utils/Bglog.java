@@ -1,4 +1,4 @@
-package com.discovmobile.bgtasks.utils;
+package com.discovmobile.bglocation.utils;
 
 import android.util.Log;
 

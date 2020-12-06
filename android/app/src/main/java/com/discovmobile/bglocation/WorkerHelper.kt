@@ -1,8 +1,8 @@
-package com.discovmobile.bgtasks
+package com.discovmobile.bglocation
 
 import android.content.Context
 import androidx.work.*
-import com.discovmobile.bgtasks.utils.Bglog
+import com.discovmobile.bglocation.utils.Bglog
 import java.util.concurrent.TimeUnit
 
 
@@ -31,7 +31,7 @@ class WorkerHelper( context: Context, workerParameters: WorkerParameters) : Work
         Bglog.i("************ The worker doing its work")
         HeadlessService.sendSignal(applicationContext, "worker");
         // Make sure bg tasks are alive
-        LocationStarter.startAll( applicationContext, true );
+        LocationStarter.startAll(applicationContext, true);
         return Result.success()
     }
 }

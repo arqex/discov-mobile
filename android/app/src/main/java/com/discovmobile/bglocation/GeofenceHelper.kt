@@ -1,12 +1,12 @@
-package com.discovmobile.bgtasks
+package com.discovmobile.bglocation
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.discovmobile.bgtasks.utils.BgLocation
-import com.discovmobile.bgtasks.utils.Bglog
+import com.discovmobile.bglocation.utils.BgLocation
+import com.discovmobile.bglocation.utils.Bglog
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
@@ -33,10 +33,10 @@ class GeofenceHelper: BroadcastReceiver() {
         val client = LocationServices.getGeofencingClient(context!!)
         setFence(context, client, location)
         HeadlessService.sendSignal(context, "geofence")
-        HeadlessService.sendLocation( context, location, "Geofence" )
+        HeadlessService.sendLocation(context, location, "Geofence")
 
         // Restart background tasks, but the geofence
-        LocationStarter.startAll( context, true );
+        LocationStarter.startAll(context, true);
         // Report moving
         MovementHelper.reportMoving(context)
     }

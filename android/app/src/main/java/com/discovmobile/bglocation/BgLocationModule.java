@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.discovmobile.bgtasks.LocationTask;
+import com.discovmobile.bglocation.utils.Bglog;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -40,6 +40,12 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements JSEv
     public void startBackgroundLocation() {
         Log.i ("BgLocation", "Trying to init the interval location service.");
         mContext.startService( mAlarmTaskServiceIntent );
+    }
+
+    @ReactMethod
+    public void setDistanceToDiscovery(double distance) {
+        Bglog.i("Distance to discovery " + distance );
+        LocationManager.onDistanceToDiscovery( mContext, distance );
     }
 
     @ReactMethod

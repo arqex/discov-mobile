@@ -1,4 +1,4 @@
-package com.discovmobile.bgtasks
+package com.discovmobile.bglocation
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.SystemClock
-import com.discovmobile.bgtasks.utils.Bglog
+import com.discovmobile.bglocation.utils.Bglog
 
 
 class AlarmHelper: BroadcastReceiver() {
@@ -41,9 +41,12 @@ class AlarmHelper: BroadcastReceiver() {
         // Send a sign
         HeadlessService.sendSignal(context, "alarm")
 
-        // Get a location
         if( context !== null ){
-            updateLocation(context)
+            // Get a location
+            val trackingMode = TrackHelper.getMode(context);
+            if( trackingMode == TrackHelper.MODE_PASSIVE ){
+                updateLocation(context);
+            }
         }
 
         // Restart alarm
@@ -51,11 +54,13 @@ class AlarmHelper: BroadcastReceiver() {
     }
 
     fun updateLocation(context: Context){
+        var type = "coarse";
         val fetcher = LocationFetcher(context, fun(location) {
-            LocationManager.onLocation(context, location, "alarm")
+            LocationManager.onLocation(context, location, "alarm:$type")
         });
 
         if (LocationManager.needFineLocation(context)) {
+            type = "fine";
             fetcher.retrieveLocation()
         } else {
             fetcher.getLastLocation()

@@ -1,9 +1,9 @@
-package com.discovmobile.bgtasks
+package com.discovmobile.bglocation
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.discovmobile.bgtasks.utils.Bglog
+import com.discovmobile.bglocation.utils.Bglog
 
 class LocationStarter: BroadcastReceiver() {
     companion object {
@@ -23,12 +23,12 @@ class LocationStarter: BroadcastReceiver() {
 
         @JvmStatic
         fun startAlarm( context: Context ){
-            AlarmHelper.start( context );
+            AlarmHelper.start(context);
         }
 
         @JvmStatic
         fun startActivityTransitions( context: Context ){
-            MovementHelper.start( context )
+            MovementHelper.start(context)
         }
 
         @JvmStatic
