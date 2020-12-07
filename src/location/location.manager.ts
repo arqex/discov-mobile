@@ -19,6 +19,11 @@ locationService.addListener( (result, source) => {
 		id: getRandomId()
 	};
 
+	serverMessageService.open({
+		title: 'El titulito',
+		message: 'Aquí la descripción'
+	});
+
 	log('----- Receiving location');
 	// Render location available in the store for the rest of the app
 	storeService.addLocationReportOld(location, false);
@@ -118,13 +123,13 @@ function onDiscoveryResponse(res, location) {
 	updateFences(location, distanceToDiscovery - ACTIVE_RADIUS);
 }
 
-// Five seconds without requesting new discoveries
-const REQUEST_PAUSE = 5000;
-let lastRequested;
+// Ten seconds without requesting new discoveries
+const REQUEST_PAUSE = 10000;
 function inRequestPause() {
 	let now = Date.now();
+	let lastRequested = storeService.getDiscoveriesLastRequestedAt();
 	if (!lastRequested || now - lastRequested > REQUEST_PAUSE) {
-		lastRequested = now;
+		storeService.setDiscoveriesLastRequestedAt(now);
 		return true;
 	}
 	return false;
@@ -162,7 +167,7 @@ function fenceContainsFence(container, fence) {
 function destroyFences() {
 	log('Destroying fences');
 	passiveFence = false;
-	lastRequested = 0;
+	storeService.setDiscoveriesLastRequestedAt(0);
 }
 
 function createFences(circle) {

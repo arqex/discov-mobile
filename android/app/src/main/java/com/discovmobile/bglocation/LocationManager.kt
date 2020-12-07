@@ -148,7 +148,9 @@ fun tryDummyRequest(context: Context){
               Bglog.i("OKOKOK Dummy request ok")
             } else {
               Bglog.w("^^^ Dummy request error")
-              Bglog.e(it.message)
+              if( it?.message != null ){
+                Bglog.e(it.message)
+              }
             }
           }
    )

@@ -302,6 +302,14 @@ export default {
 		return store.user.account && store.user.account.extra.needOnboarding;
 	},
 
+	getDiscoveriesLastRequestedAt(){
+		return store.discoveriesLastRequestedAt || 0;
+	},
+
+	setDiscoveriesLastRequestedAt( time ){
+		store.discoveriesLastRequestedAt = time;
+	},
+
 	resetStore() {
 		this.invalidateFollowers();
 		this.invalidateFollowing();

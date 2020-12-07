@@ -24,7 +24,9 @@ class MovementHelper: BroadcastReceiver() {
                     .addOnSuccessListener { Bglog.i("Activity recognizer added properly.") }
                     .addOnFailureListener { e ->
                         Bglog.i("Error adding activity recognizer.")
-                        Bglog.e(e.message)
+                        if( e?.message != null ){
+                            Bglog.e(e.message)
+                        }
                     }
         }
 

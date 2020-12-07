@@ -60,8 +60,10 @@ private fun setFence(context: Context?, client: GeofencingClient, location: BgLo
         client.addGeofences(getRequest(fence), getPendingIntent(context))
                 .addOnSuccessListener(OnSuccessListener<Void?> { Bglog.i("Geofence added properly.") })
                 .addOnFailureListener(OnFailureListener { e ->
-                    Bglog.i("Error adding geofence.")
-                    Bglog.e(e.message)
+                    Bglog.w("Error adding geofence.")
+                    if( e?.message != null ){
+                        Bglog.e(e.message)
+                    }
                 })
     } else {
         Bglog.i("Permission not granted for geofence")

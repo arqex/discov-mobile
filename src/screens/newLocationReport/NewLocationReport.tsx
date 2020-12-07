@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Dimensions, FlatList} from 'react-native';
+import { Text, View, StyleSheet, Dimensions, FlatList, TouchableHighlight} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import { Bg } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
@@ -9,6 +9,10 @@ interface NewLocationReportProps extends ScreenProps {};
 let windowWidth = Dimensions.get('window').width;
 const bgColors = ['#ffffff', '#fafafa'];
 class NewLocationReport extends React.Component<NewLocationReportProps> {
+	state = {
+		selectedLocation: false
+	}
+
 	render() {
 		let locations = this.getLocations();
 		let initialRegion;
@@ -50,7 +54,7 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 			let coords = location.coords ? location.coords : location
 			let st = [
 				styles.placeMarker,
-				{ backgroundColor: colorFromIndex(i, locationCount) }
+				{ backgroundColor: colorFromIndex(i, locationCount), zIndex: id === this.state.selectedLocation ? 10 : 1 }
 			];
 			return (
 				<Marker
@@ -76,13 +80,15 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 		];
 		
 		return (
-			<View style={ rowStyle }>
-				{ this.renderDate( location.timestamp ) }
-				<View style={ styles.source }>
-					<Text>{ location.source || 'Unknown' }</Text>
+			<TouchableHighlight onPress={ () => this.setState({selectedLocation: location.id})}>
+				<View style={ rowStyle }>
+					{ this.renderDate( location.timestamp ) }
+					<View style={ styles.source }>
+						<Text>{ location.source || 'Unknown' }</Text>
+					</View>
+					{ this.renderResult( location.result ) }
 				</View>
-				{ this.renderResult( location.result ) }
-			</View>
+			</TouchableHighlight>
 		);
 	}
 
