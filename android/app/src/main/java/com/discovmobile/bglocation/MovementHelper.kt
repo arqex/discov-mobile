@@ -15,7 +15,6 @@ class MovementHelper: BroadcastReceiver() {
         const val STILL = 0
         const val MOVING = 1
         val MOVEMENT_INERTIA = 5 * 60 * 1000
-        val clbks = HashMap<String, (mode: Int) -> Unit>()
 
         @JvmStatic
         fun start( context: Context ) {
@@ -39,9 +38,6 @@ class MovementHelper: BroadcastReceiver() {
         fun reportMoving( context: Context ){
             if( !isMoving(context) ){
                 Storage.setMovingState( context, MOVING);
-                for( entry in clbks ){
-                    entry.value( MOVING );
-                }
             }
             Storage.setLastMovingAt( context, Date().time );
         }
@@ -53,24 +49,11 @@ class MovementHelper: BroadcastReceiver() {
                 if( lastMovingAt + MOVEMENT_INERTIA < Date().time ){
                     // After the inertia we confirm we are still
                     Storage.setMovingState(context, STILL)
-                    for( entry in clbks ){
-                        entry.value( STILL );
-                    }
                     return false
                 }
                 return true
             }
             return false
-        }
-
-        @JvmStatic
-        fun addChangeListener( key: String, clbk: (mode: Int) -> Unit ){
-            clbks.set(key, clbk)
-        }
-
-        @JvmStatic
-        fun removeChangeListener( key: String ){
-            clbks.remove(key)
         }
     }
 

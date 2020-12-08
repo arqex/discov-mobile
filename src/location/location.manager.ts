@@ -19,11 +19,6 @@ locationService.addListener( (result, source) => {
 		id: getRandomId()
 	};
 
-	serverMessageService.open({
-		title: 'El titulito',
-		message: 'Aquí la descripción'
-	});
-
 	log('----- Receiving location');
 	// Render location available in the store for the rest of the app
 	storeService.addLocationReportOld(location, false);

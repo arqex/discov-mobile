@@ -10,6 +10,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
@@ -67,11 +68,16 @@ public class LocationHelper {
         Intent notificationIntent = new Intent(service, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(service, 0, notificationIntent, 0);
 
+        Intent dismissIntent = new Intent(service, TrackHelper.class);
+        dismissIntent.putExtra("type", "dismiss");
+        PendingIntent dismissPendingIntent = PendingIntent.getService(service, 0, dismissIntent, 0);
+
         Notification notification = new NotificationCompat.Builder(service, CHANNEL_ID)
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.icon)
+                .setSmallIcon(R.drawable.ic_location_notification)
                 .setContentTitle("You are close to discover a story!")
-                .setContentText("Location is now active to discovery as soon as you get into the discovery area.")
+                .setContentText("Location is now active to find it as soon as you get into the discovery area.")
+                .addAction(R.mipmap.ic_launcher, "Stop location", dismissPendingIntent)
                 .build();
 
         Bglog.i ("Starting notification.");

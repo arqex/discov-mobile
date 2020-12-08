@@ -1,9 +1,12 @@
 package com.discovmobile.bglocation
 
 import android.content.Context
+import android.hardware.display.DisplayManager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.os.PowerManager
+import android.view.Display
 import androidx.work.*
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
@@ -40,7 +43,7 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
       if (prevDistance > 200 && distance < 200 && !TrackHelper.isActiveModeDismissed(context)) {
         TrackHelper.setMode(context, TrackHelper.MODE_ACTIVE);
       }
-      else if (TrackHelper.getMode(context) == TrackHelper.MODE_ACTIVE && (distance > 200 || !MovementHelper.isMoving(context))) {
+      else if (distance > 200 || !MovementHelper.isMoving(context)) {
         TrackHelper.setMode(context, TrackHelper.MODE_PASSIVE);
       }
     }
@@ -50,7 +53,8 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
       if (prevLocation == null) return true
 
       val diff = abs(prevLocation.latitude - nextLocation.latitude) + abs(prevLocation.longitude - nextLocation.longitude)
-      return diff > 0.0001;
+      Bglog.i("$$$ Location diff: $diff")
+      return diff > 0.0005;
     }
 
     @JvmStatic
@@ -88,6 +92,24 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
         Bglog.i("*** Going to mobile network");
       }
       return result;
+    }
+
+    @SuppressWarnings("deprecation")
+    private fun isScreenOn(context: Context): Boolean {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+        val dm = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
+        var screenOn = false
+        for (display in dm.displays) {
+          if (display.state != Display.STATE_OFF) {
+            screenOn = true
+          }
+        }
+        return screenOn
+      }
+      else {
+        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        return pm.isScreenOn
+      }
     }
   }
 

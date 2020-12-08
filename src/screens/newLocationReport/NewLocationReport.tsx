@@ -46,17 +46,20 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 		);
 	}
 
-	renderMarkers( locations ){
-		let locationCount = locations.order.length;
+	renderMarkers( {order, items} ){
+		let locationCount = order.length;
+		let i = locationCount
+		let markers = [];
 
-		return locations.order.map( (id,i) => {
-			let location = locations.items[id];
+		while( i-- > 0 ){
+			let id = order[i];
+			let location = items[id];
 			let coords = location.coords ? location.coords : location
 			let st = [
 				styles.placeMarker,
 				{ backgroundColor: colorFromIndex(i, locationCount), zIndex: id === this.state.selectedLocation ? 10 : 1 }
 			];
-			return (
+			markers.push(
 				<Marker
 					key={ id }
 					coordinate={ coords }>
@@ -65,7 +68,7 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 						</View>
 				</Marker>
 			);
-		});
+		}
 	}
 
 	_renderLocation = ({item, index}) => {

@@ -4,6 +4,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import com.discovmobile.bglocation.utils.Bglog
 import com.discovmobile.bglocation.utils.Storage
 import java.util.*
 
@@ -25,23 +26,18 @@ class TrackHelper: Service() {
 
             if( mode == MODE_ACTIVE ){
                 val intent = Intent(context, TrackHelper::class.java)
+                intent.putExtra("type", "create")
                 if( LocationHelper.needForegroundService(context) ){
                     context.startForegroundService(intent)
                 }
                 else {
                     context.startService(intent)
                 }
-                MovementHelper.addChangeListener("track") {
-                    if (it == MovementHelper.STILL) {
-                        setMode(context, MODE_PASSIVE)
-                    }
-                }
             }
 
             if( prevMode == MODE_ACTIVE ){
                 val intent = Intent(context, TrackHelper::class.java)
                 context.stopService( intent )
-                MovementHelper.removeChangeListener("track")
             }
 
             Storage.setTrackingMode(context, mode)
@@ -49,11 +45,12 @@ class TrackHelper: Service() {
 
         @JvmStatic
         fun dismissActiveMode( context: Context ){
-            setMode(context, MODE_PASSIVE);
-            Storage.setTrackingDismissedAt( context, Date().time );
+            Bglog.i("Dismissing active mode")
+            setMode(context, MODE_PASSIVE)
+            Storage.setTrackingDismissedAt( context, Date().time )
         }
 
-        val DISMISS_TIME = 2 * 60 * 60 * 1000
+        val DISMISS_TIME = 90000 // 2 * 60 * 60 * 1000
         @JvmStatic
         fun isActiveModeDismissed( context: Context ): Boolean {
             return Storage.getTrackingDismissedAt(context) + DISMISS_TIME > Date().time
@@ -62,18 +59,26 @@ class TrackHelper: Service() {
 
     private lateinit var fetcher: LocationFetcher
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        LocationHelper.openNotification( this )
-        fetcher = LocationFetcher( applicationContext) {
-            LocationManager.onLocation(applicationContext, it, "foreground")
+        if( intent?.getStringExtra("type") == "dismiss" ) {
+            dismissActiveMode( applicationContext )
         }
-
-        fetcher.listenToLocations()
+        else {
+            Bglog.i("Creating active notification")
+            LocationHelper.openNotification( this )
+            fetcher = LocationFetcher( applicationContext) {
+                LocationManager.onLocation(applicationContext, it, "foreground")
+                if( !MovementHelper.isMoving(applicationContext) ){
+                    setMode( applicationContext, MODE_PASSIVE)
+                }
+            }
+            fetcher.listenToLocations()
+        }
         return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        fetcher.stopListening()
+        fetcher?.stopListening()
     }
 
     override fun onBind(p0: Intent?): IBinder? {

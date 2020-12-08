@@ -5,8 +5,12 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.hardware.display.DisplayManager
 import android.net.ConnectivityManager
+import android.os.Build
+import android.os.PowerManager
 import android.os.SystemClock
+import android.view.Display
 import com.discovmobile.bglocation.utils.Bglog
 
 
@@ -41,12 +45,10 @@ class AlarmHelper: BroadcastReceiver() {
         // Send a sign
         HeadlessService.sendSignal(context, "alarm")
 
-        if( context !== null ){
-            // Get a location
-            val trackingMode = TrackHelper.getMode(context);
-            if( trackingMode == TrackHelper.MODE_PASSIVE ){
-                updateLocation(context);
-            }
+        // Get a location
+
+        if( needTracking(context) && context != null ){
+            updateLocation(context);
         }
 
         // Restart alarm
@@ -67,9 +69,24 @@ class AlarmHelper: BroadcastReceiver() {
         }
     }
 
-    private fun isNetworkAvailable( context: Context?): Boolean {
+    private fun isNetworkAvailable(context: Context?): Boolean {
         val connectivityManager = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
         val activeNetworkInfo = connectivityManager?.activeNetworkInfo
         return activeNetworkInfo != null && activeNetworkInfo.isConnected
+    }
+
+    private fun needTracking(context: Context?): Boolean{
+        if( context == null ) {
+            Bglog.i("No tracking: no context")
+            return false
+        };
+
+        val trackingMode = TrackHelper.getMode(context);
+        if( trackingMode != TrackHelper.MODE_PASSIVE ){
+            Bglog.i("No tracking: Tracking mode $trackingMode")
+            return false
+        };
+
+        return true;
     }
 }

@@ -31,6 +31,8 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements JSEv
 
         Log.i ("BgLocation", "Creating bg location module.");
 
+        TrackHelper.setMode( reactContext, TrackHelper.MODE_PASSIVE );
+
         mContext = reactContext;
         mAlarmTaskServiceIntent = new Intent(mContext, LocationTask.class);
         startBackgroundLocation();
