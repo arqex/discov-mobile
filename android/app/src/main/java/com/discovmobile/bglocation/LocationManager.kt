@@ -21,12 +21,13 @@ import kotlin.math.abs
 class LocationManager(context: Context, workerParameters: WorkerParameters) : Worker(context, workerParameters) {
   companion object {
     val FINE_LOCATION_INTERVAL = 2 * 60 * 60 * 1000 // Two hours
+    val ACTIVE_MODE_RADIUS = 250 // meters
 
     @JvmStatic
     fun onLocation(context: Context, location: BgLocation, source: String) {
       val lastLocation = Storage.getLastLocation(context)
       if( needToUpdateLocation(lastLocation, location) ){
-        Storage.setLastLocation(context, location)
+        Storage.setCandidateLocation(context, location)
         Storage.setLastLocationSource(context, source)
         GeofenceHelper.start(context, location)
         MovementHelper.reportMoving(context)
@@ -40,11 +41,17 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
       val prevDistance = Storage.getDistanceToDiscovery(context)
       Storage.setDistanceToDiscovery(context, distance.toFloat())
 
-      if (prevDistance > 200 && distance < 200 && !TrackHelper.isActiveModeDismissed(context)) {
+      if (prevDistance > ACTIVE_MODE_RADIUS && distance <= ACTIVE_MODE_RADIUS && !TrackHelper.isActiveModeDismissed(context)) {
         TrackHelper.setMode(context, TrackHelper.MODE_ACTIVE);
       }
-      else if (distance > 200 || !MovementHelper.isMoving(context)) {
+      else if (distance > ACTIVE_MODE_RADIUS || !MovementHelper.isMoving(context)) {
         TrackHelper.setMode(context, TrackHelper.MODE_PASSIVE);
+      }
+
+      // We have a response from the frontend, consolidate candidate into the last tracked location
+      val candidateLocation = Storage.getCandidateLocation(context)
+      if( candidateLocation != null ){
+        Storage.setLastLocation(context, candidateLocation)
       }
     }
 

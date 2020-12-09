@@ -5,15 +5,14 @@ import android.content.SharedPreferences
 
 class Storage {
     companion object {
-        val preferencesKey = "DISCOV"
-        fun getStore( context: Context ): SharedPreferences{
+        private const val preferencesKey = "DISCOV"
+        private fun getStore(context: Context ): SharedPreferences{
             return context.getSharedPreferences( preferencesKey, Context.MODE_PRIVATE);
         }
 
         @JvmStatic
         fun getLastLocation( context: Context ): BgLocation? {
-            val location = getStore(context).getString("lastLocation", null );
-            if( location == null ) return null;
+            val location = getStore(context).getString("lastLocation", null ) ?: return null;
             return BgLocation.fromString(location);
         }
         @JvmStatic
@@ -21,6 +20,23 @@ class Storage {
             getStore( context )
                     .edit()
                     .putString("lastLocation", location.stringify() )
+                    .apply();
+        }
+
+        // When the native module retrieves a location, it's passed to the frontend to check for discoveries
+        // If the discovery request failed we don't want to store the location as the last tracked, so there is 2
+        // steps: 1. When the location is retrieved is stored as candidate and 2. when we have a response from the
+        // the frontend we store it as the actual last tested location
+        @JvmStatic
+        fun getCandidateLocation( context: Context ): BgLocation? {
+            val location = getStore(context).getString("candidateLocation", null ) ?: return null;
+            return BgLocation.fromString(location);
+        }
+        @JvmStatic
+        fun setCandidateLocation( context: Context, location: BgLocation){
+            getStore( context )
+                    .edit()
+                    .putString("candidateLocation", location.stringify() )
                     .apply();
         }
 
