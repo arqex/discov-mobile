@@ -202,21 +202,23 @@ function createDiscoveriesNofication(discoveries) {
 	let count = Math.max(discoveries.length, storeService.getUnseenCount());
 	serverMessageService.close();
 
+	const owner = discoveries[0].owner;
 	const title = count > 1 ?
 		__('notifications.multipleTitle', { count }) :
 		__('notifications.singleTitle')
 		;
 
 	const message = count > 1 ?
-		__('notifications.multipleMessage', { name: discoveries[0].owner.displayName }) :
-		__('notifications.singleMessage', { name: discoveries[0].owner.displayName })
-		;
+		__('notifications.multipleMessage', { name: owner.displayName }) :
+		__('notifications.singleMessage', { name: owner.displayName })
+	;
 
-	return serverMessageService.open({
-		title,
-		message,
-		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQanDmDzKGJxRcOsZJjuUwmHGgeKzaOeBaGnA&usqp=CAU'
-	});
+	let notification: any = {title,message};
+	if( owner.avatarPic ){
+		notification.image = owner.avatarPic;
+	}
+
+	return serverMessageService.open( notification );
 }
 
 

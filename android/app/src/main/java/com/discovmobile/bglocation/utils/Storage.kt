@@ -61,7 +61,7 @@ class Storage {
         }
 
         @JvmStatic
-        fun getLastNetworkConnectionType( context: Context ): String {
+        fun getLastNetworkConnectionType( context: Context ): String? {
             return getStore( context ).getString("lastConnectionType", "none");
         }
         @JvmStatic
