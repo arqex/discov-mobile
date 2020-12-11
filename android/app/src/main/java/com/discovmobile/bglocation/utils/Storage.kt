@@ -2,6 +2,8 @@ package com.discovmobile.bglocation.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class Storage {
     companion object {
@@ -20,23 +22,6 @@ class Storage {
             getStore( context )
                     .edit()
                     .putString("lastLocation", location.stringify() )
-                    .apply();
-        }
-
-        // When the native module retrieves a location, it's passed to the frontend to check for discoveries
-        // If the discovery request failed we don't want to store the location as the last tracked, so there is 2
-        // steps: 1. When the location is retrieved is stored as candidate and 2. when we have a response from the
-        // the frontend we store it as the actual last tested location
-        @JvmStatic
-        fun getCandidateLocation( context: Context ): BgLocation? {
-            val location = getStore(context).getString("candidateLocation", null ) ?: return null;
-            return BgLocation.fromString(location);
-        }
-        @JvmStatic
-        fun setCandidateLocation( context: Context, location: BgLocation){
-            getStore( context )
-                    .edit()
-                    .putString("candidateLocation", location.stringify() )
                     .apply();
         }
 
@@ -87,18 +72,6 @@ class Storage {
                     .apply()
         }
         @JvmStatic
-        fun getLastLocationSource( context: Context ): String {
-            return getStore( context ).getString("lastLocationSource", "none");
-        }
-        @JvmStatic
-        fun setLastLocationSource( context: Context, networkType: String ){
-            getStore( context )
-                    .edit()
-                    .putString("lastLocationSource", networkType)
-                    .apply()
-        }
-
-        @JvmStatic
         fun getDistanceToDiscovery( context: Context ): Float {
             return getStore( context ).getFloat("distanceToDiscovery", -1f);
         }
@@ -134,7 +107,19 @@ class Storage {
                     .apply()
         }
 
-
-
+        @JvmStatic
+        fun getLocationQueue( context: Context ): ArrayList<BgLocation> {
+            val stringArray = getStore( context ).getString("locationQueue", "[]")
+            class Token : TypeToken<ArrayList<BgLocation>>()
+            return (Gson()).fromJson<ArrayList<BgLocation>>( stringArray, Token().type )
+        }
+        @JvmStatic
+        fun saveLocationQueue( context: Context, queue: ArrayList<BgLocation> ){
+            val stringArray = Gson().toJson( queue )
+            getStore( context )
+                    .edit()
+                    .putString("locationQueue", stringArray)
+                    .apply()
+        }
     }
 }

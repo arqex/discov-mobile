@@ -13,6 +13,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.discovmobile.bglocation.utils.BgLocation
 import com.discovmobile.bglocation.utils.Bglog
+import com.discovmobile.bglocation.utils.LocationQueue
 import com.discovmobile.bglocation.utils.Storage
 import java.util.*
 import kotlin.math.abs
@@ -24,34 +25,49 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
     val ACTIVE_MODE_RADIUS = 250 // meters
 
     @JvmStatic
-    fun onLocation(context: Context, location: BgLocation, source: String) {
-      val lastLocation = Storage.getLastLocation(context)
+    fun onLocation(context: Context, location: BgLocation) {
+      val lastLocation = getLastLocation(context)
+
       if( needToUpdateLocation(lastLocation, location) ){
-        Storage.setCandidateLocation(context, location)
-        Storage.setLastLocationSource(context, source)
+        LocationQueue.enqueue(context, location)
         GeofenceHelper.start(context, location)
         MovementHelper.reportMoving(context)
-        waitForConnectionAndSend(context, location, source)
       }
-      MovementHelper.reportStill(context)
+      else {
+        MovementHelper.reportStill(context)
+      }
+
+      if( LocationQueue.getFirst(context) != null ){
+        waitForConnectionAndSend(context)
+      }
     }
 
     @JvmStatic
     fun onDistanceToDiscovery( context: Context, distance: Double ) {
+      // The frontend handled the location and returns the
+      // distance to the closest one. We can be sure that the first location in the
+      // queue has been processed
+      val location = LocationQueue.pop(context)
+      if( location != null ){
+        Storage.setLastLocation(context, location)
+      }
+
+      // The frwontend didn't try to get any discovery, but it wasn't an error
+      // we just return here
+      if( distance == -2.0 ){
+        Bglog.i("React didn't try to get discoveries. No distance")
+        return
+      }
+
+      // Save the distance and check if we (de)activate the active mode
       val prevDistance = Storage.getDistanceToDiscovery(context)
       Storage.setDistanceToDiscovery(context, distance.toFloat())
 
       if (prevDistance > ACTIVE_MODE_RADIUS && distance <= ACTIVE_MODE_RADIUS && !TrackHelper.isActiveModeDismissed(context)) {
-        TrackHelper.setMode(context, TrackHelper.MODE_ACTIVE);
+        TrackHelper.setMode(context, TrackHelper.MODE_ACTIVE)
       }
       else if (distance > ACTIVE_MODE_RADIUS || !MovementHelper.isMoving(context)) {
-        TrackHelper.setMode(context, TrackHelper.MODE_PASSIVE);
-      }
-
-      // We have a response from the frontend, consolidate candidate into the last tracked location
-      val candidateLocation = Storage.getCandidateLocation(context)
-      if( candidateLocation != null ){
-        Storage.setLastLocation(context, candidateLocation)
+        TrackHelper.setMode(context, TrackHelper.MODE_PASSIVE)
       }
     }
 
@@ -61,7 +77,7 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
 
       val diff = abs(prevLocation.latitude - nextLocation.latitude) + abs(prevLocation.longitude - nextLocation.longitude)
       Bglog.i("$$$ Location diff: $diff")
-      return diff > 0.0005;
+      return diff > 0.0005
     }
 
     @JvmStatic
@@ -69,12 +85,12 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
       val lastLocation = Storage.getLastLocation(context) ?: return true
 
       val diff = Date().time - lastLocation.timestamp;
-      Bglog.i("Time difference $diff");
+      Bglog.i("Time difference $diff")
 
       return MovementHelper.isMoving(context) || isGoingToMobileNetwork(context) // || diff > 2 * FINE_LOCATION_INTERVAL;
     }
 
-    private fun waitForConnectionAndSend(context: Context, location: BgLocation, source: String){
+    private fun waitForConnectionAndSend(context: Context){
       Bglog.i("********** Waiting for connection")
       val constraints = Constraints.Builder()
               .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -123,10 +139,9 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
   override fun doWork(): Result {
     Bglog.i("********** Connection available: ${getNetworkType(applicationContext)}")
     tryDummyRequest(applicationContext);
-    val location = Storage.getLastLocation(applicationContext)
-    val source = Storage.getLastLocationSource(applicationContext)
+    val location = LocationQueue.getFirst(applicationContext)
     if( location != null ){
-      HeadlessService.sendLocation(applicationContext, location, "$source:${getNetworkType(applicationContext)}");
+      HeadlessService.sendLocation(applicationContext, location, "${location.source}:${getNetworkType(applicationContext)}");
     }
     return Result.success()
   }
@@ -184,4 +199,11 @@ fun tryDummyRequest(context: Context){
           }
    )
   queue.add(stringRequest)
+}
+private fun getLastLocation( context: Context ): BgLocation? {
+  var location = LocationQueue.getLast(context)
+  if( location == null ){
+    location = Storage.getLastLocation(context)
+  }
+  return location
 }

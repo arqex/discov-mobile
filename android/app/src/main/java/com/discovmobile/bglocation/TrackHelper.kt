@@ -66,7 +66,8 @@ class TrackHelper: Service() {
             Bglog.i("Creating active notification")
             LocationHelper.openNotification( this )
             fetcher = LocationFetcher( applicationContext) {
-                LocationManager.onLocation(applicationContext, it, "foreground")
+                it.source = "foreground"
+                LocationManager.onLocation(applicationContext, it)
                 if( !MovementHelper.isMoving(applicationContext) ){
                     setMode( applicationContext, MODE_PASSIVE)
                 }

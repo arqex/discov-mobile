@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Spinner from './Spinner';
 import styleVars from './styleVars';
@@ -67,11 +67,14 @@ const Button = (props: ButtonProps) => {
 				iconPost = <View style={[styles.iconWrapperPost, isMenuButton && styles.iconWrapper_post]}>{icon}</View>;
 			}
 		}
+		
+		// The extra blank space is to not to break the line on Oppo or OnePlus phones that have
+		// a custom font face
 		content = (
 			<View style={[styles.textWrapper, loading && styles.textLoading]}>
 				{iconPre}
-				<Text style={textStyles}>
-					{props.children}
+				<Text style={textStyles} textBreakStrategy="simple">
+					{props.children}{" "}
 				</Text>
 				{iconPost}
 			</View>

@@ -29,7 +29,7 @@ class GeofenceHelper: BroadcastReceiver() {
             return
         }
 
-        val location = BgLocation(geofencingEvent.triggeringLocation)
+        val location = BgLocation(geofencingEvent.triggeringLocation, "geofence")
         val client = LocationServices.getGeofencingClient(context!!)
         setFence(context, client, location)
         HeadlessService.sendSignal(context, "geofence")

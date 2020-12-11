@@ -54,7 +54,7 @@ public class LocationHelper {
             NotificationChannel serviceChannel = new NotificationChannel(
                 CHANNEL_ID,
                 "Discov location channel",
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_LOW
             );
 
             serviceChannel.enableVibration(false);

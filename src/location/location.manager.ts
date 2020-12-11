@@ -28,6 +28,14 @@ locationService.addListener( (result, source) => {
 
 	return checkDiscoveries( location )
 		.then( result => {
+			if( result.error ){
+				if( result.error !== 'discovery_error' ){
+					sendDistanceToNative(-2);
+				}
+			}
+			else {
+				sendDistanceToNative( result.distanceToDiscovery );
+			}
 			storeService.setLocationResult( location.id , result);
 		})
 	;
@@ -67,7 +75,7 @@ function checkDiscoveries(location) {
 		.then(res => onDiscoveryResponse(res, location))
 		.then(res => {
 			log('----- End location update');
-			return { error: res && res.error || false };
+			return { error: false, ...res };
 		})
 	;
 }
@@ -95,8 +103,6 @@ function onDiscoveryResponse(res, location) {
 
 	const distanceToDiscovery = res.closestDiscoveryDistance;
 
-	NativeModules.BgLocation.setDistanceToDiscovery( distanceToDiscovery );
-
 	hasPendingDiscoveries = distanceToDiscovery !== -1;
 	lastUpdate = Date.now();
 
@@ -116,6 +122,8 @@ function onDiscoveryResponse(res, location) {
 	}
 
 	updateFences(location, distanceToDiscovery - ACTIVE_RADIUS);
+
+	return {distanceToDiscovery};
 }
 
 // Ten seconds without requesting new discoveries
@@ -263,4 +271,8 @@ export default {
     hasPendingDiscoveries = true;
     destroyFences();
   },
+}
+
+function sendDistanceToNative( distance ){
+	NativeModules.BgLocation.setDistanceToDiscovery( distance );
 }

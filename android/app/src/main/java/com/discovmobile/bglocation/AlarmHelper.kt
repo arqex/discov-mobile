@@ -58,7 +58,8 @@ class AlarmHelper: BroadcastReceiver() {
     fun updateLocation(context: Context){
         var type = "coarse";
         val fetcher = LocationFetcher(context, fun(location) {
-            LocationManager.onLocation(context, location, "alarm:$type")
+            location.source = "alarm:$type"
+            LocationManager.onLocation(context, location)
         });
 
         if (LocationManager.needFineLocation(context)) {
