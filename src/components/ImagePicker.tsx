@@ -119,7 +119,8 @@ export default class ImagePicker extends React.Component {
 	animateIn(){
 		Animated.timing( this.animatedValue, {
 			toValue: 1,
-			duration: 300
+			duration: 300,
+			useNativeDriver: true
 		}).start( () => {
 			this.setState({inTransition: false});
 		});
@@ -128,7 +129,8 @@ export default class ImagePicker extends React.Component {
 	animateOut(){
 		Animated.timing(this.animatedValue, {
 			toValue: 0,
-			duration: 300
+			duration: 300,
+			useNativeDriver: true
 		}).start(() => {
 			this.setState({
 				inTransition: false,

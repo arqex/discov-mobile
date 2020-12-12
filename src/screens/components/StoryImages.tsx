@@ -137,7 +137,8 @@ export default class StoryImages extends React.Component<StoryImagesProps> {
 		if( this.props.removing !== prevProps.removing ){
 			Animated.timing( this.animatedRemoving, {
 				toValue: this.props.removing ? 1 : 0,
-				duration: 300
+				duration: 300,
+				useNativeDriver: true
 			}).start();
 		}
 	}

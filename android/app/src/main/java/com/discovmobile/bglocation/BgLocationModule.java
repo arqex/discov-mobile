@@ -51,8 +51,28 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements JSEv
     }
 
     @ReactMethod
+    public void startForegroundTracking() {
+        TrackHelper.startForegroundTracking( mContext );
+    }
+
+    @ReactMethod
+    public void stopForegroundTracking() {
+        TrackHelper.stopForegroundTracking(mContext);
+    }
+
+    @ReactMethod
     public void stopBackgroundLocation() {
         mContext.stopService(mAlarmTaskServiceIntent);
+    }
+
+    @ReactMethod
+    public void updateLocation(){
+        LocationFetcher fetcher = new LocationFetcher( mContext, (BgLocation) -> {
+            LocationManager.onLocation(mContext, BgLocation);
+            return null;
+        });
+
+        fetcher.retrieveLocation();
     }
 
     @Nonnull

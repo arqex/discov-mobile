@@ -121,5 +121,17 @@ class Storage {
                     .putString("locationQueue", stringArray)
                     .apply()
         }
+
+        @JvmStatic
+        fun isForegroundTracking( context: Context ): Boolean {
+            return getStore(context).getBoolean("fgTracking", false)
+        }
+        @JvmStatic
+        fun setForegroundTracking( context: Context, isActive: Boolean ){
+            getStore( context )
+                    .edit()
+                    .putBoolean("fgTracking", isActive)
+                    .apply()
+        }
     }
 }

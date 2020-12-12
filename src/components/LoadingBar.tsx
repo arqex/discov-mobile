@@ -48,7 +48,8 @@ export default class LoadingBar extends React.Component<LoadingBarProps> {
       Animated.sequence([
         Animated.timing( this.barPosition, {
           toValue: width,
-          duration: 2000
+          duration: 2000,
+          useNativeDriver: true
         })
       ])
     );
@@ -58,12 +59,13 @@ export default class LoadingBar extends React.Component<LoadingBarProps> {
       Animated.sequence([
         Animated.timing( this.barWidth, {
           toValue: .9,
-          duration: 1500
-
+          duration: 1500,
+          useNativeDriver: true
         }),
         Animated.timing( this.barWidth, {
           toValue: .5,
-          duration: 2500
+          duration: 2500,
+          useNativeDriver: true
         })
       ])
     );

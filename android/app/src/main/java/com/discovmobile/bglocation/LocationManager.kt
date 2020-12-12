@@ -22,7 +22,7 @@ import kotlin.math.abs
 class LocationManager(context: Context, workerParameters: WorkerParameters) : Worker(context, workerParameters) {
   companion object {
     val FINE_LOCATION_INTERVAL = 2 * 60 * 60 * 1000 // Two hours
-    val ACTIVE_MODE_RADIUS = 250 // meters
+    val ACTIVE_MODE_RADIUS = 220 // meters
 
     @JvmStatic
     fun onLocation(context: Context, location: BgLocation) {

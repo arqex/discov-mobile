@@ -68,13 +68,11 @@ const Button = (props: ButtonProps) => {
 			}
 		}
 		
-		// The extra blank space is to not to break the line on Oppo or OnePlus phones that have
-		// a custom font face
 		content = (
 			<View style={[styles.textWrapper, loading && styles.textLoading]}>
 				{iconPre}
-				<Text style={textStyles} textBreakStrategy="simple">
-					{props.children}{" "}
+				<Text style={textStyles}>
+					{props.children}
 				</Text>
 				{iconPost}
 			</View>
@@ -168,10 +166,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'center',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 
 	text: {
+		fontFamily: Platform.OS === 'android' ? 'Roboto' : 'System',
 		fontWeight: 'bold',
 		fontSize: 15,
 		textTransform: 'uppercase'

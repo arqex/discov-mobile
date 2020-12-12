@@ -117,7 +117,8 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 	showMeta() {
 		Animated.timing( this.animatedValue, {
 			toValue: 1,
-			duration: 300
+			duration: 300,
+			useNativeDriver: true
 		}).start();
 		this.isMetaDisplayed = true
 	}
@@ -125,7 +126,8 @@ export default class AssetsViewer extends React.Component<AssetsViewerProps> {
 	hideMeta() {
 		Animated.timing(this.animatedValue, {
 			toValue: 0,
-			duration: 300
+			duration: 300,
+			useNativeDriver: true
 		}).start();
 		this.isMetaDisplayed = false
 	}

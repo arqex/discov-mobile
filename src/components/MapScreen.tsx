@@ -170,7 +170,7 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 		let scroll = this.refs.scroll;
 		if( scroll && Platform.OS !== 'ios' ){
 			setTimeout( () => {
-				scroll._component.scrollTo({
+				scroll.scrollTo({
 					x: 0,
 					y: this.getInitialScroll(),
 					animated: false
@@ -188,7 +188,7 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 
 	closeMap() {
 		let scroll = this.refs.scroll;
-		return scroll && scroll._component.scrollTo({
+		return scroll && scroll.scrollTo({
 			x: 0,
 			y: this.getHeights().minPanel,
 			animated: true
@@ -197,7 +197,7 @@ export default class MapScreen extends React.Component<MapScreenProps> {
 
 	openMap() {
 		let scroll = this.refs.scroll;
-		return scroll && scroll._component.scrollTo({
+		return scroll && scroll.scrollTo({
 			x: 0,
 			y: 0,
 			animated: true

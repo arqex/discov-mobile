@@ -4,17 +4,17 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
-  - appcenter-analytics (3.0.3):
+  - appcenter-analytics (4.0.0):
     - AppCenter/Analytics
     - AppCenterReactNativeShared
-    - React
-  - appcenter-core (3.0.3):
+    - React-Core
+  - appcenter-core (4.0.0):
     - AppCenterReactNativeShared
-    - React
-  - appcenter-crashes (3.0.3):
+    - React-Core
+  - appcenter-crashes (4.0.0):
     - AppCenter/Crashes
     - AppCenterReactNativeShared
-    - React
+    - React-Core
   - AppCenter/Analytics (4.0.0):
     - AppCenter/Core
   - AppCenter/Core (4.0.0)
@@ -666,9 +666,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   AppCenter: 51351e0121e40ba75e28ecb7de5c2e69d480df5e
-  appcenter-analytics: 4fdc885acb8a3bfac835515a8b9610d054ba8b9f
-  appcenter-core: 84a1c69361d10272bf08b2ff906c37f4e422b940
-  appcenter-crashes: e9008710be7612c585c39f3dc2cf3894172dc6e2
+  appcenter-analytics: 3e8bf76870877c5abdfb752e1dc014be2b2030e4
+  appcenter-core: e7aa4513ee9173b82c4a4497d49abb0ec7ceb159
+  appcenter-crashes: 0052b9ae5cc6b5c184238eb6c230ed5942d91f10
   AppCenterReactNativeShared: 69aedc15c136e5f76a0cc9eb2ad84d3cefc6e64f
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c

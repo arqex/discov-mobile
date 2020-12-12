@@ -6,6 +6,7 @@ import serverMessageService from '../services/serverMessage/serverMessage.servic
 import { log } from '../utils/logger';
 import { AppState, NativeModules } from 'react-native';
 import * as Location from 'expo-location';
+import BgLocation from './BgLocation';
 
 let hasPendingDiscoveries = true;
 let lastUpdate = Date.now();
@@ -278,3 +279,12 @@ export default {
 function sendDistanceToNative( distance ){
 	NativeModules.BgLocation.setDistanceToDiscovery( distance );
 }
+
+AppState.addEventListener( 'change', status => {
+	if( status !== 'active' ){
+		BgLocation.stopTracking();
+	}
+	else {
+		BgLocation.updateLocation();
+	}
+})

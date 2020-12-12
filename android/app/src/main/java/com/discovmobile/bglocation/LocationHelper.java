@@ -20,6 +20,7 @@ import com.discovmobile.MainActivity;
 import com.discovmobile.R;
 import com.discovmobile.bglocation.utils.Bglog;
 
+import java.util.Date;
 import java.util.List;
 
 public class LocationHelper {
@@ -66,6 +67,9 @@ public class LocationHelper {
         }
 
         Intent notificationIntent = new Intent(service, MainActivity.class);
+        notificationIntent.putExtra("source", "locationNotification");
+        notificationIntent.putExtra("notificationPostTime", (new Date()).getTime() );
+        notificationIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(service, 0, notificationIntent, 0);
 
         Intent dismissIntent = new Intent(service, TrackHelper.class);

@@ -14,6 +14,7 @@ import EditLocationModal from './EditLocationModal';
 import SearchPlacePanel from './SearchPlacePanel';
 import locationManager from '../../location/location.manager';
 import BackButtonHandler from '../../utils/BackButtonHandler';
+import BgLocation from '../../location/BgLocation';
 
 // Stores the temporal data in store.storyInProgress
 
@@ -71,6 +72,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	componentDidMount() {
 		BackButtonHandler.addListener( this._onBackPress );
 		this.preloadFollowers();
+		BgLocation.startTracking();
 	}
 
 	componentDidUpdate( prevProps, prevState ) {
@@ -570,6 +572,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	componentWillUnmount() {
 		BackButtonHandler.removeListener( this._onBackPress );
 		this.props.actions.story.clearStoryInProgress();
+		BgLocation.stopTracking();
 	}
 
 	componentWillEnter() {

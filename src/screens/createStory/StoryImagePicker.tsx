@@ -33,14 +33,14 @@ export default class StoryImagePicker extends Component<StoryImagePickerProps, S
 	render() {
 		return (
 			<View style={ styles.container }>
-				{this.renderImages()}
+				{ this.renderImages() }
 				{ this.renderSourceButtons() }
 			</View>
 		);
 	}
 
 	renderImages() {
-		let images = this.props.images;
+		let images = this.props.images || [];
 		if (!images.length) return;
 
 		return (
