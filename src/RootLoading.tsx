@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     position: 'absolute',
     width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    height: Dimensions.get('window').height + 200,
     zIndex: 1000
   },
   barContainer: {

@@ -30,45 +30,64 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements JSEv
         super(reactContext);
 
         Log.i ("BgLocation", "Creating bg location module.");
-
-        TrackHelper.setMode( reactContext, TrackHelper.MODE_PASSIVE );
-
         mContext = reactContext;
-        mAlarmTaskServiceIntent = new Intent(mContext, LocationTask.class);
-        startBackgroundLocation();
+        startBackgroundTasks();
     }
 
-    @ReactMethod
-    public void startBackgroundLocation() {
+    private void startBackgroundTasks(){
+        TrackHelper.setMode( mContext, TrackHelper.MODE_PASSIVE );
+        Intent intent = new Intent(mContext, LocationTask.class);
         Log.i ("BgLocation", "Trying to init the interval location service.");
-        mContext.startService( mAlarmTaskServiceIntent );
+        mContext.startService( intent );
     }
 
+    // When the user logs in, we start trying to get the location
+    @ReactMethod
+    public void startBackgroundLocationUpdates(){
+        TrackHelper.setMode( mContext, TrackHelper.MODE_PASSIVE );
+    }
+
+    // When the user logs out, we stop trying to get locations
+    @ReactMethod
+    public void stopBackgroundLocationUpdates() {
+        TrackHelper.setMode( mContext, TrackHelper.MODE_OFF );
+    }
+
+    // The frontend has searched for discoveries and returned the distance to the
+    // closest one. Based on it the bgLocation might switch modes
     @ReactMethod
     public void setDistanceToDiscovery(double distance) {
         Bglog.i("Distance to discovery " + distance );
         LocationManager.onDistanceToDiscovery( mContext, distance );
     }
 
+    // The app is in the foreground and wants frequent location updates
     @ReactMethod
     public void startForegroundTracking() {
         TrackHelper.startForegroundTracking( mContext );
     }
 
+    // The app doesn't need frequent location updates anymore
     @ReactMethod
     public void stopForegroundTracking() {
         TrackHelper.stopForegroundTracking(mContext);
     }
 
+    // The frontend want to know the current location, this will activate the geolocation
+    // and fetch one.
+    // If the `forced` param is true, the location is always sent back to the frontend,
+    // otherwise, the location is only sent if it is different than the previous one
     @ReactMethod
-    public void stopBackgroundLocation() {
-        mContext.stopService(mAlarmTaskServiceIntent);
-    }
-
-    @ReactMethod
-    public void updateLocation(){
+    public void updateLocation( boolean forced ){
         LocationFetcher fetcher = new LocationFetcher( mContext, (BgLocation) -> {
-            LocationManager.onLocation(mContext, BgLocation);
+
+            if( forced ){
+                LocationManager.sendLocation(mContext, BgLocation);
+            }
+            else {
+                LocationManager.onLocation(mContext, BgLocation);
+            }
+
             return null;
         });
 

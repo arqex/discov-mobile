@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import Button from './Button';
 import Text from './Text';
 import styleVars from './styleVars';
-import { Wrapper } from '.';
+import Wrapper from './Wrapper';
 
 interface ModalContentProps {
 	title?: string,

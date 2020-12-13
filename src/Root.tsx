@@ -14,6 +14,7 @@ import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
 import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
 import BackButtonHandler from './utils/BackButtonHandler';
+import locationHandler from './location/location.handler';
 
 globalThis.gql_debug = true;
 
@@ -119,6 +120,7 @@ class Root extends React.Component {
 			}); 
 		});
 
+		locationHandler.init();
 
     let update = () => {
 			if( !this.unmounted ) this.forceUpdate();

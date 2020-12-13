@@ -190,7 +190,7 @@ export default {
 	},
 
 	getCurrentPosition(){
-		return store.currentPosition;
+		return store.locationData.lastLocation;
 	},	
 
 	storeCurrentPosition( coords, error? ){
@@ -320,9 +320,10 @@ export default {
 		store.storyComments = {};
 		store.comments = {};
 
+		store.locationData = {};
+
 		delete store.user.stories;
 		delete store.user.discoveries;
-		delete store.locationReport;
 	}
 }
 

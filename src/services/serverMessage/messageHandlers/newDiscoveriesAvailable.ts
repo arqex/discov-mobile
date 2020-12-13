@@ -1,12 +1,9 @@
-import locationManager from "../../../location/location.manager";
+import locationService from "../../../location/location.service";
 import { log } from "../../../utils/logger";
 
 export default function handleNewDescoveriesAvailable(router, dataService, data) {
-	const store = dataService.getStore();
-
 	log('Updating current location by a new discoveries available notification');
-	locationManager.resetFence();
-	// locationManager.updateCurrentLocation('NEW_DISCOVERIES_AVAILABLE');
+	locationService.resetFence();
 
 	return {
 		title: 'There are new stories to be discovered!',

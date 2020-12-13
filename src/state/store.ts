@@ -14,8 +14,7 @@ let store = ors({
 	followerGroups: {},
 	placesByLocation: {},
 	addressByLocation: {},
-	currentPosition: {},
-	distanceFromOutOfFence: 0 // 0 means no discoveries
+	locationData: {}
 })
 
 export default store;

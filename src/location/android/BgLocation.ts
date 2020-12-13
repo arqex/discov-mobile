@@ -10,7 +10,13 @@ export default {
   stopTracking(){
     NativeModules.BgLocation.stopForegroundTracking();
   },
-  updateLocation(){
-    NativeModules.BgLocation.updateLocation();
+  updateLocation( force = false ){
+    NativeModules.BgLocation.updateLocation(force);
+  },
+  startBackgroundLocationUpdates(){
+    NativeModules.BgLocation.startBackgroundLocationUpdates();
+  },
+  stopBackgroundLocationUpdates(){
+    NativeModules.BgLocation.stopBackgroundLocationUpdates();
   }
 }

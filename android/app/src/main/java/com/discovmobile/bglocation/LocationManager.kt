@@ -25,7 +25,7 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
     val ACTIVE_MODE_RADIUS = 220 // meters
 
     @JvmStatic
-    fun onLocation(context: Context, location: BgLocation) {
+    fun onLocation(context: Context, location: BgLocation ) {
       val lastLocation = getLastLocation(context)
 
       if( needToUpdateLocation(lastLocation, location) ){
@@ -43,6 +43,15 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
     }
 
     @JvmStatic
+    fun sendLocation( context: Context, location: BgLocation ){
+      // Clear any location in the queue, because we are interested
+      // in the current location, previous ones are not valid anymore
+      LocationQueue.clear(context)
+      LocationQueue.enqueue(context, location)
+      waitForConnectionAndSend(context)
+    }
+
+    @JvmStatic
     fun onDistanceToDiscovery( context: Context, distance: Double ) {
       // The frontend handled the location and returns the
       // distance to the closest one. We can be sure that the first location in the
@@ -52,7 +61,7 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
         Storage.setLastLocation(context, location)
       }
 
-      // The frwontend didn't try to get any discovery, but it wasn't an error
+      // The frontend didn't try to get any discovery, but it wasn't an error
       // we just return here
       if( distance == -2.0 ){
         Bglog.i("React didn't try to get discoveries. No distance")
@@ -88,6 +97,11 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
       Bglog.i("Time difference $diff")
 
       return MovementHelper.isMoving(context) || isGoingToMobileNetwork(context) // || diff > 2 * FINE_LOCATION_INTERVAL;
+    }
+
+    @JvmStatic
+    fun cleanLocations(context: Context) {
+
     }
 
     private fun waitForConnectionAndSend(context: Context){

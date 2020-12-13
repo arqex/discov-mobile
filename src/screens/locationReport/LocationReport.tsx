@@ -3,13 +3,13 @@ import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Button } from '../../components';
 import store from '../../state/store';
-import locationManager from '../../location/location.manager';
+import locationService from '../../location/location.service';
 
 export default class LocationReport extends Component<ScreenProps> {
 	render() {
     let store = this.props.store;
     let locations = store && store.locationReportOld || [];
-    let fenceData = locationManager.getFenceData();
+    let fenceData = locationService.getFenceData();
 
     return (
       <ScrollView contentContainerStyle={ styles.container }>

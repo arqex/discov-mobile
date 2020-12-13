@@ -115,9 +115,8 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 	}
 
 	getLocations(){
-		return this.props.store.locationReport;
+		return this.props.store.locationData.report;
 	}
-
 
 	formatDate(t) {
 		let d = new Date(t);

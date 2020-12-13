@@ -1,3 +1,5 @@
+import LocationService from "../location/location.service";
+
 let actions, store;
 
 export const loginService = {
@@ -21,6 +23,7 @@ export const loginService = {
 			}
 		}
 		else {
+			LocationService.startBackgroundLocationUpdates();
 			router.navigate('/myStories');
 			return true;
 		}

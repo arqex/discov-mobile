@@ -35,6 +35,11 @@ class LocationQueue {
             Storage.saveLocationQueue(context, queue)
             return location
         }
+        @JvmStatic
+        fun clear(context: Context) {
+            queue = ArrayList<BgLocation>()
+            Storage.saveLocationQueue(context, queue)
+        }
 
         private fun getQueue( context: Context): ArrayList<BgLocation> {
             if( initialized ) return queue

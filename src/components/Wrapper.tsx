@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, ViewStyle } from 'react-native';
-import { styleVars } from '.';
+import {View, ViewStyle } from 'react-native';
+import styleVars from './styleVars';
 
 interface WrapperProps {
 	margin?: string,
