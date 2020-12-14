@@ -54,6 +54,11 @@ export default {
     if( !store ) return;
 
     let report = store.locationData.report;
+    if(!report){
+      store.locationData.report = {items:{}, order:[]};
+      report = store.locationData.report;
+    }
+    
     report.items[location.id] = location;
     report.order.push( location.id );
 

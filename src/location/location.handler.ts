@@ -41,6 +41,8 @@ function onLocation( result, source ) {
 };
 
 function handleDiscoveryRequest( location ) {
+	fenceManager.saveLocationReport( location );
+
 	return checkDiscoveries( location )
 		.then( result => {
 			fenceManager.storeLastLocation( location );
@@ -55,7 +57,7 @@ function handleDiscoveryRequest( location ) {
 				locationService.notifyLocationHandled( result.distanceToDiscovery );
 			}
 
-			storeService.setLocationResult( location.id , result );
+			fenceManager.updateLocationReportResult( location.id , result );
 		})
 	;
 }
