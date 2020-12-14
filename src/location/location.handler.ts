@@ -105,7 +105,7 @@ function onDiscoveryResponse(res) {
 		log('No new discoveries');
 	}
 
-	return {distanceToDiscovery: res.distanceToDiscovery};
+	return { distanceToDiscovery: res.closestDiscoveryDistance };
 }
 
 // Ten seconds without requesting new discoveries

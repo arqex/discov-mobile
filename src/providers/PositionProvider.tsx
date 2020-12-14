@@ -16,7 +16,7 @@ export default function PositionProvider(WrappedComponent) {
 		}
 		
 		render() {
-			let position = storeService.getCurrentPosition();
+			let position = this.getPosition();
 			return (
 				<WrappedComponent
 					position={ position || false }
@@ -30,20 +30,22 @@ export default function PositionProvider(WrappedComponent) {
 
 		componentDidMount() {
 			this.position = this.getPosition();
+			this.checkListeners();
 			if( this.needToLoad( this.position ) ){
 				this.loadPosition();
 			} 
 		}
 
-
 		loadPosition() {
-			this.checkListeners();
-
 			this.setState({loading: true, positionRequested: true});
 			if( !this.state.positionRequested ){
 				locationService.updateLocation( true );
 			}
-			setTimeout( () => this.setState({loading: false}), 500 );
+			setTimeout( () => {
+				this.setState({loading: false});
+				this.position = this.getPosition();
+				this.checkListeners();
+			}, 500 );
 		}
 
 		needToLoad( position ){
@@ -69,7 +71,7 @@ export default function PositionProvider(WrappedComponent) {
 
 		_onChange = () => {
 			// check the changes in the account
-			this.position = storeService.getCurrentPosition();
+			this.position = this.getPosition();
 			this.forceUpdate();
 		}
 	}

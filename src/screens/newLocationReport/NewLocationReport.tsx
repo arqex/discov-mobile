@@ -69,6 +69,8 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 				</Marker>
 			);
 		}
+
+		return markers;
 	}
 
 	_renderLocation = ({item, index}) => {

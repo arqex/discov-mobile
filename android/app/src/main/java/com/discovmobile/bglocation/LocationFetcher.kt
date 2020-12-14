@@ -15,7 +15,15 @@ class LocationFetcher( val context: Context, val listener : (location: BgLocatio
     fun getLastLocation(){
         locationClient
                 .lastLocation
-                .addOnSuccessListener { location -> listener(BgLocation(location, "lastLocation")) }
+                .addOnSuccessListener { location -> {
+                    if( location != null ) {
+                        listener(BgLocation(location, "lastLocation"))
+                    }
+                    else {
+                        // If there is some error try to retrieve a fine location
+                        retrieveLocation()
+                    }
+                }}
     }
 
     @SuppressLint("MissingPermission")
