@@ -261,24 +261,6 @@ export default {
 		}
 	},
 
-	addLocationReportOld( loc, isBgFetch = false){
-		console.log('##### Adding to location report', store.locationReportOld && store.locationReportOld.length );
-		let locations = store.locationReportOld && store.locationReportOld.slice ? store.locationReportOld.slice() : [];
-
-		locations.unshift({
-			isBgFetch,
-			longitude: truncateDegrees(loc.longitude),
-			latitude: truncateDegrees(loc.latitude),
-			accuracy: parseInt(loc.accuracy),
-			date: Date.now()
-		});
-
-		locations = locations.slice(0,100);
-		store.locationReportOld = locations;
-	},
-
-
-
 	setLocationPermissions( permissions ){
 		store.locationPermissions = permissions;
 	},

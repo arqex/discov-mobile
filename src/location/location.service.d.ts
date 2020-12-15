@@ -1,7 +1,10 @@
+import { PermissionResponse } from "expo-location";
+
 const LocationService = {
 	addListener(clbk: Function){},
-	getPermissions():Promise<Boolean>{},
-	requestPermissions():Promise<Boolean>{},
+	getStoredPermission(): PermissionResponse {},
+	getPermission():Promise<PermissionResponse>{},
+	requestPermission():Promise<PermissionResponse>{},
 	resetFence(){},
 	startBackgroundLocationUpdates(){},
 	stopBackgroundLocationUpdates(){},

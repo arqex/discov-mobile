@@ -10,7 +10,8 @@ store.locationData = {
   report: {
     order: [],
     items: {}
-  }
+  },
+  permission: {}
 }
 */
 
@@ -60,7 +61,7 @@ export default {
     }
     
     report.items[location.id] = location;
-    report.order.push( location.id );
+    report.order.unshift( location.id );
 
     cleanLongReport( report );
   },
@@ -69,6 +70,12 @@ export default {
 		if( items[id] ) {
 			items[id].result = result;
 		}
+  },
+  getStoredPermission(){
+    return store.locationData.permissionData;
+  },
+  storePermission( permissionData ){
+    store.locationData.permission = permissionData;
   }
 }
 
@@ -82,7 +89,7 @@ function isExpired( location ){
 function cleanLongReport( report ){
   if( report.order.length <= 100 ) return;
 
-  let toDelete = report.order.splice( 0, 1 );
+  let toDelete = report.order.splice( 100, report.order.length - 100 );
   toDelete.forEach( location => {
     delete report.items[location.id];
   });

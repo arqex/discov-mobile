@@ -43,7 +43,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		super(props);
 
 		// refresh permissions
-		locationService.getPermissions();
+		locationService.getPermission();
 
 		let story = this.getStory();
 		let location = story.location && lngToLocation(story.location) || this.props.position;
@@ -564,7 +564,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	}
 
 	hasLocationPermission() {
-		let perm = this.props.store.locationPermissions
+		let perm = locationService.getStoredPermission();
 		return perm && perm.granted;
 	}
 

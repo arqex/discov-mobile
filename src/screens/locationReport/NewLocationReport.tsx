@@ -35,6 +35,9 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 							{ this.renderMarkers( locations ) }
 					</MapView>
 				</View>
+				<View>
+					<Text>Distance to discovery: { this.getDistanceToDiscovery() }</Text>
+				</View>
 				<View style={ styles.items }>
 					<FlatList
 						data={ locations.order }
@@ -54,7 +57,6 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 		while( i-- > 0 ){
 			let id = order[i];
 			let location = items[id];
-			let coords = location.coords ? location.coords : location
 			let st = [
 				styles.placeMarker,
 				{ backgroundColor: colorFromIndex(i, locationCount), zIndex: id === this.state.selectedLocation ? 10 : 1 }
@@ -62,7 +64,7 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 			markers.push(
 				<Marker
 					key={ id }
-					coordinate={ coords }>
+					coordinate={ location }>
 						<View style={styles.placeMarkerWrapper}>
 							<View style={st} />
 						</View>
@@ -119,6 +121,11 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 	getLocations(){
 		let report = this.props.store.locationData.report;
 		return report || {items:{}, order:[]};
+	}
+
+	getDistanceToDiscovery(){
+		let fence = this.props.store.locationData.fence;		
+		return fence ? fence.distanceToDiscovery : '???';
 	}
 
 	formatDate(t) {

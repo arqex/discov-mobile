@@ -1,7 +1,7 @@
 import { AppRegistry } from 'react-native';
 import { log } from '../utils/logger';
 import * as ExpoLocation from 'expo-location';
-import fenceManager from './fence.manager';
+import locationStore from './location.store';
 import BgLocation from './android/BgLocation';
 
 let clbks = [];
@@ -19,14 +19,28 @@ export default {
 	addListener( clbk ){
 		clbks.push( clbk );
 	},
-	getPermissions(){
-		return ExpoLocation.getPermissionsAsync();
+	getStoredPermission(){
+		return locationStore.getStoredPermission();
 	},
+	getPermission(){
+		return ExpoLocation.getPermissionsAsync()
+			.then( permission => {
+				locationStore.storePermission(permission);
+				return permission;
+			})
+		;
+	},
+	
 	requestPermissions(){
-		return ExpoLocation.requestPermissionsAsync();
+		return ExpoLocation.requestPermissionsAsync()
+			.then( permission => {
+				locationStore.storePermission(permission);
+				return permission;
+			})
+		;
 	},
 	resetFence(){
-		fenceManager.clearFence();
+		locationStore.clearFence();
 	},
 	startBackgroundLocationUpdates(){
 		BgLocation.startBackgroundLocationUpdates();

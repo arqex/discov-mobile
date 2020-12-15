@@ -4,7 +4,7 @@ import { dataService } from '../services/data.service';
 import serverMessageService from '../services/serverMessage/serverMessage.service';
 import { log } from '../utils/logger';
 import { AppState } from 'react-native';
-import fenceManager from './fence.manager';
+import fenceManager from './location.store';
 
 export default {
 	init(){
@@ -43,10 +43,8 @@ function onLocation( result, source ) {
 function handleDiscoveryRequest( location ) {
 	fenceManager.saveLocationReport( location );
 
-	return checkDiscoveries( location )
+	let result = checkDiscoveries( location )
 		.then( result => {
-			fenceManager.storeLastLocation( location );
-
 			if( result.error ){
 				if( result.error !== 'discovery_error' ){
 					locationService.notifyLocationHandled( fenceManager.NOT_TRIED );
@@ -57,9 +55,15 @@ function handleDiscoveryRequest( location ) {
 				locationService.notifyLocationHandled( result.distanceToDiscovery );
 			}
 
+
 			fenceManager.updateLocationReportResult( location.id , result );
+			let r = dataService.getStore().locationData.report.items[location.id].result;
+			console.log( r );
 		})
 	;
+
+	fenceManager.storeLastLocation( location );
+	return result;
 }
 
 function checkDiscoveries(location) {

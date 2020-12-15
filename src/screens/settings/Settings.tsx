@@ -47,9 +47,6 @@ class Settings extends React.Component<ScreenProps> {
 						<SettingItem title="See location report"
 							onPress={ () => this.props.router.navigate('/locationReport')} 
 							border />
-						<SettingItem title="New location report"
-							onPress={() => this.props.router.navigate('/newLocationReport')}
-							border />
 						<SettingItem title="See BG report"
 							onPress={() => this.props.router.navigate('/bgReport')}
 							border />
