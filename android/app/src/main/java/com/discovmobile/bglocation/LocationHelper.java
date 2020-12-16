@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
@@ -22,6 +23,8 @@ import com.discovmobile.bglocation.utils.Bglog;
 
 import java.util.Date;
 import java.util.List;
+
+import kotlin.jvm.JvmStatic;
 
 public class LocationHelper {
     public static final String CHANNEL_ID = "DiscovLocationChannel";
@@ -92,4 +95,8 @@ public class LocationHelper {
         service.stopForeground( true );
     }
 
+    @JvmStatic
+    static boolean hasPermission( Context context ){
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 }

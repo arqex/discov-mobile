@@ -11,7 +11,8 @@ store.locationData = {
     order: [],
     items: {}
   },
-  permission: {}
+  permission: {},
+  backgroundPermission: {}
 }
 */
 
@@ -72,10 +73,13 @@ export default {
 		}
   },
   getStoredPermission(){
-    return store.locationData.permissionData;
+    return store.locationData.permission;
   },
   storePermission( permissionData ){
     store.locationData.permission = permissionData;
+  },
+  storeBackgroundPermission( permission ){
+    store.locationData.backgroundPermission = permission;
   }
 }
 

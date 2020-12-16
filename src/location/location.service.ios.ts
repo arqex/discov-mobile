@@ -7,6 +7,7 @@ export default {
 	addListener(clbk) {
 		clbks.push(clbk);
 	},
+	getBackgroundPermission(){},
 	getStoredPermission(){
 		return locationStore.getStoredPermission();
 	},

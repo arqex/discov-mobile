@@ -133,5 +133,21 @@ class Storage {
                     .putBoolean("fgTracking", isActive)
                     .apply()
         }
+
+        @JvmStatic
+        fun getBackgroundPermission( context: Context ): BgLocationPermission? {
+            val permission = getStore( context ).getString("locationPermission", "");
+            if( permission == null || permission == "" ){
+                return null;
+            }
+            return BgLocationPermission.fromString(permission);
+        }
+        @JvmStatic
+        fun saveBackgroundPermission( context: Context, permission: BgLocationPermission ){
+            getStore( context )
+                    .edit()
+                    .putString("locationPermission", permission.stringify())
+                    .apply()
+        }
     }
 }

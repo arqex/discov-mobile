@@ -18,6 +18,7 @@ export default {
 					locationService.stopTracking();
 				}
 				else {
+					locationService.getBackgroundPermission();
 					locationService.updateLocation();
 				}
 			})

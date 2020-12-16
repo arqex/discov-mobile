@@ -19,6 +19,14 @@ export default {
 	addListener( clbk ){
 		clbks.push( clbk );
 	},
+	getBackgroundPermission() {
+		return BgLocation.getBackgroundLocationPermission()
+			.then( bgPermission => {
+				locationStore.storeBackgroundPermission(bgPermission)
+				return bgPermission;
+			})
+		;
+	},
 	getStoredPermission(){
 		return locationStore.getStoredPermission();
 	},

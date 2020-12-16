@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.discovmobile.bglocation.utils.BgLocationPermission;
 import com.discovmobile.bglocation.utils.Bglog;
+import com.discovmobile.bglocation.utils.Storage;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -92,6 +95,17 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements JSEv
         });
 
         fetcher.retrieveLocation();
+    }
+
+    @ReactMethod
+    public void getBackgroundLocationPermission(Promise promise){
+        BgLocationPermission permission = Storage.getBackgroundPermission(mContext);
+        if( permission != null ){
+            promise.resolve( permission.stringify() );
+        }
+        else {
+            promise.resolve( null );
+        }
     }
 
     @Nonnull

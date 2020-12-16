@@ -18,5 +18,12 @@ export default {
   },
   stopBackgroundLocationUpdates(){
     NativeModules.BgLocation.stopBackgroundLocationUpdates();
+  },
+  getBackgroundLocationPermission(){
+    return NativeModules.BgLocation.getBackgroundLocationPermission()
+      .then( permisionStr => {
+        return JSON.parse( permisionStr );
+      })
+    ;
   }
 }

@@ -5,13 +5,12 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.hardware.display.DisplayManager
 import android.net.ConnectivityManager
-import android.os.Build
-import android.os.PowerManager
 import android.os.SystemClock
-import android.view.Display
+import com.discovmobile.bglocation.utils.BgLocationPermission
 import com.discovmobile.bglocation.utils.Bglog
+import com.discovmobile.bglocation.utils.Storage
+import java.util.*
 
 
 class AlarmHelper: BroadcastReceiver() {
@@ -45,11 +44,12 @@ class AlarmHelper: BroadcastReceiver() {
         // Send a sign
         HeadlessService.sendSignal(context, "alarm")
 
-        // Get a location
-
+        // Update location
         if( needTracking(context) && context != null ){
             updateLocation(context);
         }
+
+        updateBackgroundPermission( context );
 
         // Restart alarm
         start(context)
@@ -89,5 +89,16 @@ class AlarmHelper: BroadcastReceiver() {
         };
 
         return true;
+    }
+
+    private fun updateBackgroundPermission( context: Context? ){
+        if( context == null || LocationHelper.isAppOnForeground(context) ) return
+
+        val isGranted = LocationHelper.hasPermission(context)
+        val storedPermission = Storage.getBackgroundPermission(context)
+        if( storedPermission == null || storedPermission.isGranted !== isGranted ){
+            val permission = BgLocationPermission( isGranted, Date().time );
+            Storage.saveBackgroundPermission(context, permission);
+        }
     }
 }
