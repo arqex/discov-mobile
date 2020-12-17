@@ -137,7 +137,7 @@ export default {
 						...d,
 						owner: store.peerAccounts[ d.ownerId ]
 					};
-					unseen.push( discoveries );
+					unseen.push( discovery );
 					i++;
 				}
 			}
@@ -187,82 +187,6 @@ export default {
 
 	storeLocationAddress( location, address ){
 		store.addressByLocation[getLocationKey(location)] = address;
-	},
-
-	getCurrentPosition(){
-		return store.locationData.lastLocation;
-	},	
-
-	storeCurrentPosition( coords, error? ){
-		if( error ){
-			return store.currentPosition = {
-				status: error,
-				updatedAt: Date.now(),
-				coords: false
-			};
-		}
-
-		store.currentPosition = {
-			status: 'ok',
-			updatedAt: Date.now(),
-			coords
-		}
-	},
-
-	getPassiveGeofence(){
-		return store.passiveGeofence;
-	},
-
-	storePassiveGeoFence( location, radius ) {
-		store.passiveGeofence = {
-			updatedAt: ( new Date() ).toISOString(),
-			latitude: location.latitude,
-			longitude: location.longitude,
-			radius: radius
-		};
-	},
-
-	storeFenceDistance( distance ){
-		store.distanceFromOutOfFence = distance;
-	},
-
-	getFenceDistance() {
-		return store.distanceFromOutOfFence;
-	},
-
-	addLocationReport( locations ){
-		let order = [];
-		let items = {};
-
-		locations.forEach( l => {
-			order.push(l.id);
-			items[l.id] = l;
-		});
-
-		let currentReport = store.locationReport;
-		if( currentReport && !currentReport.slice && currentReport.order ){
-			let limit = Math.min( 200 - order.length, currentReport.order.length );
-			let i = 0;
-			while( i < limit ){
-				let id = currentReport.order[i];
-				order.push( id );
-				items[ id ] = currentReport.items[id];
-				i++;
-			}
-		}
-
-		store.locationReport = { order, items };
-	},
-
-	setLocationResult( id, result ){
-		let { items } = store.locationReport;
-		if( items[id] ) {
-			items[id].result = result;
-		}
-	},
-
-	setLocationPermissions( permissions ){
-		store.locationPermissions = permissions;
 	},
 
 	getComments( storyId ){

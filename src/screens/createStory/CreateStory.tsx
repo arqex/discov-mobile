@@ -565,7 +565,7 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 
 	hasLocationPermission() {
 		let perm = locationService.getStoredPermission();
-		return perm && perm.granted;
+		return perm && perm.isGranted;
 	}
 
 	componentWillUnmount() {

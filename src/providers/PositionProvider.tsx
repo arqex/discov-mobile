@@ -25,7 +25,7 @@ export default function PositionProvider(WrappedComponent) {
 		}
 
 		getPosition() {
-			return storeService.getCurrentPosition();
+			return locationService.getLastLocation();
 		}
 
 		componentDidMount() {

@@ -2,6 +2,7 @@
 import actionService from './action.service';
 import storeService from '../store.service';
 import * as RNLocalize from 'react-native-localize';
+import locationService from '../../location/old/location.service';
 
 export default function (store, api) {
 
@@ -28,7 +29,7 @@ export default function (store, api) {
 		},
 
 		searchPlaces( query:string, location: any ){
-			let position = location || storeService.getCurrentPosition().coords || defaultLocation;
+			let position = location || locationService.getLastLocation() || defaultLocation;
 
 			let payload = {
 				query,

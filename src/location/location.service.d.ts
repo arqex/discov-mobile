@@ -1,17 +1,31 @@
-import { PermissionResponse } from "expo-location";
-
-interface BgPermission {
-	foreground: boolean,
-	background: boolean,
+interface BgLocation {
+	accuracy: number,
+	altitude: number,
+	bearing: number,
+	id?: string,
+	latitude: number,
+	longitude: number,
+	source?: string,
 	timestamp: number
+}
+interface BgPermission {
+	isGranted: boolean,
+	updatedAt: number,
+	checkedAt: number,
+	requestedAt: number
+}
+
+interface FgPermission extends BgPermission{
+	canAskAgain: boolean
 }
 
 const LocationService = {
-	addListener(clbk: Function){},
+	addListener(clbk: (location:BgLocation) => {}){},
 	getBackgroundPermission(): BgPermission {},
-	getStoredPermission(): PermissionResponse {},
-	getPermission():Promise<PermissionResponse>{},
-	requestPermission():Promise<PermissionResponse>{},
+	getLastLocation(): BgLocation | undefined {},
+	getPermission():Promise<FgPermission>{},
+	getStoredPermission(): FgPermission | undefined {},
+	requestPermission():Promise<FgPermission>{},
 	resetFence(){},
 	startBackgroundLocationUpdates(){},
 	stopBackgroundLocationUpdates(){},

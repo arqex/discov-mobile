@@ -4,6 +4,7 @@ import { ScreenProps } from '../../utils/ScreenProps';
 import { storyService } from '../../services/story.service';
 import storeService from '../../state/store.service';
 import StoryScreen from '../components/StoryScreen';
+import locationService from '../../location/old/location.service';
 
 export default class OwnStory extends Component<ScreenProps> {
 	
@@ -23,7 +24,7 @@ export default class OwnStory extends Component<ScreenProps> {
 			return this.renderLoading();
 		}
 
-		const currentPosition = storeService.getCurrentPosition();
+		const currentPosition = locationService.getLastLocation();
 
 		return (
 			<StoryScreen

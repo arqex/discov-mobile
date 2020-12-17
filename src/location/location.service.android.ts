@@ -27,24 +27,20 @@ export default {
 			})
 		;
 	},
+	getLastLocation(){
+		return locationStore.getLastLocation();
+	},
 	getStoredPermission(){
 		return locationStore.getStoredPermission();
 	},
 	getPermission(){
 		return ExpoLocation.getPermissionsAsync()
-			.then( permission => {
-				locationStore.storePermission(permission);
-				return permission;
-			})
+			.then( permission => locationStore.storePermission(permission, false) )
 		;
 	},
-	
 	requestPermissions(){
 		return ExpoLocation.requestPermissionsAsync()
-			.then( permission => {
-				locationStore.storePermission(permission);
-				return permission;
-			})
+			.then( permission => locationStore.storePermission(permission, true) )
 		;
 	},
 	resetFence(){

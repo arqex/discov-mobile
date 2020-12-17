@@ -13,7 +13,7 @@ store.locationData = {
     order: [],
     items: {}
   },
-  permission: {},
+  foregroundPermission: {},
   backgroundPermission: {}
 }
 */
@@ -27,6 +27,9 @@ export default {
   },
 
   NOT_TRIED: -2,
+  getLastLocation(){
+    return store.locationData.lastLocation;
+  },
   storeLastLocation( location ){
     store.locationData.lastLocation = location;
   },
@@ -75,13 +78,23 @@ export default {
 		}
   },
   getStoredPermission(){
-    return store.locationData.permission;
+    return store.locationData.foregroundPermission;
   },
-  storePermission( permissionData ){
-    store.locationData.permission = permissionData;
+  storePermission( permissionData, justRequested ){
+    let now = Date.now();
+    let storedPermission = this.getStoredPermission();
+    let permission = {
+      isGranted: permissionData.granted,
+      canAskAgain: permissionData.canAskAgain,
+      updatedAt: !storedPermission || storedPermission.isGranted !== permissionData.granted ? now : storedPermission.updatedAt,
+      checkedAt: now,
+      requestedAt: !storedPermission || justRequested ? now : storedPermission.requestedAt
+    };
+    store.locationData.foregroundPermission = permission;
+    return permission;
   },
-  storeBackgroundPermission( permission ){
-    store.locationData.backgroundPermission = permission;
+  storeBackgroundPermission( foregroundPermission ){
+    store.locationData.backgroundPermission = foregroundPermission;
   },
   getLastTriedAt(){
     return store.locationData.lastTriedAt;
@@ -90,7 +103,6 @@ export default {
     store.locationData.lastTriedAt = timestamp;
     dataService.backupStoreNow();
   }
-
 }
 
 const STALE_UPDATE_TIME = 5 * 60 * 1000;
