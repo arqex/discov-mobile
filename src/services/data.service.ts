@@ -87,7 +87,8 @@ export const dataService = {
 		}
 
 		return lastLoginStatus;
-	}
+	},
+	backupStoreNow: backupStoreNow
 }
 
 // dataService get always initialized automatically
@@ -139,12 +140,16 @@ function backupStore(){
 		if( !backupRestored ){
 			return backupStore();
 		}
-
-		backupTimer = false;
-		authStore.storage.setItem(BACKUP_KEY, JSON.stringify( store ) );
-		console.log('####### Backup SAVED: ', store.locationReport &&  store.locationReport.length);
+		backupStoreNow();
 	}, 2000);
 }
+
+function backupStoreNow() {
+	backupTimer = false;
+	authStore.storage.setItem(BACKUP_KEY, JSON.stringify( store ) );
+	console.log('####### Backup SAVED: ', store.locationReport &&  store.locationReport.length);
+}
+
 
 let backupRestored = false;
 function restoreStore(){

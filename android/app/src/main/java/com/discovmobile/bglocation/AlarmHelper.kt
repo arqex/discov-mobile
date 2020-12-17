@@ -94,11 +94,15 @@ class AlarmHelper: BroadcastReceiver() {
     private fun updateBackgroundPermission( context: Context? ){
         if( context == null || LocationHelper.isAppOnForeground(context) ) return
 
-        val isGranted = LocationHelper.hasPermission(context)
         val storedPermission = Storage.getBackgroundPermission(context)
-        if( storedPermission == null || storedPermission.isGranted !== isGranted ){
-            val permission = BgLocationPermission( isGranted, Date().time );
-            Storage.saveBackgroundPermission(context, permission);
+        val isGranted = LocationHelper.hasPermission(context)
+        if( storedPermission == null || storedPermission.isGranted != isGranted ){
+            val permission = BgLocationPermission( isGranted, Date().time, Date().time )
+            Storage.saveBackgroundPermission(context, permission)
+        }
+        else {
+            val permission = BgLocationPermission( isGranted, storedPermission.updatedAt, Date().time )
+            Storage.saveBackgroundPermission(context, permission)
         }
     }
 }

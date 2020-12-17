@@ -4,14 +4,14 @@ import { dataService } from '../services/data.service';
 import serverMessageService from '../services/serverMessage/serverMessage.service';
 import { log } from '../utils/logger';
 import { AppState } from 'react-native';
-import fenceManager from './location.store';
+import locationStore from './location.store';
 
 export default {
 	init(){
 		dataService.init().then( () => {
 			locationService.addListener( onLocation );
 
-			fenceManager.init( dataService.getStore() );
+			locationStore.init( dataService.getStore() );
 	
 			AppState.addEventListener( 'change', status => {
 				if( status !== 'active' ){
@@ -42,28 +42,28 @@ function onLocation( result, source ) {
 };
 
 function handleDiscoveryRequest( location ) {
-	fenceManager.saveLocationReport( location );
+	locationStore.saveLocationReport( location );
 
 	let result = checkDiscoveries( location )
 		.then( result => {
 			if( result.error ){
 				if( result.error !== 'discovery_error' ){
-					locationService.notifyLocationHandled( fenceManager.NOT_TRIED );
+					locationService.notifyLocationHandled( locationStore.NOT_TRIED );
 				}
 			}
 			else {
-				fenceManager.updateFence( location, result.distanceToDiscovery );
+				locationStore.updateFence( location, result.distanceToDiscovery );
 				locationService.notifyLocationHandled( result.distanceToDiscovery );
 			}
 
 
-			fenceManager.updateLocationReportResult( location.id , result );
+			locationStore.updateLocationReportResult( location.id , result );
 			let r = dataService.getStore().locationData.report.items[location.id].result;
 			console.log( r );
 		})
 	;
 
-	fenceManager.storeLastLocation( location );
+	locationStore.storeLastLocation( location );
 	return result;
 }
 
@@ -74,12 +74,12 @@ function checkDiscoveries(location) {
 		return Promise.resolve({ error: 'LOGGED_OUT' });
 	}
 
-	if ( !fenceManager.hasAvailableDiscoveries() ) {
+	if ( !locationStore.hasAvailableDiscoveries() ) {
 		log('----- Nothing to discover');
 		return Promise.resolve({ error: 'nothing_to_discover' });
 	}
 
-	if ( fenceManager.isInFence(location) ) {
+	if ( locationStore.isInFence(location) ) {
 		log('----- Location in fence');
 		return Promise.resolve({ error: 'location_in_fence' });
 	}
@@ -90,6 +90,7 @@ function checkDiscoveries(location) {
 	}
 
 	log('----- Getting discoveries!');
+	locationStore.setLastTriedAt( Date.now() );
 	return dataService.getActions().discovery.discoverAround(location)
 		.then(res => onDiscoveryResponse(res))
 		.then(res => {
@@ -118,11 +119,11 @@ function onDiscoveryResponse(res) {
 // Ten seconds without requesting new discoveries
 const REQUEST_PAUSE = 10000;
 function isInPause() {
-	let fence = fenceManager.getFenceData();
-	if( !fence ) return false;
+	let lastTriedAt = locationStore.getLastTriedAt();
+	if( !lastTriedAt ) return false;
 
 	let now = Date.now();
-	return now < fence.location.timestamp + REQUEST_PAUSE;
+	return now < lastTriedAt + REQUEST_PAUSE;
 }
 
 function createDiscoveriesNofication(discoveries) {

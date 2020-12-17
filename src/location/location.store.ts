@@ -1,7 +1,9 @@
+import { dataService } from "../services/data.service";
 import { getDistance } from "../utils/maps";
 
 /* locationData has this shape:
 store.locationData = {
+  lastTriedAt: 0,
   lastLocation: {},
   fence: {
     location: {},
@@ -80,7 +82,15 @@ export default {
   },
   storeBackgroundPermission( permission ){
     store.locationData.backgroundPermission = permission;
+  },
+  getLastTriedAt(){
+    return store.locationData.lastTriedAt;
+  },
+  setLastTriedAt(timestamp){
+    store.locationData.lastTriedAt = timestamp;
+    dataService.backupStoreNow();
   }
+
 }
 
 const STALE_UPDATE_TIME = 5 * 60 * 1000;

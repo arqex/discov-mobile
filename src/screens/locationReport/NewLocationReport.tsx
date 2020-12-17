@@ -36,7 +36,7 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 					</MapView>
 				</View>
 				<View>
-					<Text>Distance to discovery: { this.getDistanceToDiscovery() }</Text>
+					<Text>Closest discov: { this.getDistanceToDiscovery() } - BgPermission: { this.getBgPermission() }</Text>
 				</View>
 				<View style={ styles.items }>
 					<FlatList
@@ -51,18 +51,15 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 
 	renderMarkers( {order, items} ){
 		let locationCount = order.length;
-		let i = locationCount
-		let markers = [];
-
-		while( i-- > 0 ){
-			let id = order[i];
+		return order.map( (id,i) => {
 			let location = items[id];
 			let st = [
 				styles.placeMarker,
-				{ backgroundColor: colorFromIndex(i, locationCount), zIndex: id === this.state.selectedLocation ? 10 : 1 }
+				{ backgroundColor: colorFromIndex(i, locationCount) }
 			];
-			markers.push(
+			return (
 				<Marker
+					style={{zIndex: id === this.state.selectedLocation ? 1000 : locationCount - i}}
 					key={ id }
 					coordinate={ location }>
 						<View style={styles.placeMarkerWrapper}>
@@ -70,9 +67,7 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 						</View>
 				</Marker>
 			);
-		}
-
-		return markers;
+		});
 	}
 
 	_renderLocation = ({item, index}) => {
@@ -126,6 +121,12 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 	getDistanceToDiscovery(){
 		let fence = this.props.store.locationData.fence;		
 		return fence ? fence.distanceToDiscovery : '???';
+	}
+
+	getBgPermission(){
+		let permission = this.props.store.locationData.backgroundPermission;
+		console.log(permission);
+		return permission ? `${permission.isGranted}:${this.formatDate(permission.checkedAt)}` : '???';
 	}
 
 	formatDate(t) {
