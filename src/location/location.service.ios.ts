@@ -16,7 +16,7 @@ export default {
 			.then( permission => locationStore.storePermission(permission, false) )
 		;
 	},
-	requestPermissions(){
+	requestPermission(){
 		return ExpoLocation.requestPermissionsAsync()
 			.then( permission => locationStore.storePermission(permission, true) )
 		;

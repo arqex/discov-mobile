@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.os.Build
 import android.os.SystemClock
 import com.discovmobile.bglocation.utils.BgLocationPermission
 import com.discovmobile.bglocation.utils.Bglog
@@ -62,12 +63,15 @@ class AlarmHelper: BroadcastReceiver() {
             LocationManager.onLocation(context, location)
         });
 
+
         if (LocationManager.needFineLocation(context)) {
             type = "fine";
             fetcher.retrieveLocation()
         } else {
             fetcher.getLastLocation()
         }
+
+        Bglog.i("Getting location ${type}");
     }
 
     private fun isNetworkAvailable(context: Context?): Boolean {
@@ -92,13 +96,16 @@ class AlarmHelper: BroadcastReceiver() {
     }
 
     private fun updateBackgroundPermission( context: Context? ){
-        if( context == null || LocationHelper.isAppOnForeground(context) ) return
+        if( context == null ) return
 
         val storedPermission = Storage.getBackgroundPermission(context)
-        val isGranted = LocationHelper.hasPermission(context)
+        val isGranted = LocationHelper.hasBackgroundPermission(context)
         if( storedPermission == null || storedPermission.isGranted != isGranted ){
             val permission = BgLocationPermission( isGranted, Date().time, Date().time )
             Storage.saveBackgroundPermission(context, permission)
+            if( isGranted ){
+                LocationStarter.startGeofence(context)
+            }
         }
         else {
             val permission = BgLocationPermission( isGranted, storedPermission.updatedAt, Date().time )

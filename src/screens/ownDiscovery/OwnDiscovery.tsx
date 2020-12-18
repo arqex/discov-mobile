@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import storeService from '../../state/store.service';
 import StoryScreen from '../components/StoryScreen';
-import locationService from '../../location/old/location.service';
+import locationService from '../../location/location.service';
 
 export default class OwnDiscovery extends Component<ScreenProps> {
 	state = {

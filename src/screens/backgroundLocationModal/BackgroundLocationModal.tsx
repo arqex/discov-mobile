@@ -3,14 +3,13 @@ import { View, StyleSheet, Image, Linking } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, Text, Button, styleVars } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
-import locationService from '../../location/location.service';
 import locationStore from '../../location/location.store';
 
-interface NoLocationScreenProps extends ScreenProps {
+interface BackgroundLocationModalProps extends ScreenProps {
 
 }
 
-class NoLocationScreen extends React.Component<NoLocationScreenProps>{
+class BackgroundLocationModal extends React.Component<BackgroundLocationModalProps>{
 	state = {
 		loading: false
 	}
@@ -23,7 +22,7 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 						style={styles.image} />
 					<View style={styles.title}>
 						<Text type="header">
-							Enable location
+							Location in the Background
 						</Text>
 					</View>
 				</View>
@@ -31,8 +30,20 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 					<View style={styles.card}>
 						<View style={styles.content}>
 							<View style={styles.paragraph}>
-								{ this.props.children }
+                <Text>
+								  If you want to discover your friend's stories while your phone is in your pocket on stand-by, Discov needs to access the location when the app is not actively used.
+                </Text>
 							</View>
+              <View style={styles.paragraph}>
+                <Text>
+                  Please go to the phone settings and enable Discov to access to the location "All the time".
+                </Text>
+              </View>
+              <View style={styles.paragraph}>
+                <Text>
+                  The app will try to know your position only when you are on the move and you can always check when the location has been accessed by Discov in the location report.
+                </Text>
+              </View>
 							{ this.renderControls() }
 						</View>
 					</View>
@@ -42,56 +53,32 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 	}
 
 	renderControls() {
-		if( this.canAskForLocation() ){
-			return (
-				<View style={styles.buttonWrapper}>
-					<Button onPress={ this._askForPermission } loading={ this.state.loading }>
-						Enable location
-					</Button>
-				</View>
-			);
-		}
-
 		return (
 			<View>
-				<View style={styles.paragraph}>
-					<Text>
-						Please go to the phone settings and enable the location for Discov.
-					</Text>
-				</View>
 				<View style={styles.buttonWrapper}>
 					<Button onPress={ this._openSettings }>
 						Go to settings
+					</Button>
+				</View>
+				<View style={styles.buttonWrapper}>
+					<Button onPress={ () => this.props.router.back() } type="transparent">
+					  Not now
 					</Button>
 				</View>
 			</View>
 		);
 	}
 
-	canAskForLocation() {
-		let perm = locationStore.getStoredPermission();
-
-		console.log('Perm', perm );
-
-		return !perm || perm.canAskAgain;
-	}
-
-	_askForPermission = () => {
-		this.setState({loading: true});
-		
-		locationService.requestPermission()
-			.then( () => {
-				this.setState({loading: false});
-			})
-		;
-	}
-
 	_openSettings = () => {
 		Linking.openSettings();
 	}
+
+	componentWillLeave() {
+		locationStore.refreshBackgroundRequestedAt();
+	}
 };
 
-export default NoLocationScreen;
+export default BackgroundLocationModal;
 
 const styles = StyleSheet.create({
 	container: {

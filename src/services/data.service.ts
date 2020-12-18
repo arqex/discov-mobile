@@ -147,7 +147,7 @@ function backupStore(){
 function backupStoreNow() {
 	backupTimer = false;
 	authStore.storage.setItem(BACKUP_KEY, JSON.stringify( store ) );
-	console.log('####### Backup SAVED: ', store.locationReport &&  store.locationReport.length);
+	console.log('####### Backup SAVED');
 }
 
 
@@ -171,7 +171,7 @@ function restoreStore(){
 						store.accountStatus = {}; // Clear the account status in case we need to refresh
 					}
 
-					console.log(`###### Backup RESTORED: ${backup.locationReport && backup.locationReport.length}`);
+					console.log(`###### Backup RESTORED`);
 
 				}
 				catch ( err ) {

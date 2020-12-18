@@ -12,6 +12,7 @@ import RootLoading from './RootLoading';
 import serverMessageListener from './services/serverMessage/serverMessage.listener';
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
+import appStateService from './services/appState.service';
 import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
 import BackButtonHandler from './utils/BackButtonHandler';
 import locationHandler from './location/location.handler';
@@ -120,7 +121,7 @@ class Root extends React.Component {
 			}); 
 		});
 
-		locationHandler.init();
+		locationHandler.init(router);
 
     let update = () => {
 			if( !this.unmounted ) this.forceUpdate();
@@ -151,6 +152,11 @@ class Root extends React.Component {
 
 			return false;
 		});
+
+		// Signal other listeners about the app has been open
+		if( AppState.currentState === 'active') {
+			appStateService.emit('active');
+		}
 	}
 
 	isLoading() {

@@ -149,5 +149,17 @@ class Storage {
                     .putString("locationPermission", permission.stringify())
                     .apply()
         }
+
+        @JvmStatic
+        fun getLastBuildAt( context: Context ): Long? {
+            return getStore( context ).getLong("lastBuildAt", 0)
+        }
+        @JvmStatic
+        fun setLastBuildAt( context: Context, buildAt: Long ){
+            getStore( context )
+                    .edit()
+                    .putLong("lastBuildAt", buildAt)
+                    .apply()
+        }
     }
 }

@@ -1,4 +1,4 @@
-interface BgLocation {
+export interface BgLocation {
 	accuracy: number,
 	altitude: number,
 	bearing: number,
@@ -8,20 +8,20 @@ interface BgLocation {
 	source?: string,
 	timestamp: number
 }
-interface BgPermission {
+export interface BgPermission {
 	isGranted: boolean,
 	updatedAt: number,
 	checkedAt: number,
 	requestedAt: number
 }
 
-interface FgPermission extends BgPermission{
+export interface FgPermission extends BgPermission{
 	canAskAgain: boolean
 }
 
 const LocationService = {
-	addListener(clbk: (location:BgLocation) => {}){},
-	getBackgroundPermission(): BgPermission {},
+	addListener(clbk: (location:BgLocation, source: String) => void){},
+	getBackgroundPermission(): Promise<BgPermission> {},
 	getLastLocation(): BgLocation | undefined {},
 	getPermission():Promise<FgPermission>{},
 	getStoredPermission(): FgPermission | undefined {},

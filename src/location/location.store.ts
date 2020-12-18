@@ -93,8 +93,12 @@ export default {
     store.locationData.foregroundPermission = permission;
     return permission;
   },
-  storeBackgroundPermission( foregroundPermission ){
-    store.locationData.backgroundPermission = foregroundPermission;
+  getBackgroundPermission(){
+    return store.locationData.backgroundPermission;
+  },
+  storeBackgroundPermission( permission ){
+    let storedPermission = this.getBackgroundPermission() || {};
+    store.locationData.backgroundPermission = { ...storedPermission, ...permission};
   },
   getLastTriedAt(){
     return store.locationData.lastTriedAt;
@@ -102,6 +106,12 @@ export default {
   setLastTriedAt(timestamp){
     store.locationData.lastTriedAt = timestamp;
     dataService.backupStoreNow();
+  },
+  refreshBackgroundRequestedAt(){
+    let bgPermission = store.locationData.backgroundPermission;
+    if( bgPermission ){
+      bgPermission.requestedAt = Date.now();
+    }
   }
 }
 

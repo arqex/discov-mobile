@@ -1,32 +1,30 @@
-import locationService from './location.service';
+import locationService, {BgLocation} from './location.service';
 import storeService from '../state/store.service';
 import { dataService } from '../services/data.service';
 import serverMessageService from '../services/serverMessage/serverMessage.service';
 import { log } from '../utils/logger';
-import { AppState } from 'react-native';
 import locationStore from './location.store';
+import appStateService from '../services/appState.service';
 
+let router;
 export default {
-	init(){
+	init( r ){
+		router = r;
 		dataService.init().then( () => {
 			locationService.addListener( onLocation );
 
 			locationStore.init( dataService.getStore() );
-	
-			AppState.addEventListener( 'change', status => {
-				if( status !== 'active' ){
-					locationService.stopTracking();
-				}
-				else {
-					locationService.getBackgroundPermission();
-					locationService.updateLocation();
-				}
-			})
+		});
+		appStateService.addChangeListener( status => {
+			status === 'active' ?
+				onGoingToForeground() :
+				onGoingToBackground()
+			;
 		})
 	}
 };
 
-function onLocation( result, source ) {
+function onLocation( result: BgLocation, source: String ) {
 	let location = {
 		...result,
 		source,
@@ -151,4 +149,38 @@ function createDiscoveriesNofication(discoveries) {
 
 function getRandomId() {
 	return '' + Math.random();
+}
+
+
+function onGoingToBackground() {
+	locationService.stopTracking();
+}
+
+function onGoingToForeground() {
+	dataService.init().then( () => {
+		locationService.updateLocation();
+		locationService.getBackgroundPermission().then( checkAskForBackgroundPermission );
+	});
+}
+
+const BG_PERM_REQUEST_WAIT = 2 * 60 * 60 * 1000; // 2 hours
+function checkAskForBackgroundPermission( bgPermission ){
+	let fgPermission = locationService.getStoredPermission();
+
+	if( !fgPermission || !fgPermission.isGranted ) return;
+
+	if( bgPermission && bgPermission.isGranted ) return;
+
+	let lastRequested = bgPermission && bgPermission.requestedAt || fgPermission.requestedAt;
+	let now = Date.now();
+
+	if( lastRequested + BG_PERM_REQUEST_WAIT < now ){
+		router.onChange( navigationListener );
+	}
+}
+
+function navigationListener() {
+	router.offChange( navigationListener );
+	// At the first navigation we prompt the user
+	setTimeout( () => {router.navigate('/backgroundLocationModal')}, 500 );
 }

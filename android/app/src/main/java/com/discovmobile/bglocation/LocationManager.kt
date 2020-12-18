@@ -26,6 +26,7 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
 
     @JvmStatic
     fun onLocation(context: Context, location: BgLocation ) {
+      Bglog.i("Location received");
       val lastLocation = getLastLocation(context)
 
       if( needToUpdateLocation(lastLocation, location) ){

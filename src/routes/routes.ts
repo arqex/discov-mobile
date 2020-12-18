@@ -35,6 +35,7 @@ import AssetsViewer from '../screens/assetsViewer/AssetsViewer';
 import StoryComments from '../screens/storyComments/StoryComments';
 import DiscoveryCommentsScreen from '../screens/storyComments/DiscoveryComments';
 import UnknownDiscovery from '../screens/unknownDiscovery/UnknownDiscovery';
+import BackgroundLocationModal from '../screens/backgroundLocationModal/BackgroundLocationModal';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -91,6 +92,7 @@ export const routes = [
 	{ path: '/bgReport', cb: BgReport },
 
 	{ path: '/accountModal', cb: PeerAccountModal, isModal: true },
+	{ path: '/backgroundLocationModal', cb: BackgroundLocationModal, isModal: true },
 
 	{ path: '/unknownDiscovery', cb: UnknownDiscovery },
 

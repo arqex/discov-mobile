@@ -4,7 +4,7 @@ import { ScreenProps } from '../../utils/ScreenProps';
 import { storyService } from '../../services/story.service';
 import storeService from '../../state/store.service';
 import StoryScreen from '../components/StoryScreen';
-import locationService from '../../location/old/location.service';
+import locationService from '../../location/location.service';
 
 export default class OwnStory extends Component<ScreenProps> {
 	

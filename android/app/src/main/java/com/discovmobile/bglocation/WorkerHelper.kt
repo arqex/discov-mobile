@@ -3,6 +3,7 @@ package com.discovmobile.bglocation
 import android.content.Context
 import androidx.work.*
 import com.discovmobile.bglocation.utils.Bglog
+import com.discovmobile.bglocation.utils.Storage
 import java.util.concurrent.TimeUnit
 
 
@@ -24,7 +25,21 @@ class WorkerHelper( context: Context, workerParameters: WorkerParameters) : Work
                     .build()
 
             WorkManager.getInstance( context )
-                    .enqueueUniquePeriodicWork( WORK_NAME, ExistingPeriodicWorkPolicy.KEEP, workRequest )
+                    .enqueueUniquePeriodicWork( WORK_NAME, getWorkPolicy(context), workRequest )
+        }
+
+        fun getWorkPolicy( context: Context ): ExistingPeriodicWorkPolicy {
+            val info = context?.packageManager?.getPackageInfo( context?.packageName, 0);
+            if( info != null ){
+                val lastBuild = Storage.getLastBuildAt(context);
+                Bglog.i( "Buildcode ${info.lastUpdateTime.toString()}" );
+                if( lastBuild != info.lastUpdateTime ){
+                    Bglog.i( "!!! Replacing worker" );
+                    Storage.setLastBuildAt(context, info.lastUpdateTime)
+                    return ExistingPeriodicWorkPolicy.REPLACE
+                }
+            }
+            return ExistingPeriodicWorkPolicy.KEEP
         }
     }
     override fun doWork(): Result {

@@ -99,4 +99,9 @@ public class LocationHelper {
     static boolean hasPermission( Context context ){
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
+
+    @JvmStatic
+    static boolean hasBackgroundPermission( Context context ){
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 }

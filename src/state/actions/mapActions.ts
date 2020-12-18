@@ -2,7 +2,7 @@
 import actionService from './action.service';
 import storeService from '../store.service';
 import * as RNLocalize from 'react-native-localize';
-import locationService from '../../location/old/location.service';
+import locationService from '../../location/location.service';
 
 export default function (store, api) {
 

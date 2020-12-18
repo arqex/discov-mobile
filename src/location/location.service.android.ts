@@ -23,7 +23,7 @@ export default {
 		return BgLocation.getBackgroundLocationPermission()
 			.then( bgPermission => {
 				locationStore.storeBackgroundPermission(bgPermission)
-				return bgPermission;
+				return locationStore.getBackgroundPermission();
 			})
 		;
 	},
@@ -38,7 +38,7 @@ export default {
 			.then( permission => locationStore.storePermission(permission, false) )
 		;
 	},
-	requestPermissions(){
+	requestPermission(){
 		return ExpoLocation.requestPermissionsAsync()
 			.then( permission => locationStore.storePermission(permission, true) )
 		;
