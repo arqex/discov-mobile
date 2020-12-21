@@ -36,6 +36,7 @@ import StoryComments from '../screens/storyComments/StoryComments';
 import DiscoveryCommentsScreen from '../screens/storyComments/DiscoveryComments';
 import UnknownDiscovery from '../screens/unknownDiscovery/UnknownDiscovery';
 import BackgroundLocationModal from '../screens/backgroundLocationModal/BackgroundLocationModal';
+import ActivityEventsScreen from '../screens/activityEvents/ActivityEventsScreen';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -48,6 +49,8 @@ export const routes = [
 			]}
 		]}
 	]},
+
+	{ path: '/activityEvents', cb: ActivityEventsScreen},
 
 	{ path: '/myAccount', cb: MyAccount},
 	{ path: '/createStory', cb: CreateStory, children: [

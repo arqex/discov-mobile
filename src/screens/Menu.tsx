@@ -5,6 +5,7 @@ import { ScreenProps } from '../utils/ScreenProps';
 import { getStatusbarHeight } from '../components/utils/getStatusbarHeight';
 import storeService from '../state/store.service';
 import '../utils/i18n';
+import ActivityEventsButton from './activityEvents/ActivityEventsButton';
 
 export default class Menu extends Component<ScreenProps> {
 	constructor( props ){
@@ -35,9 +36,7 @@ export default class Menu extends Component<ScreenProps> {
 				<Wrapper screenPadding style={ containerStyles }>
 					<View style={ [styles.topBar, {paddingTop: getStatusbarHeight()}] }>
 						<Logo textColor={ styleVars.colors.blueText } />
-						<Button type="icon" icon="more-horiz" color="secondary"
-							onPress={ this.props.drawer.close }
-							link="/settings" />
+						{ this.renderTopButtons() }
 					</View>
 					<View style={ styles.account }>
 						<View style={ styles.accountTouchableWrapper }>
@@ -92,6 +91,22 @@ export default class Menu extends Component<ScreenProps> {
 				</Wrapper>
 			</Bg>
 		)
+	}
+
+	renderTopButtons(){
+		return (
+			<Wrapper style={ styles.topButtons }>
+				<ActivityEventsButton
+					drawer={ this.props.drawer } />
+				<View style={{marginLeft: 5}}>
+					<Button type="icon"
+						icon="more-horiz"
+						color="secondary"
+						onPress={this.props.drawer.close}
+						link="/settings" />
+				</View>
+			</Wrapper>
+		);
 	}
 
 	renderDiscoveryCounter() {
@@ -197,5 +212,8 @@ const styles = StyleSheet.create({
 		height: 20, width: 20,
 		justifyContent: 'center',
 		alignItems: 'center'
+	},
+	topButtons: {
+		flexDirection: 'row'
 	}
 });
