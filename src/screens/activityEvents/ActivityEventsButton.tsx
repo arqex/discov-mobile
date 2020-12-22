@@ -2,12 +2,23 @@ import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
 import { Button, CounterBadge, styleVars } from '../../components'
 import { MaterialIcons } from '@expo/vector-icons';
+import { ActivityAlertLevel, ActivityAlertsMeta } from '../../services';
 
-export default class ActivityEventsButton extends Component {
+interface ActivityEventsButtonProps {
+	drawer: any,
+	alerts: ActivityAlertsMeta
+}
+
+const alertColors = {
+	[ActivityAlertLevel.INFO]: 'blue',
+	[ActivityAlertLevel.WARNING]: 'yellow',
+	[ActivityAlertLevel.ERROR]: styleVars.colors.primary
+}
+export default class ActivityEventsButton extends Component<ActivityEventsButtonProps> {
 	render() {
 		return (
 			<View style={styles.container}>
-				{ this.renderNotificationsBadge() }
+				{ this.renderAlertBadge() }
 				{ this.renderUnseenActivityCount() }
 				<Button type="icon"
 					icon="notifications"
@@ -18,14 +29,14 @@ export default class ActivityEventsButton extends Component {
 		)
 	}
 
-	renderNotificationsBadge(){
-		return;
+	renderAlertBadge(){
+		if( !this.props.alerts.count ) return;
 
 		return (
 			<View style={styles.notifBadge}>
 				<MaterialIcons
 					size={19}
-					color={ styleVars.colors.primary }
+					color={ alertColors[this.props.alerts.maxLevel] }
 					name="new-releases" />
 			</View>
 		)

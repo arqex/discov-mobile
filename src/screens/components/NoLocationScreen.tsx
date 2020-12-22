@@ -5,6 +5,7 @@ import { Bg, Text, Button, styleVars } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
 import locationService from '../../location/location.service';
 import locationStore from '../../location/location.store';
+import LocationService from '../../location/location.service';
 
 interface NoLocationScreenProps extends ScreenProps {
 
@@ -69,7 +70,7 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 	}
 
 	canAskForLocation() {
-		let perm = locationStore.getStoredPermission();
+		let perm = LocationService.getStoredPermissions().foreground;
 
 		console.log('Perm', perm );
 

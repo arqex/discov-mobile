@@ -4,12 +4,21 @@ import { log } from '../utils/logger';
 
 let clbks = [];
 export default {
+	init( actions, store, services ){
+		locationStore.init( store );
+	},
 	addListener(clbk) {
 		clbks.push(clbk);
 	},
 	getBackgroundPermission(){},
-	getStoredPermission(){
-		return locationStore.getStoredPermission();
+	getLastLocation(){
+		return locationStore.getLastLocation();
+	},
+	getStoredPermissions(){
+		return {
+			foreground: locationStore.getStoredPermission(),
+			background: locationStore.getBackgroundPermission()
+		};
 	},
 	getPermission(){
 		return ExpoLocation.getPermissionsAsync()

@@ -6,6 +6,8 @@ import { getStatusbarHeight } from '../components/utils/getStatusbarHeight';
 import storeService from '../state/store.service';
 import '../utils/i18n';
 import ActivityEventsButton from './activityEvents/ActivityEventsButton';
+import { alertService } from '../services/alert.service';
+import { dataService } from '../services/data.service';
 
 export default class Menu extends Component<ScreenProps> {
 	constructor( props ){
@@ -96,8 +98,7 @@ export default class Menu extends Component<ScreenProps> {
 	renderTopButtons(){
 		return (
 			<Wrapper style={ styles.topButtons }>
-				<ActivityEventsButton
-					drawer={ this.props.drawer } />
+				{ this.renderActivityBell() }
 				<View style={{marginLeft: 5}}>
 					<Button type="icon"
 						icon="more-horiz"
@@ -108,6 +109,15 @@ export default class Menu extends Component<ScreenProps> {
 			</Wrapper>
 		);
 	}
+
+	renderActivityBell(){
+		if( !dataService.isInitialized() ) return;
+		return (
+			<ActivityEventsButton
+				alerts={ alertService.getAlertsMeta() }
+				drawer={ this.props.drawer } />
+		);
+ 	}
 
 	renderDiscoveryCounter() {
 		let unseenCount = storeService.getUnseenCount();

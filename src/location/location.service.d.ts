@@ -15,16 +15,22 @@ export interface BgPermission {
 	requestedAt: number
 }
 
+export interface StoredPermissions {
+	foreground?: FgPermission,
+	background?: BgPermission
+}
+
 export interface FgPermission extends BgPermission{
 	canAskAgain: boolean
 }
 
 const LocationService = {
+	init(actions, store, services){},
 	addListener(clbk: (location:BgLocation, source: String) => void){},
 	getBackgroundPermission(): Promise<BgPermission> {},
 	getLastLocation(): BgLocation | undefined {},
 	getPermission():Promise<FgPermission>{},
-	getStoredPermission(): FgPermission | undefined {},
+	getStoredPermissions(): StoredPermissions {},
 	requestPermission():Promise<FgPermission>{},
 	resetFence(){},
 	startBackgroundLocationUpdates(){},

@@ -16,6 +16,9 @@ AppRegistry.registerHeadlessTask('DISCOV_HEADLESS_LOCATION', () => async (taskDa
 });
 
 export default {
+	init( actions, store, services ){
+		locationStore.init( store );
+	},
 	addListener( clbk ){
 		clbks.push( clbk );
 	},
@@ -30,8 +33,11 @@ export default {
 	getLastLocation(){
 		return locationStore.getLastLocation();
 	},
-	getStoredPermission(){
-		return locationStore.getStoredPermission();
+	getStoredPermissions(){
+		return {
+			foreground: locationStore.getStoredPermission(),
+			background: locationStore.getBackgroundPermission()
+		};
 	},
 	getPermission(){
 		return ExpoLocation.getPermissionsAsync()

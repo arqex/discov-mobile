@@ -52,6 +52,9 @@ export const dataService = {
 
 		return initPromise;
 	},
+	isInitialized(){
+		return store.apiInitialized;
+	},
 	addStatusListener( clbk ) {
 		statusChangeClbks.push( clbk );
 	},

@@ -6,7 +6,7 @@ import { log } from '../utils/logger';
 import locationStore from './location.store';
 import appStateService from '../services/appState.service';
 import { ActivityAlert, ActivityAlertLevel } from '../services';
-import { alertService } from '../services/alert.services';
+import { alertService } from '../services/alert.service';
 
 let router;
 export default {
@@ -164,14 +164,13 @@ function onGoingToForeground() {
 		locationService.getPermission();
 		locationService.getBackgroundPermission().then( bgPermission => {
 			checkAskForBackgroundPermission(bgPermission);
-			setLocationAlerts( locationService.getStoredPermission(), bgPermission );
-		 });
+		});
 	});
 }
 
 const BG_PERM_REQUEST_WAIT = 2 * 60 * 60 * 1000; // 2 hours
 function checkAskForBackgroundPermission( bgPermission ){
-	let fgPermission = locationService.getStoredPermission();
+	let fgPermission = locationService.getStoredPermissions().foreground;
 
 	if( !fgPermission || !fgPermission.isGranted ) return;
 
@@ -189,36 +188,4 @@ function navigationListener() {
 	router.offChange( navigationListener );
 	// At the first navigation we prompt the user
 	setTimeout( () => {router.navigate('/backgroundLocationModal')}, 500 );
-}
-
-const fgPermissionAlert: ActivityAlert = {
-	id: 'FG_LOCATION',
-	title: 'Location access is not allowed',
-	description: 'Enable location access to start discovering stories from your friends',
-	level: ActivityAlertLevel.ERROR,
-	action: '/fgLocationPermission',
-	dismissable: false
-}
-const bgPermissionAlert: ActivityAlert = {
-	id: 'BG_LOCATION',
-	title: 'Passive discovering not allowed',
-	description: 'Enable location to discover stories while Discov is in the background',
-	level: ActivityAlertLevel.ERROR,
-	action: '/bgLocationPermission',
-	dismissable: false
-}
-
-function setLocationAlerts( fgPermission, bgPermission ){
-	if( fgPermission && !fgPermission.isGranted ){
-		alertService.setAlert( fgPermissionAlert );
-		alertService.dismissAlert(bgPermissionAlert.id);
-	}
-	else if (bgPermission && !bgPermission.isGranted) {
-		alertService.setAlert(bgPermissionAlert);
-		alertService.dismissAlert(fgPermissionAlert.id);
-	}
-	else {
-		alertService.dismissAlert(fgPermissionAlert.id);
-		alertService.dismissAlert(bgPermissionAlert.id);
-	}
 }
