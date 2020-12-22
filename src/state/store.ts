@@ -14,7 +14,8 @@ let store = ors({
 	followerGroups: {},
 	placesByLocation: {},
 	addressByLocation: {},
-	locationData: {}
+	locationData: {},
+	alerts: {}
 })
 
 export default store;

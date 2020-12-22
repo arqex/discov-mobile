@@ -3,6 +3,7 @@ import { storyService } from './story.service';
 import { storyCommentService } from './storyComment.service';
 import { usersService } from './users.service';
 import serverMessageService from './serverMessage/serverMessage.service';
+import { alertService } from './alert.services';
 
 export default {
 	init( actions, store ){
@@ -10,6 +11,7 @@ export default {
 		storyService.init( actions, store );
 		storyCommentService.init( actions, store );
 		usersService.init( actions, store );
+		alertService.init( actions, store );
 	},
 
 	login: loginService,
@@ -17,3 +19,5 @@ export default {
 	users: usersService,
 	notification: serverMessageService
 }
+
+export { ActivityAlert, ActivityAlertsMeta, ActivityAlertLevel } from './alert.services';
