@@ -3,6 +3,7 @@ import ors from '@arqex/ors';
 let store = ors({
 	status: 'INIT',
 	user: {},
+	accountActivities: {},
 	accountStatus: {},
 	discoveries: {},
 	stories: {},

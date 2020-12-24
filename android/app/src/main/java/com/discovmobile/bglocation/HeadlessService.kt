@@ -46,6 +46,11 @@ class HeadlessService: HeadlessJsTaskService() {
             Bglog.i("Sending location: ${location.timestamp}")
             send( context, hashMapOf("location" to location.stringify(), "source" to source) )
         }
+
+        @JvmStatic
+        fun openNotification( context: Context?, notificationId: String ){
+            send( context, hashMapOf("notificationId" to notificationId) )
+        }
     }
 
     override fun onHeadlessJsTaskStart(taskId: Int) {

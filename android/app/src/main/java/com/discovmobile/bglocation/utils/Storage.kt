@@ -161,5 +161,17 @@ class Storage {
                     .putLong("lastBuildAt", buildAt)
                     .apply()
         }
+
+        @JvmStatic
+        fun getLastBgLocationNotificationAt( context: Context ): Long? {
+            return getStore( context ).getLong("lalstBgLocationNotificationAt", 0)
+        }
+        @JvmStatic
+        fun setLastBgLocationNotificationAt( context: Context, lastnotificationAt: Long ){
+            getStore( context )
+                    .edit()
+                    .putLong("lalstBgLocationNotificationAt", lastnotificationAt)
+                    .apply()
+        }
     }
 }

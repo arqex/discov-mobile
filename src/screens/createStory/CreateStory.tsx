@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Alert, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { TopBar, Button, MapScreen, Text, Modal, SearchBar } from '../../components';
 import MapPanel from './MapPanel';
@@ -9,11 +9,11 @@ import storeService from '../../state/store.service';
 import PositionProvider from '../../providers/PositionProvider';
 import { lngToLocation, locationToLng } from '../../utils/maps';
 import StoryMap from '../components/StoryMap';
-import NoLocationScreen from '../components/NoLocationScreen';
 import EditLocationModal from './EditLocationModal';
 import SearchPlacePanel from './SearchPlacePanel';
 import locationService from '../../location/location.service';
 import BackButtonHandler from '../../utils/BackButtonHandler';
+import FgLocationScreen from '../locationPermissions/FgLocationScreen';
 
 // Stores the temporal data in store.storyInProgress
 
@@ -182,7 +182,6 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 	}
 
 	renderMap() {
-		let story = this.getStory();
 		let isLocationSelected = this.state.locationSelected;
 
 		return (
@@ -223,11 +222,11 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 
 	renderLocationNotGranted() {
 		return (
-			<NoLocationScreen { ...this.props }>
+			<FgLocationScreen { ...this.props }>
 				<Text>
 					You need to enable access to the location in order to create new stories.
 				</Text>
-			</NoLocationScreen>
+			</FgLocationScreen>
 		);
 	}
 

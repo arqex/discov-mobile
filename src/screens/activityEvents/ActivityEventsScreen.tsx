@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Animated } from 'react-native'
-import { Bg, ScrollScreen, Text, TopBar } from '../../components'
+import { Bg, ScrollScreen, Text, Tooltip, TopBar, Wrapper } from '../../components'
 import services, { ActivityAlert } from '../../services';
 import { ScreenProps } from '../../utils/ScreenProps';
 import ActivityAlertItem from './ActivityAlertItem';
@@ -14,12 +14,10 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 				<ScrollScreen
 					animatedScrollValue={this.animatedScrollValue}
 					topBar={this.renderTopBar()}
-					header={this.renderHeader()}>
-					<View>
-						{ this.renderAlerts() }
-						<Text> textInComponent </Text>
-					</View>
-					</ScrollScreen>
+					header={this.renderHeader()}
+					data={ this.getItems() }
+					keyExtractor={ item => item.id }
+					renderItem={ this._renderItem } />
 			</Bg>
 		)
 	}
@@ -37,22 +35,64 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 		);
 	}
 
-	renderAlerts(){
-		let alerts: ActivityAlert[] = Object.values( services.alert.getAlerts() );
-		if( !alerts.length ) return;
+	getItems(){
+		return [
+			...this.getAlerts(),
+			...this.getActivities()
+		];
+	}
 
+	getAlerts(){
+		return Object.values( services.alert.getAlerts() );
+	}
+
+	getActivities(){
+		let activities = this.props.store.user.activities;
+		if( !activities || !activities.length ){
+			return [ {
+				id: 'noactivity',
+				tooltip: 'There is no activity yet. Start following your friends and placing stories and you will see their interactions here.'
+			} ];
+		}
+
+		return activities.map( id => this.props.store.accountActivities[id] );
+	}
+
+	_renderItem = ( {item} ) => {
+		if( item.tooltip ){
+			return this.renderTooltip( item.tooltip );
+		}
+		else if( item.level ){
+			return this.renderAlert( item )
+		}
+
+		return this.renderActivity( item );
+	}
+
+	renderTooltip( text ) {
 		return (
-			<View>
-				{ alerts.map( this._renderAlert ) }
-			</View>
+			<Wrapper textWidth>
+				<Tooltip>
+					{ text }
+				</Tooltip>
+			</Wrapper>
 		)
 	}
 
-	_renderAlert = alert => {
+	renderAlert( alert ) {
 		return (
-			<ActivityAlertItem
-				key={alert.id}
-				alert={alert} />
+			<View style={{marginBottom: 10}}>
+				<ActivityAlertItem
+					key={alert.id}
+					router={this.props.router}
+					alert={alert} />
+			</View>
 		);
+	}
+
+	renderActivity( activity ) {
+		return (
+			<View><Text>Activity render not implemented yet</Text></View>
+		)
 	}
 }

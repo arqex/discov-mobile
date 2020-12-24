@@ -5,11 +5,11 @@ import { Bg, Text, Button, styleVars } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
 import locationStore from '../../location/location.store';
 
-interface BackgroundLocationModalProps extends ScreenProps {
+interface BGLocationScreenProps extends ScreenProps {
 
 }
 
-class BackgroundLocationModal extends React.Component<BackgroundLocationModalProps>{
+class BGLocationScreen extends React.Component<BGLocationScreenProps>{
 	state = {
 		loading: false
 	}
@@ -31,12 +31,12 @@ class BackgroundLocationModal extends React.Component<BackgroundLocationModalPro
 						<View style={styles.content}>
 							<View style={styles.paragraph}>
                 <Text>
-								  If you want to discover your friend's stories while your phone is in your pocket on stand-by, Discov needs to access the location when the app is not actively used.
+								  To discover your friend's stories while your phone's screen is off, Discov needs access to the location when the app is not actively used.
                 </Text>
 							</View>
               <View style={styles.paragraph}>
                 <Text>
-                  Please go to the phone settings and enable Discov to access to the location "All the time".
+                  Please open the settings and give Discov permission to access to the location "All the time".
                 </Text>
               </View>
               <View style={styles.paragraph}>
@@ -57,7 +57,7 @@ class BackgroundLocationModal extends React.Component<BackgroundLocationModalPro
 			<View>
 				<View style={styles.buttonWrapper}>
 					<Button onPress={ this._openSettings }>
-						Go to settings
+						Open settings
 					</Button>
 				</View>
 				<View style={styles.buttonWrapper}>
@@ -78,7 +78,7 @@ class BackgroundLocationModal extends React.Component<BackgroundLocationModalPro
 	}
 };
 
-export default BackgroundLocationModal;
+export default BGLocationScreen;
 
 const styles = StyleSheet.create({
 	container: {

@@ -153,7 +153,6 @@ function getRandomId() {
 	return '' + Math.random();
 }
 
-
 function onGoingToBackground() {
 	locationService.stopTracking();
 }
@@ -162,30 +161,6 @@ function onGoingToForeground() {
 	dataService.init().then( () => {
 		locationService.updateLocation();
 		locationService.getPermission();
-		locationService.getBackgroundPermission().then( bgPermission => {
-			checkAskForBackgroundPermission(bgPermission);
-		});
+		locationService.getBackgroundPermission();
 	});
-}
-
-const BG_PERM_REQUEST_WAIT = 2 * 60 * 60 * 1000; // 2 hours
-function checkAskForBackgroundPermission( bgPermission ){
-	let fgPermission = locationService.getStoredPermissions().foreground;
-
-	if( !fgPermission || !fgPermission.isGranted ) return;
-
-	if( bgPermission && bgPermission.isGranted ) return;
-
-	let lastRequested = bgPermission && bgPermission.requestedAt || fgPermission.requestedAt;
-	let now = Date.now();
-
-	if( lastRequested + BG_PERM_REQUEST_WAIT < now ){
-		router.onChange( navigationListener );
-	}
-}
-
-function navigationListener() {
-	router.offChange( navigationListener );
-	// At the first navigation we prompt the user
-	setTimeout( () => {router.navigate('/backgroundLocationModal')}, 500 );
 }

@@ -157,6 +157,8 @@ class Root extends React.Component {
 		if( AppState.currentState === 'active') {
 			appStateService.emit('active');
 		}
+
+		serverMessageListener.setDrawer( this.navigator.current.drawer );
 	}
 
 	isLoading() {

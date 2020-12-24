@@ -52,6 +52,9 @@ class AlarmHelper: BroadcastReceiver() {
 
         updateBackgroundPermission( context );
 
+        // Maybe create notifications?
+        NotificationHelper.checkCreateNotifications(context)
+
         // Restart alarm
         start(context)
     }
@@ -95,21 +98,22 @@ class AlarmHelper: BroadcastReceiver() {
         return true;
     }
 
-    private fun updateBackgroundPermission( context: Context? ){
-        if( context == null ) return
+    private fun updateBackgroundPermission( context: Context? ): BgLocationPermission?{
+        if( context == null ) return null;
 
         val storedPermission = Storage.getBackgroundPermission(context)
         val isGranted = LocationHelper.hasBackgroundPermission(context)
+        var permission: BgLocationPermission
         if( storedPermission == null || storedPermission.isGranted != isGranted ){
-            val permission = BgLocationPermission( isGranted, Date().time, Date().time )
-            Storage.saveBackgroundPermission(context, permission)
+            permission = BgLocationPermission( isGranted, Date().time, Date().time )
             if( isGranted ){
                 LocationStarter.startGeofence(context)
             }
         }
         else {
-            val permission = BgLocationPermission( isGranted, storedPermission.updatedAt, Date().time )
-            Storage.saveBackgroundPermission(context, permission)
+            permission = BgLocationPermission( isGranted, storedPermission.updatedAt, Date().time )
         }
+        Storage.saveBackgroundPermission(context, permission)
+        return permission
     }
 }

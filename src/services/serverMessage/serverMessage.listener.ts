@@ -2,6 +2,7 @@ import serverMessageHandler from './serverMessage.handler';
 import serverMessageService from './serverMessage.service';
 import { log } from "../../utils/logger";
 
+let drawer;
 const serverMessageListener = {
 	init( router, dataService ){
 		serverMessageService.onToken( token => {
@@ -28,6 +29,7 @@ const serverMessageListener = {
 		serverMessageService.onNotificationPressed( serverMessage => {
 			if( serverMessage.action ){
 				console.log('Navigating because of serverMessage', serverMessage.action );
+				drawer && drawer.close();
 				router.navigate( serverMessage.action );
 			}
 			else {
@@ -45,6 +47,10 @@ const serverMessageListener = {
 		
 		serverMessageService.init();
 		serverMessageHandler.init( router, dataService );
+	},
+
+	setDrawer( dr ){
+		drawer = dr;
 	}
 }
 

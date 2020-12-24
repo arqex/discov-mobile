@@ -76,16 +76,23 @@ const bgPermissionAlert: ActivityAlert = {
 	action: '/bgLocationPermission',
 	dismissable: false
 }
+
 function getLocationPermissionAlerts( {foreground, background} ){
 	if( foreground && !foreground.isGranted ){
 		return {
 			[fgPermissionAlert.id]: fgPermissionAlert
 		};
 	}
-	else if (background && !background.isGranted) {
+	else if (background && !background.isGranted && !isWaitingForRequestAgain( foreground )) {
 		return {
 			[bgPermissionAlert.id]: bgPermissionAlert
 		};
 	}
 	return {};
+}
+
+const REQUEST_WAIT_TIME = 5 * 60 * 1000; // Five minutes to no overwhelm the user
+function isWaitingForRequestAgain( permission ){
+	if( !permission ) return false;
+	return permission.requestedAt + REQUEST_WAIT_TIME > Date.now(); 
 }

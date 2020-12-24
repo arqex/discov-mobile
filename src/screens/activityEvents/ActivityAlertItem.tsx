@@ -20,11 +20,13 @@ export default class ActivityAlertItem extends React.Component<ActivityAlertProp
       <Touchable onPress={ () => this.props.router.navigate(alert.action) }>
         <View style={ containerStyles }>
           <Wrapper style={styles.row}>
-            <MaterialIcons
-              size={30}
-              color={ styleVars.colors.primary }
-              name="new-releases" />
-            <Wrapper textWidth style={styles.texts}> 
+            <View style={styles.icon}>
+              <MaterialIcons
+                size={30}
+                color={ styleVars.colors.primary }
+                name="new-releases" />
+            </View>
+            <Wrapper style={styles.texts}> 
               <Text type="title" color={ styleVars.colors.primary}>{ alert.title }</Text>
               <Text>{ alert.description }</Text>
             </Wrapper>
@@ -50,7 +52,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center'
   },
+  icon: {
+    marginLeft: 6,
+    marginRight: 16
+  },
   texts: {
-    marginLeft: 12
+    flex: 1,
+    maxWidth: styleVars.textWidth
   }
 })

@@ -1,6 +1,11 @@
 
 
 export default {
+  bgLocationPermission: {
+    title: 'Not discovering in the background',
+    message: 'Discov needs access to the location when the app is not open',
+    action: '/bgLocationPermission'
+  },
   newComment: {
     _handledBy: 'newCommentHandler.ts'
   },
@@ -27,5 +32,5 @@ export default {
     message: '%displayName% has found the story in %location%',
     image: '%avatarPic%',
     action: '/myStories/%storyId%'
-  }
+  },
 };

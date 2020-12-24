@@ -4,6 +4,8 @@ import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, ScrollScreen, Text, Button, TopBar } from '../../components';
 import StoryCard from '../components/StoryCard';
 import NoDiscoveries from './NoDiscoveries';
+import { alertService } from '../../services/alert.service';
+import ActivityAlertItem from '../activityEvents/ActivityAlertItem';
 
 export default class MyDiscoveries extends Component<ScreenProps> {
 
@@ -34,10 +36,10 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 					topBar={topBar}
 					loading={!discoveries}
 					animatedScrollValue={this.animatedScrollValue}
-					data={ discoveries && discoveries.items}
+					data={ this.getItems() }
 					renderItem={this._renderItem}
 					onRefresh={ this._loadDiscoveries }
-					keyExtractor={item => item} />
+					keyExtractor={ this._keyExtractor } />
 			</Bg>
 		)
 	}
@@ -57,7 +59,6 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 			</View>
 		);
 
-
 		return (
 			<Bg>
 				<ScrollScreen openHeader={ openHeader }
@@ -72,6 +73,20 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 			</Bg>
 		);
 
+	}
+
+	getItems() {
+		let discoveries = this.getDiscoveries() || {items: []};
+		let alert = alertService.getAlerts().BG_LOCATION;
+
+		if( alert ){
+			return [
+				alert,
+				...discoveries.items
+			];
+		}
+
+		return discoveries.items;
 	}
 
 	getDiscoveries(){
@@ -89,7 +104,31 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 	}
 
 	_renderItem = ({item}) => {
-		let discovery = this.props.store.discoveries[ item ];
+		if( item.level ){
+			return this.renderAlert(item);
+		}
+
+		return this.renderDiscovery(item);
+	}
+
+	_keyExtractor( item ){
+		if( item.id ) return item.id;
+		return item;
+	}
+
+	renderAlert( alert ) {
+		return (
+			<View style={{marginBottom: 10}}>
+				<ActivityAlertItem
+					key={alert.id}
+					router={this.props.router}
+					alert={alert} />
+			</View>
+		);
+	}
+
+	renderDiscovery( discoveryId ){
+		let discovery = this.props.store.discoveries[ discoveryId ];
 		
 		return (
 			<StoryCard storyId={ discovery.storyId }

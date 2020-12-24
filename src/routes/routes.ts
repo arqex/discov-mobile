@@ -35,8 +35,10 @@ import AssetsViewer from '../screens/assetsViewer/AssetsViewer';
 import StoryComments from '../screens/storyComments/StoryComments';
 import DiscoveryCommentsScreen from '../screens/storyComments/DiscoveryComments';
 import UnknownDiscovery from '../screens/unknownDiscovery/UnknownDiscovery';
-import BackgroundLocationModal from '../screens/backgroundLocationModal/BackgroundLocationModal';
+import BgLocationScreen from '../screens/locationPermissions/BgLocationScreen';
 import ActivityEventsScreen from '../screens/activityEvents/ActivityEventsScreen';
+import FgLocationModal from '../screens/locationPermissions/FgLocationModal';
+import DevSettings from '../screens/settings/DevSettings';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -89,13 +91,16 @@ export const routes = [
 		]}
 	]},
 
-	{ path: '/settings', cb: Settings },
+	{ path: '/settings', cb: Settings, children: [
+		{ path: '/dev', cb: DevSettings }
+	] },
 
 	{ path: '/locationReport', cb: NewLocationReport },
 	{ path: '/bgReport', cb: BgReport },
 
 	{ path: '/accountModal', cb: PeerAccountModal, isModal: true },
-	{ path: '/backgroundLocationModal', cb: BackgroundLocationModal, isModal: true },
+	{ path: '/bgLocationPermission', cb: BgLocationScreen, isModal: true },
+	{ path: '/fgLocationPermission', cb: FgLocationModal, isModal: true },
 
 	{ path: '/unknownDiscovery', cb: UnknownDiscovery },
 

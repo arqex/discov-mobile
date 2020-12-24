@@ -4,16 +4,16 @@ import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, Text, Button, styleVars } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
 import locationService from '../../location/location.service';
-import locationStore from '../../location/location.store';
 import LocationService from '../../location/location.service';
 
-interface NoLocationScreenProps extends ScreenProps {
-
+interface FgLocationScreenProps extends ScreenProps {
+	onFinish?: (isGranted: boolean) => void,
+	showSkip?: boolean
 }
 
-class NoLocationScreen extends React.Component<NoLocationScreenProps>{
+class FgLocationScreen extends React.Component<FgLocationScreenProps>{
 	state = {
-		loading: false
+		loading: false,
 	}
 
 	render() {
@@ -49,6 +49,7 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 					<Button onPress={ this._askForPermission } loading={ this.state.loading }>
 						Enable location
 					</Button>
+					{ this.renderNotNow() }
 				</View>
 			);
 		}
@@ -64,9 +65,22 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 					<Button onPress={ this._openSettings }>
 						Go to settings
 					</Button>
+					{ this.renderNotNow() }
 				</View>
 			</View>
 		);
+	}
+	renderNotNow() {
+		if( !this.props.showSkip ) return;
+
+		return (
+			<View style={{marginTop: 10}}>
+				<Button type="transparent"
+					onPress={ () => this.props.onFinish && this.props.onFinish(false) }>
+					Not now
+				</Button>
+			</View>
+		)
 	}
 
 	canAskForLocation() {
@@ -81,8 +95,9 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 		this.setState({loading: true});
 		
 		locationService.requestPermission()
-			.then( () => {
+			.then( permission => {
 				this.setState({loading: false});
+				this.props.onFinish && this.props.onFinish(permission.isGranted);
 			})
 		;
 	}
@@ -92,7 +107,7 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 	}
 };
 
-export default NoLocationScreen;
+export default FgLocationScreen;
 
 const styles = StyleSheet.create({
 	container: {
