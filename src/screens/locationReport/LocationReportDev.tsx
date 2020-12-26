@@ -4,11 +4,11 @@ import MapView, {Marker} from 'react-native-maps';
 import { Bg } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
 
-interface NewLocationReportProps extends ScreenProps {};
+interface LocationReportDevProps extends ScreenProps {};
 
 let windowWidth = Dimensions.get('window').width;
 const bgColors = ['#ffffff', '#fafafa'];
-class NewLocationReport extends React.Component<NewLocationReportProps> {
+class LocationReportDev extends React.Component<LocationReportDevProps> {
 	state = {
 		selectedLocation: false
 	}
@@ -156,7 +156,7 @@ function colorFromIndex( index, total ){
 	return `rgb(${ color },${255 - color}, 0)`;
 }
 
-export default NewLocationReport;
+export default LocationReportDev;
 
 const styles = StyleSheet.create({
 	container: {

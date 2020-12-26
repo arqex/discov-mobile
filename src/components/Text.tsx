@@ -3,7 +3,7 @@ import { Text as T, View, StyleSheet, Platform } from 'react-native';
 import styleVars from './styleVars';
 
 interface TextProps {
-	type?: 'header' | 'mainTitle' | 'title' | 'paragraph' | 'subtitle' | 'quote' | 'bold' | 'label',
+	type?: 'superHeader' | 'header' | 'mainTitle' | 'title' | 'paragraph' | 'subtitle' | 'quote' | 'bold' | 'label',
 	color?: string,
 	children?: any,
 	numberOfLines?: number,
@@ -39,6 +39,11 @@ const isIOS = Platform.OS === 'ios';
 
 const colors = styleVars.colors;
 const styles = StyleSheet.create({
+	superHeader: {
+		fontSize: 40,
+		fontFamily: isIOS ? 'System' : 'sans-serif',
+		color: colors.blueText
+	},
 	header: {
 		fontSize: 24,
 		fontWeight: '700',

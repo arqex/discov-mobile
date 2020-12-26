@@ -29,7 +29,7 @@ import AddStoryContent from '../screens/createStory/AddStoryContent';
 import ShareStory from '../screens/createStory/ShareStory';
 import StorySummary from '../screens/createStory/StorySummary';
 import OwnDiscovery from '../screens/ownDiscovery/OwnDiscovery';
-import NewLocationReport from '../screens/locationReport/NewLocationReport';
+import LocationReportDev from '../screens/locationReport/LocationReportDev';
 import BgReport from '../screens/locationReport/BgReport';
 import AssetsViewer from '../screens/assetsViewer/AssetsViewer';
 import StoryComments from '../screens/storyComments/StoryComments';
@@ -39,6 +39,8 @@ import BgLocationScreen from '../screens/locationPermissions/BgLocationScreen';
 import ActivityEventsScreen from '../screens/activityEvents/ActivityEventsScreen';
 import FgLocationModal from '../screens/locationPermissions/FgLocationModal';
 import DevSettings from '../screens/settings/DevSettings';
+import LocationReport from '../screens/locationReport/LocationReport';
+import ClosestDiscoveryScreen from '../screens/closestDiscovery/ClosestDiscoveryScreen';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -92,10 +94,12 @@ export const routes = [
 	]},
 
 	{ path: '/settings', cb: Settings, children: [
-		{ path: '/dev', cb: DevSettings }
+		{ path: '/dev', cb: DevSettings },
+		{ path: '/closestDiscovery', cb: ClosestDiscoveryScreen},
+		{ path: '/locationReport', cb: LocationReport },
 	] },
 
-	{ path: '/locationReport', cb: NewLocationReport },
+	{ path: '/locationReport', cb: LocationReportDev },
 	{ path: '/bgReport', cb: BgReport },
 
 	{ path: '/accountModal', cb: PeerAccountModal, isModal: true },

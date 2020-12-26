@@ -33,6 +33,13 @@ class Settings extends React.Component<ScreenProps> {
 						<SettingItem title="Invitations"
 							subtitle="Given away 3 out of 5"
 							border />
+						<SettingItem title="Closest discovery"
+							subtitle="Closer than 400m"
+							onPress={ () => this.props.router.navigate('/settings/closestDiscovery')}
+							border />
+						<SettingItem title="Location report"
+							onPress={ () => this.props.router.navigate('/settings/locationReport')}
+							border />
 						<SettingItem title="Log out" onPress={this._openConfirm} />
 					</Panel>
 				</ScrollScreen>

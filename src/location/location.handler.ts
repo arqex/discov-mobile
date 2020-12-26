@@ -5,8 +5,6 @@ import serverMessageService from '../services/serverMessage/serverMessage.servic
 import { log } from '../utils/logger';
 import locationStore from './location.store';
 import appStateService from '../services/appState.service';
-import { ActivityAlert, ActivityAlertLevel } from '../services';
-import { alertService } from '../services/alert.service';
 
 let router;
 export default {
@@ -79,7 +77,7 @@ function checkDiscoveries(location) {
 		return Promise.resolve({ error: 'nothing_to_discover' });
 	}
 
-	if ( locationStore.isInFence(location) ) {
+	if ( locationStore.isInFence(location) && !locationService.isTracking() ) {
 		log('----- Location in fence');
 		return Promise.resolve({ error: 'location_in_fence' });
 	}
@@ -159,7 +157,7 @@ function onGoingToBackground() {
 
 function onGoingToForeground() {
 	dataService.init().then( () => {
-		locationService.updateLocation();
+		locationService.updateLocation(true);
 		locationService.getPermission();
 		locationService.getBackgroundPermission();
 	});

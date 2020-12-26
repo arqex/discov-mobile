@@ -32,11 +32,13 @@ const LocationService = {
 	getPermission():Promise<FgPermission>{},
 	getStoredPermissions(): StoredPermissions {},
 	requestPermission():Promise<FgPermission>{},
+	getFence(){},
 	resetFence(){},
 	startBackgroundLocationUpdates(){},
 	stopBackgroundLocationUpdates(){},
 	startTracking(){},
 	stopTracking(){},
+	isTracking(): boolean {},
 	updateLocation(force = false){},
 	notifyLocationHandled( distanceToDiscovery ){}
 }

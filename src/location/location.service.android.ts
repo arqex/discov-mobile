@@ -24,6 +24,8 @@ AppRegistry.registerHeadlessTask('DISCOV_HEADLESS_LOCATION', () => async (taskDa
 	}
 });
 
+let trackingActive = false;
+
 export default {
 	init( actions, store, sv ){
 		services = sv;
@@ -59,6 +61,9 @@ export default {
 			.then( permission => locationStore.storePermission(permission, true) )
 		;
 	},
+	getFence(){
+		return locationStore.getFenceData()
+	},
 	resetFence(){
 		locationStore.clearFence();
 	},
@@ -69,10 +74,15 @@ export default {
 		BgLocation.stopBackgroundLocationUpdates();
 	},
 	startTracking(){
+		trackingActive = true;
 		BgLocation.startTracking();
 	},
 	stopTracking(){
+		trackingActive = false;
 		BgLocation.stopTracking();
+	},
+	isTracking(){
+		return trackingActive;
 	},
 	updateLocation(force = false){
 		BgLocation.updateLocation( force );
