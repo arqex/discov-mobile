@@ -24,6 +24,11 @@ export interface FgPermission extends BgPermission{
 	canAskAgain: boolean
 }
 
+export interface LocationFence {
+	location: BgLocation,
+	distanceToDiscovery: number
+}
+
 const LocationService = {
 	init(actions, store, services){},
 	addListener(clbk: (location:BgLocation, source: String) => void){},
@@ -32,7 +37,7 @@ const LocationService = {
 	getPermission():Promise<FgPermission>{},
 	getStoredPermissions(): StoredPermissions {},
 	requestPermission():Promise<FgPermission>{},
-	getFence(){},
+	getFence(): LocationFence{},
 	resetFence(){},
 	startBackgroundLocationUpdates(){},
 	stopBackgroundLocationUpdates(){},
