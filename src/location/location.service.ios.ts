@@ -1,18 +1,59 @@
 import * as ExpoLocation from 'expo-location';
 import locationStore from './location.store';
 import { log } from '../utils/logger';
+import BgLocationManagerIos from './ios/BgLocationManager.ios';
 
-let clbks = [];
+let tracking = false;
 export default {
 	init( actions, store, services ){
 		locationStore.init( store );
 	},
 	addListener(clbk) {
-		clbks.push(clbk);
+		BgLocationManagerIos.addListener(clbk);
 	},
-	getBackgroundPermission(){},
+	getBackgroundPermission(){
+		return ExpoLocation.getPermissionsAsync()
+			.then( expoPermission => {
+				let isGranted = expoPermission.ios.scope === 'always';
+				let stored = locationStore.getBackgroundPermission();
+				let now = Date.now();
+				let permission;
+
+				if( !stored ){
+					permission = {
+						isGranted,
+						updated: now,
+						checkedAt: now,
+						requestedAt: 0
+					}
+				}
+				else if( stored.isGranted === isGranted ){
+					permission = {
+						...stored,
+						checkedAt: now
+					}
+				}
+				else {
+					permission = {
+						...stored,
+						isGranted,
+						checkedAt: now,
+						updatedAt: now
+					}
+				}
+
+				locationStore.storeBackgroundPermission(permission);
+				return permission;
+			})
+		;
+	},
 	getLastLocation(){
 		return locationStore.getLastLocation();
+	},
+	getPermission(){
+		return ExpoLocation.getPermissionsAsync()
+			.then( permission => locationStore.storePermission(permission, false) )
+		;
 	},
 	getStoredPermissions(){
 		return {
@@ -20,35 +61,38 @@ export default {
 			background: locationStore.getBackgroundPermission()
 		};
 	},
-	getPermission(){
-		return ExpoLocation.getPermissionsAsync()
-			.then( permission => locationStore.storePermission(permission, false) )
-		;
-	},
 	requestPermission(){
 		return ExpoLocation.requestPermissionsAsync()
 			.then( permission => locationStore.storePermission(permission, true) )
 		;
 	},
+	getFence(){
+		return locationStore.getFenceData()
+	},
 	resetFence(){
 		locationStore.clearFence();
 	},
 	startBackgroundLocationUpdates(){
-		log("startBackgroundLocationUpdates not implemented");
+		BgLocationManagerIos.startBackgroundLocationUpdates();
 	},
 	stopBackgroundLocationUpdates(){
-		log("stopBackgroundLocationUpdates not implemented");
+		BgLocationManagerIos.stopBackgroundLocationUpdates();
 	},
 	startTracking(){
-		log("startTracking not implemented");
+    tracking = true;
+		BgLocationManagerIos.startTracking();
 	},
 	stopTracking(){
-		log("stopTracking not implemented");
+    tracking = false;
+		BgLocationManagerIos.stopTracking();
 	},
+  isTracking(){
+    return tracking;
+  },
 	updateLocation(force = false){
-		log("updateLocation not implemented");
+		BgLocationManagerIos.updateLocation();
 	},
 	notifyLocationHandled( distanceToDiscovery ){
-		log("notifyLocationHandled not implemented");
+		BgLocationManagerIos.notifyLocationHandled( distanceToDiscovery );
 	}
 }

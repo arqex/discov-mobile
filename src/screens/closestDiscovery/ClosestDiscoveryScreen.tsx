@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Bg, Button } from '../../components'
+import { getStatusbarHeight } from '../../components/utils/getStatusbarHeight'
 import LocationService from '../../location/location.service'
 import { ScreenProps } from '../../utils/ScreenProps'
 import ClosestDiscoveryCard from './ClosestDiscoveryCard'
@@ -26,8 +27,13 @@ export default class ClosestDiscoveryScreen extends React.Component<ScreenProps>
   }
 
 	renderMapBar() {
+    let barStyles = [
+      styles.mapBar,
+      {top: getStatusbarHeight()}
+    ];
+    
 		return (
-			<View style={styles.mapBar}>
+			<View style={barStyles}>
 				<Button type="iconFilled"
 					icon="arrow-back"
 					color="white"
@@ -54,6 +60,7 @@ const styles = StyleSheet.create({
 	mapBar: {
     position: 'absolute',
 		marginLeft: 20,
-		marginRight: 20
+    marginRight: 20,
+    zIndex: 20
   }
 })

@@ -30,6 +30,7 @@ class LocationReportDev extends React.Component<LocationReportDevProps> {
 			<Bg style={ styles.container }>
 				<View style={ styles.map }>
 					<MapView
+						provider="google"
 						initialRegion={ initialRegion }
 						style={{ display: 'flex', flexGrow: 1, width: windowWidth }}>
 							{ this.renderMarkers( locations ) }

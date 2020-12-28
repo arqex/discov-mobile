@@ -32,6 +32,7 @@ export default class ClosestDiscoveryCard extends React.Component<ClosestDiscove
   }
 
   renderDistanceCard(){
+    let distance = this.getDistanceToDiscovery();
     return (
       <View style={styles.card}>
         <Wrapper textWidth>
@@ -39,12 +40,17 @@ export default class ClosestDiscoveryCard extends React.Component<ClosestDiscove
             El descubrimiento más cercano está a...
           </Text>
         </Wrapper>
-        <Text type="superHeader">
-          { this.getDistanceToDiscovery() }
-        </Text>
+        <View style={styles.distance}>
+          <Text type="superHeader">
+            {distance.quantity}
+            <Text type="header">
+              {' ' + distance.units}
+            </Text>
+          </Text>
+        </View>
         <Wrapper textWidth>
           <Text style={{textAlign: 'center'}}>
-            La zona azul del mapa muestra donde podría esconderse la historia.
+            La zona azul del mapa muestra dónde podría esconderse la historia.
           </Text>
         </Wrapper>
       </View>
@@ -103,12 +109,22 @@ export default class ClosestDiscoveryCard extends React.Component<ClosestDiscove
   getDistanceToDiscovery(){
     let distance = this.props.fence.distanceToDiscovery;
     if( distance < 1000 ){
-      return distance + ' m';
+      return {
+        quantity: 1000,
+        units: 'm'
+      };
     }
     if( distance < 5000 ){
-      return (Math.round( distance / 100 ) / 10) + ' km';
+      return {
+        quantity: (Math.round( distance / 100 ) / 10), 
+        units: 'km'
+      };
     }
-    return Math.round( distance / 1000 ) + ' km';
+
+    return {
+      quantity: Math.round( distance / 1000 ), 
+      units: 'km'
+    };
   }
 
 	canAskForLocation() {
@@ -149,5 +165,9 @@ const styles = StyleSheet.create({
   },
   m20: {
     marginBottom: 20
+  },
+  distance: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 })

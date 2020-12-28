@@ -15,15 +15,18 @@ PODS:
     - AppCenter/Crashes
     - AppCenterReactNativeShared
     - React-Core
-  - AppCenter/Analytics (3.2.0):
+  - AppCenter/Analytics (4.0.0):
     - AppCenter/Core
-  - AppCenter/Core (3.2.0)
-  - AppCenter/Crashes (3.2.0):
+  - AppCenter/Core (4.0.0)
+  - AppCenter/Crashes (4.0.0):
     - AppCenter/Core
-  - AppCenterReactNativeShared (3.0.3):
-    - AppCenter/Core (= 3.2.0)
+  - AppCenterReactNativeShared (4.0.0):
+    - AppCenter/Core (= 4.0.0)
   - Base64 (1.1.2)
   - boost-for-react-native (1.63.0)
+  - CocoaLumberjack (3.6.2):
+    - CocoaLumberjack/Core (= 3.6.2)
+  - CocoaLumberjack/Core (3.6.2)
   - CodePush (6.2.1):
     - Base64 (~> 1.1)
     - JWT (~> 3.0.0-beta.7)
@@ -109,14 +112,14 @@ PODS:
     - AppAuth (~> 1.2)
     - GTMAppAuth (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
-  - GTMAppAuth (1.0.0):
-    - AppAuth/Core (~> 1.0)
-    - GTMSessionFetcher (~> 1.1)
-  - GTMSessionFetcher (1.4.0):
-    - GTMSessionFetcher/Full (= 1.4.0)
-  - GTMSessionFetcher/Core (1.4.0)
-  - GTMSessionFetcher/Full (1.4.0):
-    - GTMSessionFetcher/Core (= 1.4.0)
+  - GTMAppAuth (1.1.0):
+    - AppAuth/Core (~> 1.4)
+    - GTMSessionFetcher (~> 1.4)
+  - GTMSessionFetcher (1.5.0):
+    - GTMSessionFetcher/Full (= 1.5.0)
+  - GTMSessionFetcher/Core (1.5.0)
+  - GTMSessionFetcher/Full (1.5.0):
+    - GTMSessionFetcher/Core (= 1.5.0)
   - JKBigInteger2 (0.0.5)
   - JWT (3.0.0-beta.12):
     - Base64 (~> 1.1.2)
@@ -370,6 +373,9 @@ PODS:
     - React
   - RNBackgroundFetch (3.1.0):
     - React
+  - RNBackgroundGeolocation (3.9.3):
+    - CocoaLumberjack (~> 3.6.1)
+    - React-Core
   - RNCAsyncStorage (1.11.0):
     - React
   - RNCPushNotificationIOS (1.1.0):
@@ -398,14 +404,14 @@ PODS:
     - React
   - RNSVG (11.0.1):
     - React
-  - SDWebImage (5.8.1):
-    - SDWebImage/Core (= 5.8.1)
-  - SDWebImage/Core (5.8.1)
+  - SDWebImage (5.10.0):
+    - SDWebImage/Core (= 5.10.0)
+  - SDWebImage/Core (5.10.0)
   - SDWebImageWebPCoder (0.4.1):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.5)
   - SSZipArchive (2.2.3)
-  - TOCropViewController (2.5.3)
+  - TOCropViewController (2.5.5)
   - UMAppLoader (1.0.1)
   - UMBarCodeScannerInterface (5.1.0)
   - UMCameraInterface (5.1.0)
@@ -477,6 +483,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNAWSCognito (from `../node_modules/amazon-cognito-identity-js`)
   - RNBackgroundFetch (from `../node_modules/react-native-background-fetch`)
+  - RNBackgroundGeolocation (from `../node_modules/react-native-background-geolocation`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCPushNotificationIOS (from `../node_modules/@react-native-community/push-notification-ios`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
@@ -508,6 +515,7 @@ SPEC REPOS:
     - AppCenterReactNativeShared
     - Base64
     - boost-for-react-native
+    - CocoaLumberjack
     - Google-Maps-iOS-Utils
     - GoogleMaps
     - GoogleSignIn
@@ -616,6 +624,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/amazon-cognito-identity-js"
   RNBackgroundFetch:
     :path: "../node_modules/react-native-background-fetch"
+  RNBackgroundGeolocation:
+    :path: "../node_modules/react-native-background-geolocation"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCPushNotificationIOS:
@@ -665,13 +675,14 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
-  AppCenter: ca66175050d538b157959382dd43f1ab96cdab84
+  AppCenter: 51351e0121e40ba75e28ecb7de5c2e69d480df5e
   appcenter-analytics: 3e8bf76870877c5abdfb752e1dc014be2b2030e4
   appcenter-core: e7aa4513ee9173b82c4a4497d49abb0ec7ceb159
   appcenter-crashes: 0052b9ae5cc6b5c184238eb6c230ed5942d91f10
-  AppCenterReactNativeShared: d1218878427a69d4b76f73883256455ed20f12b3
+  AppCenterReactNativeShared: 69aedc15c136e5f76a0cc9eb2ad84d3cefc6e64f
   Base64: cecfb41a004124895a7bcee567a89bae5a89d49b
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
+  CocoaLumberjack: bd155f2dd06c0e0b03f876f7a3ee55693122ec94
   CodePush: 4b21ce24113167513a6fd1602718b22e322069b2
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   EXConstants: 9f18e9ef229706394f41735d9c7f309d479b36c0
@@ -693,8 +704,8 @@ SPEC CHECKSUMS:
   Google-Maps-iOS-Utils: c32891ff472eaaa1fca032beedafa1a013af7875
   GoogleMaps: 32ca02de09de357a10ac773f2c70f1986751392d
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
-  GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
-  GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
+  GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
+  GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   JKBigInteger2: e91672035c42328c48b7dd015b66812ddf40ca9b
   JWT: 9b5c05abbcc1a0e69c3c91e1655b3387fc7e581d
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
@@ -724,6 +735,7 @@ SPEC CHECKSUMS:
   ReactCommon: 73d79c7039f473b76db6ff7c6b159c478acbbb3b
   RNAWSCognito: 08567d55159547e8ac2a1ce4350cd44a67f3db96
   RNBackgroundFetch: 81c690aa5e8e67dbc3f86ecb7f26629c00c6060d
+  RNBackgroundGeolocation: fb1b487e56488c2fa8a33eaf2b24803e5b883bbf
   RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
   RNCPushNotificationIOS: de54f074e577e684c0619d4271a5b451e8a37ee1
   RNDeviceInfo: c3ea4a4d4547740c548cdd1e5a78f9b04e524688
@@ -733,10 +745,10 @@ SPEC CHECKSUMS:
   RNImageCropPicker: f0557a908758c4a3f83978894ec7227651529b45
   RNLocalize: fc27ee5878ce5a3af73873fb2d8e866e0d1e6d84
   RNSVG: 67f1f12dae2cef6ed59a42cae74a6b8f5a9e7b46
-  SDWebImage: e3eae2eda88578db0685a0c88597fdadd9433f05
+  SDWebImage: 9169792e9eec3e45bba2a0c02f74bf8bd922d1ee
   SDWebImageWebPCoder: 36f8f47bd9879a8aea6044765c1351120fd8e3a8
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
-  TOCropViewController: 20a14b6a7a098308bf369e7c8d700dc983a974e6
+  TOCropViewController: da59f531f8ac8a94ef6d6c0fc34009350f9e8bfe
   UMAppLoader: 83885655be9ce3e5b3684d20f9973da67b78b3a9
   UMBarCodeScannerInterface: aa3409ab9d108866e55c09ad0292e4a6c08a7775
   UMCameraInterface: 9d5da92c521e0af7815afbf77ea19bd0312b4928
@@ -754,4 +766,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: f628b4fb2eb5a34ad160828c7c1215baa9ce1a49
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3

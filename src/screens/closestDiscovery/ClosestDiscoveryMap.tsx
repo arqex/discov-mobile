@@ -18,6 +18,7 @@ export default class ClosestDiscoveryMap extends React.Component<ClosestDiscover
     return (
       <MapView style={{flex:1, padding: 0}}
         initialRegion={ this.getRegion(position, fence) }
+        provider="google"
         ref={ this.map }>
         { this.renderCurrentPositionMarker(position) }
         { this.renderCircle(fence) }
@@ -50,7 +51,11 @@ export default class ClosestDiscoveryMap extends React.Component<ClosestDiscover
 
   getRegion( location, fence ){
     if( fence ){
-      return getRegion(fence.location.latitude, fence.location.longitude, this.getOuterCircleRadius(fence)*2 + 200);
+      return {
+        ...getRegion(fence.location.latitude, fence.location.longitude, this.getOuterCircleRadius(fence)*2 + 200),
+        latitude: location && location.latitude || fence.location.latitude,
+        longitude: location && location.longitude || fence.location.longitude,
+      }
     }
     if( location ){
       return {

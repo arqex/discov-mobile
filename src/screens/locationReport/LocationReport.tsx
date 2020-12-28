@@ -16,7 +16,7 @@ export default class LocationReport extends React.Component<ScreenProps> {
           onBack={ () => this.props.router.back() }
           withSafeArea />
         <View style={{height: Dimensions.get('window').height / 3}}>
-          <MapView style={{flex: 1}} />
+          <MapView style={{flex: 1}} provider="google" />
         </View>
         <View>
           <FlatList

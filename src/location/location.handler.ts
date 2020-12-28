@@ -95,6 +95,9 @@ function checkDiscoveries(location) {
 			log('----- End location update');
 			return { error: false, ...res };
 		})
+		.catch( err => {
+			console.log('ERROR discovering', err );
+		})
 	;
 }
 

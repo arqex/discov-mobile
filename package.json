@@ -47,6 +47,7 @@
     "react-interactable": "^0.6.4",
     "react-native": "0.63.4",
     "react-native-background-fetch": "^3.1.0",
+    "react-native-background-geolocation": "^3.9.3",
     "react-native-code-push": "^6.2.1",
     "react-native-device-info": "^5.5.4",
     "react-native-fast-image": "^8.1.5",
