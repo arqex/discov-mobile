@@ -1,5 +1,5 @@
 import React from 'react';
-import { actions } from '../state/appState';
+import locationService from '../location/location.service';
 import storeService from '../state/store.service';
 
 const EXPIRY_TIME = 5 * 60000;
@@ -10,45 +10,46 @@ export default function PositionProvider(WrappedComponent) {
 		position: any = false
 		positionListener: any = false
 
-		constructor(props) {
-			super(props);
-			this.loadPosition();
+		state = {
+			loading: false,
+			positionRequested: false
 		}
-
+		
 		render() {
-			let position = storeService.getCurrentPosition();
+			let position = this.getPosition();
 			return (
 				<WrappedComponent
-					position={ position && position.coords || false }
+					position={ position || false }
 					{...this.props} />
 			);
 		}
 
-		loadPosition() {
-			this.position = storeService.getCurrentPosition();
-			this.checkListeners();
+		getPosition() {
+			return locationService.getLastLocation();
+		}
 
-			if ( this.needToLoad( this.position ) ) {
-				actions.map.getCurrentPosition()
-					.then(() => {
-						// Position should be in the store now, load it
-						this.position = storeService.getCurrentPosition();
-						this.forceUpdate();
-					})
-				;
+		componentDidMount() {
+			this.position = this.getPosition();
+			this.checkListeners();
+			if( this.needToLoad( this.position ) ){
+				this.loadPosition();
+			} 
+		}
+
+		loadPosition() {
+			this.setState({loading: true, positionRequested: true});
+			if( !this.state.positionRequested ){
+				locationService.updateLocation( true );
 			}
+			setTimeout( () => {
+				this.setState({loading: false});
+				this.position = this.getPosition();
+				this.checkListeners();
+			}, 500 );
 		}
 
 		needToLoad( position ){
-			if( position.status === 'loading' ){
-				return false;
-			}
-
-			if( position.status === 'ok' && !this.isExpired( position ) ){
-				return false;
-			}
-
-			return true;
+			return !this.state.loading && !position;
 		}
 
 		isExpired( position ){
@@ -70,7 +71,7 @@ export default function PositionProvider(WrappedComponent) {
 
 		_onChange = () => {
 			// check the changes in the account
-			this.position = storeService.getCurrentPosition();
+			this.position = this.getPosition();
 			this.forceUpdate();
 		}
 	}

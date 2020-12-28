@@ -1,10 +1,11 @@
 
-let actions, store;
+let actions, store, services;
 
 export const usersService = {
-	init( ac, st ){
+	init(ac, st, sr) {
 		actions = ac;
 		store = st;
+		services = sr;
 	},
 
 	followers: createRelationshipService('followers'),

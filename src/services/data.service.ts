@@ -52,6 +52,9 @@ export const dataService = {
 
 		return initPromise;
 	},
+	isInitialized(){
+		return store.apiInitialized;
+	},
 	addStatusListener( clbk ) {
 		statusChangeClbks.push( clbk );
 	},
@@ -87,7 +90,8 @@ export const dataService = {
 		}
 
 		return lastLoginStatus;
-	}
+	},
+	backupStoreNow: backupStoreNow
 }
 
 // dataService get always initialized automatically
@@ -139,12 +143,16 @@ function backupStore(){
 		if( !backupRestored ){
 			return backupStore();
 		}
-
-		backupTimer = false;
-		authStore.storage.setItem(BACKUP_KEY, JSON.stringify( store ) );
-		console.log('####### Backup SAVED: ', store.locationReport &&  store.locationReport.length);
+		backupStoreNow();
 	}, 2000);
 }
+
+function backupStoreNow() {
+	backupTimer = false;
+	authStore.storage.setItem(BACKUP_KEY, JSON.stringify( store ) );
+	console.log('####### Backup SAVED');
+}
+
 
 let backupRestored = false;
 function restoreStore(){
@@ -166,7 +174,7 @@ function restoreStore(){
 						store.accountStatus = {}; // Clear the account status in case we need to refresh
 					}
 
-					console.log(`###### Backup RESTORED: ${backup.locationReport && backup.locationReport.length}`);
+					console.log(`###### Backup RESTORED`);
 
 				}
 				catch ( err ) {

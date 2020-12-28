@@ -1,24 +1,43 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Dimensions, FlatList} from 'react-native';
+import { Text, View, StyleSheet, Dimensions, FlatList, TouchableHighlight} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 import { Bg } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
 
-interface NewLocationReportProps extends ScreenProps {};
+interface LocationReportDevProps extends ScreenProps {};
 
 let windowWidth = Dimensions.get('window').width;
 const bgColors = ['#ffffff', '#fafafa'];
-class NewLocationReport extends React.Component<NewLocationReportProps> {
+class LocationReportDev extends React.Component<LocationReportDevProps> {
+	state = {
+		selectedLocation: false
+	}
+
 	render() {
 		let locations = this.getLocations();
+		let initialRegion;
+		if( locations.order.length ) {
+			let loc = locations.items[ locations.order[0] ];
+			initialRegion = {
+				latitude: loc.latitude,
+				longitude: loc.longitude,
+				latitudeDelta: 0.0322,
+				longitudeDelta: 0.0321,
+			}
+		}
 
 		return (
 			<Bg style={ styles.container }>
 				<View style={ styles.map }>
 					<MapView
+						provider="google"
+						initialRegion={ initialRegion }
 						style={{ display: 'flex', flexGrow: 1, width: windowWidth }}>
 							{ this.renderMarkers( locations ) }
 					</MapView>
+				</View>
+				<View>
+					<Text>Closest discov: { this.getDistanceToDiscovery() } - BgPermission: { this.getBgPermission() }</Text>
 				</View>
 				<View style={ styles.items }>
 					<FlatList
@@ -31,20 +50,19 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 		);
 	}
 
-	renderMarkers( locations ){
-		let locationCount = locations.order.length;
-
-		return locations.order.map( (id,i) => {
-			let location = locations.items[id];
-			let coords = location.coords ? location.coords : location
+	renderMarkers( {order, items} ){
+		let locationCount = order.length;
+		return order.map( (id,i) => {
+			let location = items[id];
 			let st = [
 				styles.placeMarker,
 				{ backgroundColor: colorFromIndex(i, locationCount) }
 			];
 			return (
 				<Marker
+					style={{zIndex: id === this.state.selectedLocation ? 1000 : locationCount - i}}
 					key={ id }
-					coordinate={ coords }>
+					coordinate={ location }>
 						<View style={styles.placeMarkerWrapper}>
 							<View style={st} />
 						</View>
@@ -59,19 +77,21 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 		let rowStyle = [
 			styles.row,
 			{
-				backgroundColor: this.getRowColor(location.batchId),
+				backgroundColor: '#fff', // this.getRowColor(location.batchId),
 				borderLeftColor: colorFromIndex(index, locations.order.length )
 			}
 		];
 		
 		return (
-			<View style={ rowStyle }>
-				{ this.renderDate( location.timestamp ) }
-				<View style={ styles.source }>
-					<Text>{ location.initiator }</Text>
+			<TouchableHighlight onPress={ () => this.setState({selectedLocation: location.id})}>
+				<View style={ rowStyle }>
+					{ this.renderDate( location.timestamp ) }
+					<View style={ styles.source }>
+						<Text>{ location.source || 'Unknown' }</Text>
+					</View>
+					{ this.renderResult( location.result ) }
 				</View>
-				{ this.renderResult( location.result ) }
-			</View>
+			</TouchableHighlight>
 		);
 	}
 
@@ -95,9 +115,20 @@ class NewLocationReport extends React.Component<NewLocationReportProps> {
 	}
 
 	getLocations(){
-		return this.props.store.locationReport;
+		let report = this.props.store.locationData.report;
+		return report || {items:{}, order:[]};
 	}
 
+	getDistanceToDiscovery(){
+		let fence = this.props.store.locationData.fence;		
+		return fence ? fence.distanceToDiscovery : '???';
+	}
+
+	getBgPermission(){
+		let permission = this.props.store.locationData.backgroundPermission;
+		console.log(permission);
+		return permission ? `${permission.isGranted}:${this.formatDate(permission.checkedAt)}` : '???';
+	}
 
 	formatDate(t) {
 		let d = new Date(t);
@@ -126,7 +157,7 @@ function colorFromIndex( index, total ){
 	return `rgb(${ color },${255 - color}, 0)`;
 }
 
-export default NewLocationReport;
+export default LocationReportDev;
 
 const styles = StyleSheet.create({
 	container: {

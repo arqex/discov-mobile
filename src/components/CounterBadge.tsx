@@ -7,7 +7,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 const size = 18;
 
 interface CounterBadgeProps {
-	progress: number,
+	progress?: number,
 	count: string | number
 }
 

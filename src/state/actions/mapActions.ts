@@ -1,8 +1,8 @@
 
 import actionService from './action.service';
 import storeService from '../store.service';
-import { getCurrentPositionAsync } from 'expo-location';
-import * as RNLocalize from "react-native-localize";
+import * as RNLocalize from 'react-native-localize';
+import locationService from '../../location/location.service';
 
 export default function (store, api) {
 
@@ -28,19 +28,8 @@ export default function (store, api) {
 			;
 		},
 
-		getCurrentPosition(){
-			return getCurrentPositionAsync({ enableHighAccuracy: true, timeout: 20000 })
-				.then( ({coords}) => {
-					storeService.storeCurrentPosition(coords)
-				})
-				.catch(err => {
-					console.log('Location not granted');
-				})
-			;
-		},
-
 		searchPlaces( query:string, location: any ){
-			let position = location || storeService.getCurrentPosition().coords || defaultLocation;
+			let position = location || locationService.getLastLocation() || defaultLocation;
 
 			let payload = {
 				query,

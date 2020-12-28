@@ -1,77 +1,42 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Text, ScrollView } from 'react-native';
-import { ScreenProps } from '../../utils/ScreenProps';
-import { Button } from '../../components';
-import store from '../../state/store';
-import locationHandler from '../../location/location.handler';
+import * as React from 'react'
+import { Dimensions, View } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
+import MapView from 'react-native-maps'
+import { Bg, TopBar } from '../../components'
+import { ScreenProps } from '../../utils/ScreenProps'
+import LocationGroup from './LocationGroupItem'
 
-export default class LocationReport extends Component<ScreenProps> {
-	render() {
-    let store = this.props.store;
-    let locations = store && store.locationReportOld || [];
-    let fenceData = locationHandler.getFenceData();
-
+export default class LocationReport extends React.Component<ScreenProps> {
+  render() {
     return (
-      <ScrollView contentContainerStyle={ styles.container }>
-        <Text>Location report ({locations.length})</Text>
-        <Text>In fence: { fenceData.passiveFence ? 'true' : 'false' }</Text>
-        <Text>Distance from out of the fence: { fenceData.distanceFromOutOfFence }</Text>
-        <Button onPress={ this._clearLocationReport }>Clear report</Button>
-        <View style={ styles.location }>
-          <Text>date</Text>
-          <Text>lon/lat</Text>
-          <Text>accuracy</Text>
+      <Bg>
+        <TopBar
+          title="Location report"
+          subtitle="Next discovery < 300m"
+          onBack={ () => this.props.router.back() }
+          withSafeArea />
+        <View style={{height: Dimensions.get('window').height / 3}}>
+          <MapView style={{flex: 1}} provider="google" />
         </View>
-        { locations.map( this._renderLocation ) }
-      </ScrollView>
+        <View>
+          <FlatList
+            data={ this.getGroups() }
+            renderItem={ this._renderGroup }
+            keyExtractor={ this._keyExtractor } />
+        </View>
+      </Bg>
     )
-  };
+  }
 
-	_renderLocation = location => {
+  getGroups() { 
+    return [];
+  }
+
+  _renderGroup = group => {
     return (
-      <View style={ styles.location }>
-        <Text>{this.getWildcard(location) + this.formatDate(location.date) }</Text>
-        <Text>{ location.longitude } / { location.latitude }</Text>
-        <Text>{ location.accuracy }</Text>
-      </View>
+      <LocationGroup group={ group } />
     )
   }
 
-  getWildcard( location ){
-    return location.isBgFetch ? '* ' : '';
-  }
-
-  _clearLocationReport = () => {
-    store.locationReportOld = [];
-    this.forceUpdate();
-  }
-  
-  
-  formatDate(t) {
-    let d = new Date(t);
-    return `${d.getDate()}/${d.getMonth() + 1} ${d.getHours()}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
-  }
+  _keyExtractor = group => group.id
 }
-
-function pad(n) {
-  if (n < 10) {
-    return `0${n}`;
-  }
-  return n;
-}
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    paddingBottom: 50,
-    width: '100%',
-    alignItems: 'stretch'
-  },
-	location: {
-    flexDirection: 'row',
-    paddingLeft: 20,
-    paddingRight: 20,
-    marginBottom: 5,
-    justifyContent: 'space-between'
-	}
-});

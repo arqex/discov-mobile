@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import { styleVars, Text } from ".";
+import styleVars from './styleVars';
+import Text from './Text';
 
 export default function LoadingText( props ){
 	let color = styleVars.colors.borderBlue;

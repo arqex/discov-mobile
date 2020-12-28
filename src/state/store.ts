@@ -3,6 +3,7 @@ import ors from '@arqex/ors';
 let store = ors({
 	status: 'INIT',
 	user: {},
+	accountActivities: {},
 	accountStatus: {},
 	discoveries: {},
 	stories: {},
@@ -14,8 +15,8 @@ let store = ors({
 	followerGroups: {},
 	placesByLocation: {},
 	addressByLocation: {},
-	currentPosition: {},
-	distanceFromOutOfFence: 0 // 0 means no discoveries
+	locationData: {},
+	alerts: {}
 })
 
 export default store;

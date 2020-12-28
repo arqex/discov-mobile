@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
+import { Text, View, StyleSheet, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import Spinner from './Spinner';
 import styleVars from './styleVars';
@@ -67,6 +67,7 @@ const Button = (props: ButtonProps) => {
 				iconPost = <View style={[styles.iconWrapperPost, isMenuButton && styles.iconWrapper_post]}>{icon}</View>;
 			}
 		}
+		
 		content = (
 			<View style={[styles.textWrapper, loading && styles.textLoading]}>
 				{iconPre}
@@ -165,10 +166,11 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'center',
-		alignItems: 'center',
+		alignItems: 'center'
 	},
 
 	text: {
+		fontFamily: Platform.OS === 'android' ? 'Roboto' : 'System',
 		fontWeight: 'bold',
 		fontSize: 15,
 		textTransform: 'uppercase'

@@ -118,7 +118,8 @@ export default class Auth extends React.Component<AuthProps> {
 	animateLogo( value ){
 		Animated.timing( this.logoPosition, {
 			toValue: value,
-			duration: 500
+			duration: 500,
+			useNativeDriver: true
 		}).start();
 	}
 };

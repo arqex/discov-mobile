@@ -12,7 +12,12 @@ interface PeerAccountImageViewerProps {
 }
 
 class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps> {
+	isBarDisplayed = false
 
+	state = {
+		open: false
+	}
+	
 	backgroundOpacity = this.props.animatedValue.interpolate({
 		inputRange: [0, .8, 1],
 		outputRange: [0, 1, 1]
@@ -33,11 +38,6 @@ class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps
 
 	constructor(props) {
 		super(props);
-
-		this.state = {
-			open: false
-		};
-
 		this.props.animatedValue.addListener( ({value}) => {
 			if( value === 1 && !this.state.open ){
 				this.setState({open: true});
@@ -176,7 +176,8 @@ class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps
 	showBar() {
 		Animated.timing(this.barTranslate, {
 			toValue: 0,
-			duration: 300
+			duration: 300,
+			useNativeDriver: true
 		}).start();
 		this.isBarDisplayed = true
 	}
@@ -184,7 +185,8 @@ class PeerAccountImageViewer extends React.Component<PeerAccountImageViewerProps
 	hideBar() {
 		Animated.timing(this.barTranslate, {
 			toValue: -100,
-			duration: 300
+			duration: 300,
+			useNativeDriver: true
 		}).start();
 		this.isBarDisplayed = false
 	}

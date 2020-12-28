@@ -3,8 +3,8 @@ import { View, StyleSheet, Image } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, Text, Button, styleVars, Tooltip, Wrapper } from '../../components';
 import onboardingStyles from './onboarding.styles';
-import * as Location from 'expo-location';
 import storeService from '../../state/store.service';
+import locationService from '../../location/location.service';
 
 export default class OnboardingLocation extends React.Component<ScreenProps> {
 	state = {
@@ -95,7 +95,7 @@ You will be asked again when you start following friends or try to create your f
 
 	_askForLocation = () => {
 		this.setState({loading: true});
-		return Location.requestPermissionsAsync()
+		return locationService.requestPermissions()
 			.then( permissions => {
 				storeService.setLocationPermissions( permissions );
 				if( permissions.granted ){
@@ -120,7 +120,7 @@ You will be asked again when you start following friends or try to create your f
 	}
 
 	componentDidMount() {
-		Location.getPermissionsAsync()
+		locationService.getPermissions()
 			.then( permissions => {
 				if( permissions.granted ){
 					this.setState({ loading: false });

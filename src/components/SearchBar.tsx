@@ -150,14 +150,16 @@ export default class SearchBar extends React.Component<SearchBarProps> {
   searchOpen() {
     Animated.timing( this.animatedOpen, {
       toValue: 1,
-      duration: ANIM_DURATION
+      duration: ANIM_DURATION,
+      useNativeDriver: true
     }).start();
   }
 
   searchClose() {
     Animated.timing( this.animatedOpen, {
       toValue: 0,
-      duration: ANIM_DURATION
+      duration: ANIM_DURATION,
+      useNativeDriver: true
     }).start();
   }
   

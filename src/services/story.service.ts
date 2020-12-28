@@ -1,12 +1,12 @@
 // TODO create a cache
 
-let actions, store;
+let actions, store, services;
 
 export const storyService = {
-
-	init(ac, st) {
+	init(ac, st, sr) {
 		actions = ac;
 		store = st;
+		services = sr;
 	},
 
 	getAccountStories(){

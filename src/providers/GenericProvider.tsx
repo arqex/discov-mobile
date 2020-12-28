@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {Text} from 'react-native';
-import { Bg } from '../components';
+import Bg from '../components/Bg';
+import Text from '../components/Text';
 
 export interface GenericProviderMethods {
   getId: (props: any) => string

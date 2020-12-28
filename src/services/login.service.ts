@@ -1,9 +1,12 @@
-let actions, store;
+import LocationService from "../location/location.service";
+
+let actions, store, services;
 
 export const loginService = {
-	init(ac, st) {
+	init(ac, st, sr) {
 		actions = ac;
 		store = st;
+		services = sr;
 	},
 
 	redirectOnLogin: function( res, router ){
@@ -21,6 +24,7 @@ export const loginService = {
 			}
 		}
 		else {
+			LocationService.startBackgroundLocationUpdates();
 			router.navigate('/myStories');
 			return true;
 		}

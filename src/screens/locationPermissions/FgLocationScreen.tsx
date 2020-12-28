@@ -3,15 +3,17 @@ import { View, StyleSheet, Image, Linking } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Bg, Text, Button, styleVars } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
-import locationTracking from '../../location/location.tracking';
+import locationService from '../../location/location.service';
+import LocationService from '../../location/location.service';
 
-interface NoLocationScreenProps extends ScreenProps {
-
+interface FgLocationScreenProps extends ScreenProps {
+	onFinish?: (isGranted: boolean) => void,
+	showSkip?: boolean
 }
 
-class NoLocationScreen extends React.Component<NoLocationScreenProps>{
+class FgLocationScreen extends React.Component<FgLocationScreenProps>{
 	state = {
-		loading: false
+		loading: false,
 	}
 
 	render() {
@@ -44,9 +46,10 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 		if( this.canAskForLocation() ){
 			return (
 				<View style={styles.buttonWrapper}>
-					<Button onPress={ this._askForPermission }>
+					<Button onPress={ this._askForPermission } loading={ this.state.loading }>
 						Enable location
 					</Button>
+					{ this.renderNotNow() }
 				</View>
 			);
 		}
@@ -62,13 +65,26 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 					<Button onPress={ this._openSettings }>
 						Go to settings
 					</Button>
+					{ this.renderNotNow() }
 				</View>
 			</View>
 		);
 	}
+	renderNotNow() {
+		if( !this.props.showSkip ) return;
+
+		return (
+			<View style={{marginTop: 10}}>
+				<Button type="transparent"
+					onPress={ () => this.props.onFinish && this.props.onFinish(false) }>
+					Not now
+				</Button>
+			</View>
+		)
+	}
 
 	canAskForLocation() {
-		let perm = this.props.store.locationPermissions;
+		let perm = LocationService.getStoredPermissions().foreground;
 
 		console.log('Perm', perm );
 
@@ -77,10 +93,11 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 
 	_askForPermission = () => {
 		this.setState({loading: true});
-
-		locationTracking.requestPermissions()
-			.then( () => {
+		
+		locationService.requestPermission()
+			.then( permission => {
 				this.setState({loading: false});
+				this.props.onFinish && this.props.onFinish(permission.isGranted);
 			})
 		;
 	}
@@ -90,7 +107,7 @@ class NoLocationScreen extends React.Component<NoLocationScreenProps>{
 	}
 };
 
-export default NoLocationScreen;
+export default FgLocationScreen;
 
 const styles = StyleSheet.create({
 	container: {

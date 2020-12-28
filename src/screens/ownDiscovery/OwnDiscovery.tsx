@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import storeService from '../../state/store.service';
 import StoryScreen from '../components/StoryScreen';
+import locationService from '../../location/location.service';
 
 export default class OwnDiscovery extends Component<ScreenProps> {
 	state = {
@@ -20,7 +21,7 @@ export default class OwnDiscovery extends Component<ScreenProps> {
 			return this.renderLoading();
 		}
 
-		const currentPosition = storeService.getCurrentPosition();
+		const currentPosition = locationService.getLastLocation();
 		const story = storeService.getStory( discovery.storyId );
 
 		return (

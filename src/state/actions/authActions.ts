@@ -1,3 +1,5 @@
+import LocationService from "../../location/location.service";
+
 type Listener = (status: string) => any
 let clbks: Listener[] = [];
 let eventEmitter = {
@@ -95,6 +97,7 @@ export default function (store, api, actions ){
 			
 			return await api.logout()
 				.then( () => {
+					LocationService.stopBackgroundLocationUpdates();
 					Object.keys( store ).forEach( key => {
 						if( typeof store[key] === 'object' ){
 							store[key] = {};

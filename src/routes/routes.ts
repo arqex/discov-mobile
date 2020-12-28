@@ -29,13 +29,18 @@ import AddStoryContent from '../screens/createStory/AddStoryContent';
 import ShareStory from '../screens/createStory/ShareStory';
 import StorySummary from '../screens/createStory/StorySummary';
 import OwnDiscovery from '../screens/ownDiscovery/OwnDiscovery';
-import LocationReport from '../screens/locationReport/LocationReport';
-import NewLocationReport from '../screens/newLocationReport/NewLocationReport';
+import LocationReportDev from '../screens/locationReport/LocationReportDev';
 import BgReport from '../screens/locationReport/BgReport';
 import AssetsViewer from '../screens/assetsViewer/AssetsViewer';
 import StoryComments from '../screens/storyComments/StoryComments';
 import DiscoveryCommentsScreen from '../screens/storyComments/DiscoveryComments';
 import UnknownDiscovery from '../screens/unknownDiscovery/UnknownDiscovery';
+import BgLocationScreen from '../screens/locationPermissions/BgLocationScreen';
+import ActivityEventsScreen from '../screens/activityEvents/ActivityEventsScreen';
+import FgLocationModal from '../screens/locationPermissions/FgLocationModal';
+import DevSettings from '../screens/settings/DevSettings';
+import LocationReport from '../screens/locationReport/LocationReport';
+import ClosestDiscoveryScreen from '../screens/closestDiscovery/ClosestDiscoveryScreen';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -48,6 +53,8 @@ export const routes = [
 			]}
 		]}
 	]},
+
+	{ path: '/activityEvents', cb: ActivityEventsScreen},
 
 	{ path: '/myAccount', cb: MyAccount},
 	{ path: '/createStory', cb: CreateStory, children: [
@@ -86,13 +93,18 @@ export const routes = [
 		]}
 	]},
 
-	{ path: '/settings', cb: Settings },
+	{ path: '/settings', cb: Settings, children: [
+		{ path: '/dev', cb: DevSettings },
+		{ path: '/closestDiscovery', cb: ClosestDiscoveryScreen},
+		{ path: '/locationReport', cb: LocationReport },
+	] },
 
-	{ path: '/locationReport', cb: LocationReport },
-	{ path: '/newLocationReport', cb: NewLocationReport },
+	{ path: '/locationReport', cb: LocationReportDev },
 	{ path: '/bgReport', cb: BgReport },
 
 	{ path: '/accountModal', cb: PeerAccountModal, isModal: true },
+	{ path: '/bgLocationPermission', cb: BgLocationScreen, isModal: true },
+	{ path: '/fgLocationPermission', cb: FgLocationModal, isModal: true },
 
 	{ path: '/unknownDiscovery', cb: UnknownDiscovery },
 

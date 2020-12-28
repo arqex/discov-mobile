@@ -137,7 +137,7 @@ export default {
 						...d,
 						owner: store.peerAccounts[ d.ownerId ]
 					};
-					unseen.push( discoveries );
+					unseen.push( discovery );
 					i++;
 				}
 			}
@@ -189,116 +189,6 @@ export default {
 		store.addressByLocation[getLocationKey(location)] = address;
 	},
 
-	getCurrentPosition(){
-		return store.currentPosition;
-	},	
-
-	storeCurrentPosition( coords, error? ){
-		if( error ){
-			return store.currentPosition = {
-				status: error,
-				updatedAt: Date.now(),
-				coords: false
-			};
-		}
-
-		store.currentPosition = {
-			status: 'ok',
-			updatedAt: Date.now(),
-			coords
-		}
-	},
-
-	getPassiveGeofence(){
-		return store.passiveGeofence;
-	},
-
-	storePassiveGeoFence( location, radius ) {
-		store.passiveGeofence = {
-			updatedAt: ( new Date() ).toISOString(),
-			latitude: location.latitude,
-			longitude: location.longitude,
-			radius: radius
-		};
-	},
-
-	storeFenceDistance( distance ){
-		store.distanceFromOutOfFence = distance;
-	},
-
-	getFenceDistance() {
-		return store.distanceFromOutOfFence;
-	},
-
-	addLocationReport( locations ){
-		let order = [];
-		let items = {};
-
-		locations.forEach( l => {
-			order.push( l.id );
-			items[ l.id ] = l;
-		});
-
-		let currentReport = store.locationReport;
-		if( currentReport && !currentReport.slice && currentReport.order ){
-			let limit = Math.min( 200 - order.length, currentReport.order.length );
-			let i = 0;
-			while( i < limit ){
-				let id = currentReport.order[i];
-				order.push( id );
-				items[ id ] = currentReport.items[id];
-				i++;
-			}
-		}
-
-		store.locationReport = { order, items };
-	},
-
-	setLocationResult( batchId, result ){
-		let { order, items } = store.locationReport;
-		let started = false;
-		let i = 0;
-
-		while( i < order.length ){
-			let id = order[i];
-			if( items[id].batchId === batchId ){
-				items[id].result = result;
-				if( !started ){
-					started = true;
-				}
-			}
-			else {
-				// Once we started to add the results if the 
-				// item doesn't belong to the batch anymore
-				// we can exit
-				if( started ) return;
-			}
-			i++;
-		}
-	},
-
-	addLocationReportOld( loc, isBgFetch = false){
-		console.log('##### Adding to location report', store.locationReportOld && store.locationReportOld.length );
-		let locations = store.locationReportOld && store.locationReportOld.slice ? store.locationReportOld.slice() : [];
-
-		locations.unshift({
-			isBgFetch,
-			longitude: truncateDegrees(loc.longitude),
-			latitude: truncateDegrees(loc.latitude),
-			accuracy: parseInt(loc.accuracy),
-			date: Date.now()
-		});
-
-		locations = locations.slice(0,100);
-		store.locationReportOld = locations;
-	},
-
-
-
-	setLocationPermissions( permissions ){
-		store.locationPermissions = permissions;
-	},
-
 	getComments( storyId ){
 		return store.storyComments[ storyId ];
 	},
@@ -318,6 +208,14 @@ export default {
 		return store.user.account && store.user.account.extra.needOnboarding;
 	},
 
+	getDiscoveriesLastRequestedAt(){
+		return store.discoveriesLastRequestedAt || 0;
+	},
+
+	setDiscoveriesLastRequestedAt( time ){
+		store.discoveriesLastRequestedAt = time;
+	},
+
 	resetStore() {
 		this.invalidateFollowers();
 		this.invalidateFollowing();
@@ -327,6 +225,8 @@ export default {
 		
 		store.storyComments = {};
 		store.comments = {};
+
+		store.locationData = {};
 
 		delete store.user.stories;
 		delete store.user.discoveries;
