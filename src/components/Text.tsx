@@ -7,6 +7,7 @@ interface TextProps {
 	color?: string,
 	children?: any,
 	numberOfLines?: number,
+	ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip',
 	style?: any,
 	theme? : 'light' | 'dark'
 }
@@ -23,7 +24,9 @@ const Text = (props: TextProps) => {
 	}
 
 	return (
-		<T style={ textStyles } numberOfLines={ props.numberOfLines }>
+		<T style={ textStyles }
+			numberOfLines={ props.numberOfLines }
+			ellipsizeMode={ props.ellipsizeMode }>
 			{ props.children }
 		</T>
 	);

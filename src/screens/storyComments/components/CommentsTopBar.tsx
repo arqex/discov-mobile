@@ -19,13 +19,13 @@ const CommentsTopBar = ({story, onBack}: CommentsTopBarProps) => {
 					border={ 2 }
 					borderColor="blue" />
 			</View>
-			<View>
+			<View style={styles.placeWrapper}>
 				<View style={styles.place}>
 					<View style={styles.placeIcon}>
 						<Marker size="xs" color="blue" />
 					</View>
 					<View style={styles.placeName}>
-						<Text type="mainTitle" numberOfLines={1}>{place.name}</Text>
+						<Text type="mainTitle" numberOfLines={1} ellipsizeMode="tail">{place.name}</Text>
 					</View>
 				</View>
 				<Text type="subtitle">{ subtitle }</Text>
@@ -45,14 +45,26 @@ export default CommentsTopBar;
 const styles = StyleSheet.create({
 	content: {
 		flexDirection: 'row',
-		alignItems: 'center'
+		alignItems: 'center',
+		overflow: 'hidden'
 	},
 	avatar: {
 		marginRight: 10
 	},
+	placeWrapper: {
+		flex: 1,
+		paddingRight: 20
+	},
 	place: {
+		flex: 1,
+		minWidth: 1,
 		flexDirection: 'row',
 		alignItems: 'center'
+	},
+	placeName: {
+		flexShrink: 1,
+		overflow: 'hidden',
+		minWidth: 1,
 	},
 	placeIcon: {
 		marginRight: 4
