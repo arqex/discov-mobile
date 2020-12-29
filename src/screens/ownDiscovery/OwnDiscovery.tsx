@@ -21,16 +21,13 @@ export default class OwnDiscovery extends Component<ScreenProps> {
 			return this.renderLoading();
 		}
 
-		const currentPosition = locationService.getLastLocation();
-		const story = storeService.getStory( discovery.storyId );
-
 		return (
 			<StoryScreen
-				story={story}
+				story={ storeService.getStory( discovery.storyId ) }
 				layout={this.props.layout}
 				router={this.props.router}
 				location={this.props.location}
-				currentPosition={ currentPosition && currentPosition.coords }
+				currentPosition={ locationService.getLastLocation() }
 				onBack={this._goBack} />
 		);
 	}
@@ -44,7 +41,7 @@ export default class OwnDiscovery extends Component<ScreenProps> {
 	}
 
 	_goBack = () => {
-		this.props.router.navigate('/myDiscoveries');
+		this.props.router.back();
 	}
 
 	getId() {

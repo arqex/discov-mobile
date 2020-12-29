@@ -42,7 +42,10 @@ class LocationQueue {
         }
 
         private fun getQueue( context: Context): ArrayList<BgLocation> {
-            if( initialized ) return queue
+            if( initialized ) {
+                Bglog.i( "Queue length ${queue.size}")
+                return queue
+            }
 
             initialized = true
             queue = Storage.getLocationQueue(context)

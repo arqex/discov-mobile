@@ -1,5 +1,5 @@
-import store from "../state/store";
-import loggerReporter from './loggerReporter';
+// import loggerReporter from './loggerReporter';
+import store from './logger.store';
 
 function log( ...args: any[] ) {
 	_saveLogLine('log', 'L', arguments);
@@ -15,8 +15,6 @@ function logError( ...args: any[] ) {
 
 const MAX_LENGTH = 300;
 function _saveLogLine( method, type, args ){
-	if ( !store.apiInitialized ) return;
-
 	let logList = store.logList && store.logList.slice && store.logList.slice() || [];
 	let logLine = {
 		time: Date.now(),
@@ -33,7 +31,7 @@ function _saveLogLine( method, type, args ){
 	console[method].apply( console, args );
 	store.logList = logList;
 
-	// loggerReporter.report( store, logLine );
+	// // loggerReporter.report( store, logLine );
 }
 
 

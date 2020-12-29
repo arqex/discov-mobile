@@ -24,15 +24,13 @@ export default class OwnStory extends Component<ScreenProps> {
 			return this.renderLoading();
 		}
 
-		const currentPosition = locationService.getLastLocation();
-
 		return (
 			<StoryScreen
 				story={ story }
 				layout={this.props.layout}
 				router={this.props.router}
 				location={this.props.location}
-				currentPosition={currentPosition && currentPosition.coords}
+				currentPosition={ locationService.getLastLocation() }
 				onBack={ this._goBack } />
 		);
 	}
@@ -46,7 +44,7 @@ export default class OwnStory extends Component<ScreenProps> {
 	}
 
 	_goBack = () => {
-		this.props.router.navigate('/myStories');
+		this.props.router.back()
 	}
 
 	getId() {

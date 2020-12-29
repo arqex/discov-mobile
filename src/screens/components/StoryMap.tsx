@@ -5,6 +5,7 @@ import { storyService } from '../../services/story.service';
 import { DiscovMarker } from '../../components';
 import { lngToLocation } from '../../utils/maps';
 import StoryCircle from './StoryCircle';
+import { log } from '../../utils/logger';
 
 let windowWidth = Dimensions.get('window').width;
 interface StoryMapProps extends MapViewProps {
@@ -88,10 +89,12 @@ export default class StoryMap extends React.Component<StoryMapProps, StoryMapSta
 		let isSelected = storyLocation && storyLocation.place && storyLocation.place.type === 'address';
 		if( isSelected && this.props.showMarker ) {
 			// Location marker is already shown
+			log('Not showing marker', isSelected, this.props.showMarker);
 			return;
 		} 
 		
 		if( this.props.currentPosition ){
+			log('Rendering marker');
 			return renderPlaceMarker(
 				this.props.currentPosition,
 				'current',
@@ -99,6 +102,9 @@ export default class StoryMap extends React.Component<StoryMapProps, StoryMapSta
 				this._onPressCurrentLocation,
 				isSelected
 			);
+		}
+		else {
+			log('Not showing marker: No current position');
 		}
 	}
 

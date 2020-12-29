@@ -18,6 +18,7 @@ import com.discovmobile.bglocation.utils.Storage
 import java.util.*
 import kotlin.math.abs
 
+var lastSentAt = 0L;
 
 class LocationManager(context: Context, workerParameters: WorkerParameters) : Worker(context, workerParameters) {
   companion object {
@@ -153,6 +154,14 @@ class LocationManager(context: Context, workerParameters: WorkerParameters) : Wo
 
   override fun doWork(): Result {
     Bglog.i("********** Connection available: ${getNetworkType(applicationContext)}")
+
+    if( lastSentAt + 1000 > Date().time ){
+      Bglog.i("Wait for sending the location again");
+      return Result.success()
+    }
+
+    lastSentAt = Date().time
+
     tryDummyRequest(applicationContext);
     val location = LocationQueue.getFirst(applicationContext)
     if( location != null ){

@@ -3,10 +3,10 @@ import { StyleSheet, View, Text, ScrollView, FlatList } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { Wrapper, Button } from '../../components';
 import { log } from '../../utils/logger';
+import store from '../../utils/logger.store';
 
 export default class LocationReport extends Component<ScreenProps> {
 	render() {
-		let store = this.props.store;
 		let logs = store && store.logList || [];
 
 		return (
@@ -31,8 +31,18 @@ export default class LocationReport extends Component<ScreenProps> {
 		);
 	}
 
+	lastKey = ''
+	index = 0
 	_keyExtractor = item => {
-		return `l${item.time}`;
+		let key = `l${item.time}${this.index}`;
+		if( this.lastKey === key ){
+			this.index++;
+			key = `l${item.time}${this.index}`;
+		}
+		else if( this.index !== 0 ) {
+			this.index = 0
+		}
+		return key;
 	}
 
 	renderDate( t ){
@@ -70,6 +80,16 @@ export default class LocationReport extends Component<ScreenProps> {
 				})
 			;
 		}
+	}
+
+	_onLogsChange = () => {
+		this.forceUpdate();
+	}
+	componentDidMount() {
+		store.addChangeListener( this._onLogsChange );
+	}
+	componentWillUnmount() {
+		store.removeChangeListener( this._onLogsChange );
 	}
 }
 

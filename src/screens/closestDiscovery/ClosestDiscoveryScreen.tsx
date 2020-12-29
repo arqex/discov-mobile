@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
 		marginLeft: 20,
     marginRight: 20,
-    zIndex: 20
+    zIndex: 20,
+    paddingTop: 10
   }
 })
