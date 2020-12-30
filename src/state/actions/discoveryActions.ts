@@ -3,20 +3,6 @@ import storeService from '../store.service';
 import actionService from './action.service';
 import { locationToLng } from '../../utils/maps';
 import { log } from '../../utils/logger';
-import axios from 'axios';
-
-axios.interceptors.request.use(request => {
-	let auth = request.headers.Authorization;
-	log('Authorization', auth ? auth.slice(0,20) : 'none');
-	return request;
-});
-
-axios.interceptors.response.use( r => r, error => {
-	if( error && error.response ){
-		log(`Request error ${error.response.status}`, JSON.stringify( error.response.data ) );
-	}
-  return error;
-});
 
 
 let promises = {

@@ -14,6 +14,9 @@ import { AuthClient } from './auth/authClient';
 import { GqlApi, GqlConfig } from './gql/gqlAPI';
 import imageApi from './otherApis/imageApi';
 import pushNotificationApi from './otherApis/pushNotificationApi';
+import axios, {AxiosRequestConfig} from 'axios';
+
+type RequestInterceptor = (AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
 
 interface ApiUser {
 	id: string
@@ -55,6 +58,12 @@ export class ApiClient {
 		this.config = config;
 		this.gql = new GqlApi( this._getGqlConfig() );
 		this.auth = new AuthClient( {authStore: config.authStore} )
+
+		axios.interceptors.request.use( request => callCalbacks( this.requestInterceptors, request ) )
+		axios.interceptors.response.use(
+			response => callCalbacks( this.responseInterceptors, response ),
+			error => callCalbacks( this.responseInterceptors, error )
+		)
 	}
 
 	init(): Promise<ApiLoginResult> {
@@ -196,4 +205,38 @@ export class ApiClient {
 			getHeaders
 		};
 	}
+
+	requestInterceptors: RequestInterceptor[] = []
+	addRequestInterceptor( clbk: RequestInterceptor ){
+		this.requestInterceptors.push( clbk );
+	}
+	removeRequestInterceptor( clbk ){
+		removeCallback( this.requestInterceptors, clbk );
+	}
+
+	responseInterceptors = []
+	addResponseInterceptor( clbk ){
+		this.responseInterceptors.push( clbk );
+	}
+	removeResponseInterceptor( clbk ){
+		removeCallback( this.responseInterceptors, clbk );
+	}
+}
+
+
+function removeCallback( arr, clbk ){
+	let i = arr.length;
+	while( i-- > 0 ){
+		if( arr[i] === clbk ){
+			arr.splice( i, 1 );
+		}
+	}
+}
+
+function callCalbacks( arr, param ): any {
+	let result = param;
+	arr.forEach( clbk => {
+		result = clbk( result );
+	});
+	return result;
 }

@@ -122,6 +122,14 @@ function createApiClient() {
 			onRequestError
 		});
 
+		apiClient.addResponseInterceptor( result => {
+			if( result && result.response && result.response.status === 401 ){
+				dataService.getApiClient().logout();
+				showAlert('Your session expired', 'Please log in again to use the app.');
+			}
+			return result;
+		});
+
 		return apiClient;
 	});
 }
@@ -206,17 +214,22 @@ function onRequestError( error ){
 	return false;
 }
 
-let showingAlert = false;
 function checkOutdatedAppError( errors ){
 	let i = errors.length;
 	while( i-- > 0 ){
-		if( errors[i].name === 'outdated_app' && !showingAlert ){
-			showingAlert = true;
+		if( errors[i].name === 'outdated_app' ){
 			dataService.getApiClient().logout();
-			Alert.alert('Your app is outdated', errors[i].message + ' Please update your discov app.', [{
-				text: 'Ok',
-				onPress: () => showingAlert = false
-			}] );
+			showAlert('Your app is outdated', errors[i].message + ' Please update your discov app.')
 		}
 	}
+}
+
+let showingAlert = false;
+function showAlert( title, message ){
+	if( showingAlert ) return;
+	showingAlert = true;
+	Alert.alert(title, message, [{
+		text: 'Ok',
+		onPress: () => showingAlert = false
+	}]);
 }
