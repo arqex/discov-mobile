@@ -7,6 +7,7 @@ import storeService from '../state/store.service';
 import { Platform, Alert } from 'react-native';
 import services from '.';
 import DeviceInfo from 'react-native-device-info'
+import connectionService from './connection.service';
 
 let statusChangeClbks = [];
 let apiClient: ApiClient;
@@ -17,22 +18,35 @@ export const dataService = {
 	init() {
 		if( initPromise ) return initPromise;
 
-		restoreStore();
-		storeService.init(store);
+		// Initialize main data sources for the app
+		// These promises always resolve
+		let promises = [
+			createApiClient(),
+			connectionService.updateConnectionData(),
+			restoreStore()
+		];
 
-		store.removeChangeListener( storeListener );
-		store.addChangeListener( storeListener );
-
-		initPromise = createApiClient()
-			.then( client => {
+		initPromise = Promise.all( promises )
+			.then(( [client]) => {
 				apiClient = client;
-				return apiClient.init();
+
+				storeService.init(store);
+				store.removeChangeListener( storeListener );
+				store.addChangeListener( storeListener );
+
+				if( connectionService.isConnected() ){
+					return apiClient.init();
+				}
+				else {
+					// Offline, we return the user to make the app work as offline
+					return {user: store.user};
+				}
 			})
 			.then( initResult => {
 				actions = initActions( apiClient );
 				services.init( actions, store );
 
-				if (initResult.user) {
+				if ( initResult.user ) {
 					if( store.user.id && store.user.id !== initResult.user.id ){
 						clearStores();
 					}
@@ -166,7 +180,7 @@ let backupRestored = false;
 function restoreStore(){
 	if( backupRestored ) return;
 
-	authStore.storage.sync()
+	return authStore.storage.sync()
 		.then( () => {
 			const strBackup = authStore.storage.getItem( BACKUP_KEY );
 			

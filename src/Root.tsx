@@ -13,9 +13,10 @@ import serverMessageListener from './services/serverMessage/serverMessage.listen
 import { initErrorHandler, errorHandler } from './utils/ErrorHandler';
 import storeService from './state/store.service';
 import appStateService from './services/appState.service';
-import { Modal, Bg } from './components'; // The Bg is just to preload the bg images
+import { Modal, Bg, ConnectionBadge } from './components'; // The Bg is just to preload the bg images
 import BackButtonHandler from './utils/BackButtonHandler';
 import locationHandler from './location/location.handler';
+import connectionService from './services/connection.service';
 
 globalThis.gql_debug = true;
 
@@ -27,7 +28,8 @@ class Root extends React.Component {
 		authenticated: false,
 		isLogin: true,
 		isVerify: false,
-		modalOpen: false
+		modalOpen: false,
+		noConnection: false
 	}
 
 	api: any = false;
@@ -50,6 +52,7 @@ class Root extends React.Component {
 		return (
 			<View style={styles.container}>
 				<StatusBar animated barStyle={this.getStatusBarStyle()} />
+				<ConnectionBadge show={ !connectionService.isConnected() } />
 				{ this.renderLoadingLayer() }
 				{ this.renderNavigator() }
 				<Modal onOpen={this._onModalOpen}
@@ -131,6 +134,9 @@ class Root extends React.Component {
 
 		// Refresh on data change
 		store.addChangeListener(update);
+
+		// Refresh on connection change
+		connectionService.addChangeListener(update);
 
 		if (Platform.OS === 'android') {
 			StatusBar.setBackgroundColor("rgba(0,0,0,0)")

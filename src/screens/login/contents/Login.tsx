@@ -6,6 +6,7 @@ import { loginService } from '../../../services/login.service';
 import validateEmail from '../../../utils/validateEmail';
 import validatePassword from '../../../utils/validatePassword';
 import authContentStyles from './authContentStyles';
+import connectionRequiredMethod from '../../../utils/connectionRequiredMethod';
 
 export default class Login extends React.Component<ScreenProps> {
 	state = {
@@ -86,7 +87,7 @@ export default class Login extends React.Component<ScreenProps> {
 		this.setState({ password });
 	}
 
-	_login = () => {
+	_login = connectionRequiredMethod( () => {
 		let error = this.getValidationError();
 		if (error) {
 			return this.alert(error.msg);
@@ -102,7 +103,7 @@ export default class Login extends React.Component<ScreenProps> {
 				console.error(err);
 			})
 		;
-	}
+	}, 'Need internet connection to log in.')
 
 	_federatedLogin = () => {
 		return Alert.alert('Google login not available yet');

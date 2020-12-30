@@ -6,6 +6,7 @@ import { ScreenProps } from '../../../utils/ScreenProps';
 import validateEmail from '../../../utils/validateEmail';
 import validatePassword from '../../../utils/validatePassword';
 import authContentStyles from './authContentStyles';
+import connectionRequiredMethod from '../../../utils/connectionRequiredMethod';
 
 const NEED_INVITATION = false;
 
@@ -75,7 +76,7 @@ export default class Register extends React.Component<ScreenProps> {
 		this.setState({ password });
 	}
 
-	_register = () => {
+	_register = connectionRequiredMethod( () => {
 		let error = this.getValidationError();
 		if (error) {
 			return this.alert(error.msg);
@@ -98,7 +99,7 @@ export default class Register extends React.Component<ScreenProps> {
 				console.error(err)
 			})
 			;
-	}
+	}, 'Need an internet connection to create an account.')
 
 	_federatedRegister = () => {
 		return Alert.alert('Google register not available yet');

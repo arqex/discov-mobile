@@ -4,6 +4,7 @@ import { Button, Input, Text } from '../../../components';
 import { ScreenProps } from '../../../utils/ScreenProps';
 import authContentStyles from './authContentStyles';
 import { loginService } from '../../../services/login.service';
+import connectionRequiredMethod from '../../../utils/connectionRequiredMethod';
 
 export default class CompleteRegistration extends React.Component<ScreenProps> {
 	state = {
@@ -62,7 +63,7 @@ export default class CompleteRegistration extends React.Component<ScreenProps> {
 		this.setState({code});
 	}
 	
-  _validateCode = () => {
+  _validateCode = connectionRequiredMethod( () => {
 		this.setState({loading: true});
 
 		this.props.actions.auth.verifyAccount( this.getEmail(), this.state.code )
@@ -94,7 +95,7 @@ export default class CompleteRegistration extends React.Component<ScreenProps> {
 				}
 			})
 		;
-	}
+	}, 'Need an internet connection to complete the account creation.')
 
 	isCodeValidated( error ){
 		// This mean that the validation code worked ok but we couldn't log the user in

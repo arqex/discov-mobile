@@ -4,6 +4,7 @@ import { Button, Input, Text } from '../../../components';
 import { ScreenProps } from '../../../utils/ScreenProps';
 import authContentStyles from './authContentStyles';
 import validateEmail from '../../../utils/validateEmail';
+import connectionRequiredMethod from '../../../utils/connectionRequiredMethod';
 
 export default class RequestPasswordReset extends React.Component<ScreenProps> {
 	state = {
@@ -57,7 +58,7 @@ export default class RequestPasswordReset extends React.Component<ScreenProps> {
 		this.setState({email});
 	}
 	
-  _sendResetEmail = () => {
+  _sendResetEmail = connectionRequiredMethod( () => {
 		const error = this.getResetError();
 		if( error ){
 			return this.alert( error.msg );
@@ -74,7 +75,7 @@ export default class RequestPasswordReset extends React.Component<ScreenProps> {
 				this.navigate('passwordReset&email=' + email );
       })
     ;
-	}
+	}, 'Need an internet connection to request a the password reset.')
 
 	_goToCode = () => {
 		const error = this.getCodeError();

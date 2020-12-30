@@ -2,6 +2,7 @@ export { default as Avatar } from './Avatar';
 export { default as AvatarGroup } from '../screens/components/AvatarGroup';
 export {default as Bg} from './Bg';
 export { default as Button } from './Button';
+export { default as ConnectionBadge } from './ConnectionBadge';
 export { default as CounterBadge } from './CounterBadge';
 export { default as DarkTopBar } from './DarkTopBar';
 export { default as DiscovMarker } from './DiscovMarker';

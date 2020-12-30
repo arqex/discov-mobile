@@ -4,6 +4,7 @@ import { Button, Input, Text } from '../../../components';
 import { ScreenProps } from '../../../utils/ScreenProps';
 import authContentStyles from './authContentStyles';
 import validateEmail from '../../../utils/validateEmail';
+import connectionRequiredMethod from '../../../utils/connectionRequiredMethod';
 
 export default class ResendCodePassword extends React.Component<ScreenProps> {
 	state = {
@@ -57,7 +58,7 @@ export default class ResendCodePassword extends React.Component<ScreenProps> {
 		this.setState({email});
 	}
 	
-  _sendCode = () => {
+  _sendCode = connectionRequiredMethod( () => {
 		const email = this.state.email;
 		const error = this.getValidationError();
 		if( error ){
@@ -71,7 +72,7 @@ export default class ResendCodePassword extends React.Component<ScreenProps> {
         this.navigate('passwordReset&email=' + email);
       })
     ;
-	}
+	}, 'Need an internet connection to resend the code.')
 	
 	alert(msg) {
 		Alert.alert('Email error', msg, [{ text: 'OK' }]);
