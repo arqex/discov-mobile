@@ -7,13 +7,14 @@ interface CommentsInputProps {
 	text: string
 	onChange: (text:string) => any,
 	onSend: () => any,
-	isSending: boolean
+	isSending: boolean,
+	isConnected: boolean
 }
 
 // This value is set by observing the initial height of the input on both OS
 const initialInputHeight = Platform.OS === 'android' ? 40.2 : 19.5;
 
-const CommentsInput = ({text, onChange, onSend, isSending}: CommentsInputProps) => {
+const CommentsInput = ({text, onChange, onSend, isSending, isConnected}: CommentsInputProps) => {
 	let [inputHeight, setInputHeight] = React.useState( initialInputHeight );
 
 	let inputStyles = [
@@ -28,14 +29,15 @@ const CommentsInput = ({text, onChange, onSend, isSending}: CommentsInputProps) 
 				<TextInput style={inputStyles}
 					value={ text }
 					onChangeText={ onChange }
+					editable={isConnected}
 					multiline
 					onContentSizeChange={ e => setInputHeight( e.nativeEvent.contentSize.height )}
-					placeholder="Write a comment..." />
+					placeholder={ isConnected ? "Write a comment..." : "No connection" } />
 			</View>
 			<View style={styles.sendButton}>
 				<Button type="iconFilled"
 					icon="send"
-					disabled={!text.trim() || !!isSending }
+					disabled={!isConnected || !text.trim() || !!isSending }
 					size="s"
 					onPress={ onSend } />
 			</View>

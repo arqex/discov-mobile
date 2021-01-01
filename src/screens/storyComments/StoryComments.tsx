@@ -77,7 +77,8 @@ class StoryComments extends React.Component<StoryCommentsProps> {
 			<CommentsInput text={ this.state.text }
 				onChange={ this._onTextChange }
 				onSend={ this._sendComment }
-				isSending={ this.state.isSending } />
+				isSending={ this.state.isSending }
+				isConnected={ this.props.isConnected } />
 		);
 	}
 

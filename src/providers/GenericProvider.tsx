@@ -54,6 +54,8 @@ export function GenericProvider( WrappedComponent, methods: GenericProviderMetho
 
     loading = false;
     checkLoad(){
+      if( !this.context.isConnected ) return;
+      
       let id = methods.getId(this.props);
       if( this.loading || !methods.needsLoad( this.props ) ) return;
       

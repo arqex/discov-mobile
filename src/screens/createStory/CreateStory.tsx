@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { TopBar, Button, MapScreen, Text, Modal, SearchBar } from '../../components';
+import { TopBar, Button, MapScreen, Text, Modal, SearchBar, Bg, ScrollScreen, Tooltip } from '../../components';
 import MapPanel from './MapPanel';
 import AreaSelector from './AreaSelector';
 import LocationSelector from './LocationSelector';
@@ -95,6 +95,9 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 		if( !this.hasLocationPermission() ){
 			return this.renderLocationNotGranted();
 		}
+		if( !this.props.isConnected ){
+			return this.renderNoConnection();
+		}
 
 		return (
 			<MapScreen top={ this.renderTopBar() }
@@ -133,6 +136,33 @@ class CreateStory extends Component<CreateStoryProps, CreateStoryState> {
 				onEditLocationName={ this._openEditLocation }
 			/>
 		);
+	}
+
+	renderNoConnection() {
+
+		let header = (
+			<Text type="header">
+				Create a story
+			</Text>
+		)
+
+		let topBar = (
+			<TopBar title="Create a story"
+				animatedScrollValue={ new Animated.Value(0) }
+				onBack={() => this.props.drawer.open()}
+				withSafeArea />
+		);
+		
+		return (
+			<Bg>
+				<ScrollScreen header={ header }
+					topBar={ topBar }>
+					<View style={{padding: 20}}>
+						<Tooltip>Please connect to internet to create a new story.</Tooltip>
+					</View>
+				</ScrollScreen>
+			</Bg>
+		)
 	}
 
 	renderTopBar() {
