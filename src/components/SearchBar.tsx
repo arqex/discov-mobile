@@ -6,6 +6,7 @@ import styleVars from './styleVars';
 import interpolations from './utils/scrollInterpolation';
 import nofn from '../utils/nofn';
 import BackButtonHandler from '../utils/BackButtonHandler';
+import ConnectionContext from '../utils/ConnectionContext';
 
 const ANIM_DURATION = 300;
 
@@ -19,6 +20,8 @@ interface SearchBarProps {
 }
 
 export default class SearchBar extends React.Component<SearchBarProps> {
+  static contextType = ConnectionContext.Context
+
   animatedOpen = new Animated.Value(0)
   circleInterpolation: Animated.AnimatedInterpolation
 
@@ -106,7 +109,7 @@ export default class SearchBar extends React.Component<SearchBarProps> {
   }
 
   _startSearch = () => {
-    if( this.state.searching ) return;
+    if( !this.context.isConencted || this.state.searching ) return;
 
     //@ts-ignore
     this.refs.input && this.refs.input._clear();

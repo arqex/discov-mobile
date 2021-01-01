@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Image, Animated } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, ScrollScreen, Text, Button, TopBar } from '../../components';
+import { Bg, ScrollScreen, Text, Button, TopBar, Tooltip } from '../../components';
 import StoryCard from '../components/StoryCard';
 import NoDiscoveries from './NoDiscoveries';
 import { alertService } from '../../services/alert.service';
 import ActivityAlertItem from '../activityEvents/ActivityAlertItem';
+import toaster from '../../utils/toaster';
 
 export default class MyDiscoveries extends Component<ScreenProps> {
 
@@ -13,33 +14,53 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 
 	render() {
 		const discoveries = this.getDiscoveries();
+
+		if( !discoveries && !this.props.isConnected ){
+			return this.renderNoConnection();
+		}
 		
 		if( discoveries && !discoveries.items.length ){
 			return <NoDiscoveries { ...this.props } />
 		}
+		return (
+			<Bg>
+				<ScrollScreen header={this.renderHeader()}
+					topBar={ this.renderTopBar() }
+					loading={!discoveries}
+					animatedScrollValue={this.animatedScrollValue}
+					data={ this.getItems() }
+					renderItem={this._renderItem}
+					onRefresh={ this._onRefresh }
+					keyExtractor={ this._keyExtractor } />
+			</Bg>
+		)
+	}	
 
-		const header = (
+	renderHeader() {
+		return (
 			<Text type="header">{ __('myDiscoveries.title') }</Text>
-		);
+		)
+	}
 
-		const topBar = (
+	renderTopBar() {
+		return (
 			<TopBar
 				onBack={() => this.props.drawer.open()}
 				withSafeArea
 				animatedScrollValue={this.animatedScrollValue}
 				title={ __('myDiscoveries.title')} />
 		);
+	}
 
+	renderNoConnection(){
 		return (
 			<Bg>
-				<ScrollScreen header={header}
-					topBar={topBar}
-					loading={!discoveries}
-					animatedScrollValue={this.animatedScrollValue}
-					data={ this.getItems() }
-					renderItem={this._renderItem}
-					onRefresh={ this._loadDiscoveries }
-					keyExtractor={ this._keyExtractor } />
+				<ScrollScreen header={ this.renderHeader() }
+					topBar={ this.renderTopBar() }>
+					<View style={{padding: 20}}>
+						<Tooltip>There is no internet connection.</Tooltip>
+					</View>
+				</ScrollScreen>
 			</Bg>
 		)
 	}
@@ -72,7 +93,6 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 				</ScrollScreen>
 			</Bg>
 		);
-
 	}
 
 	getItems() {
@@ -94,13 +114,32 @@ export default class MyDiscoveries extends Component<ScreenProps> {
 	}
 
 	EXPIRE_TIME = 60 * 60 * 1000; // One hour
-
 	componentDidMount(){
-		let discoveries = this.getDiscoveries();
-
-		if( !discoveries || discoveries.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ) {
+		if( this.needToLoad() ) {
 			this._loadDiscoveries();
 		}
+	}
+	componentDidUpdate( prevProps ) {
+		if( !prevProps.isConnected && this.props.isConnected && this.needToLoad() ){
+			this._loadDiscoveries();
+		}
+	}
+
+	_onRefresh = () => {
+		if( !this.props.isConnected ){
+			toaster.show('No internet connection');
+			return Promise.resolve();
+		}
+		else {
+			return this._loadDiscoveries()
+		}
+	}
+
+	needToLoad() {
+		let discoveries = this.getDiscoveries();
+		return !discoveries ||
+			discoveries.lastUpdatedAt + this.EXPIRE_TIME < Date.now() 
+		;
 	}
 
 	_renderItem = ({item}) => {

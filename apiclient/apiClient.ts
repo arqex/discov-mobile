@@ -54,6 +54,8 @@ export class ApiClient {
 	auth: AuthClient
 	loginPromise: Promise<ApiLoginResult>
 
+	initialized: boolean = false
+
 	constructor( config: ApiClientConfig ){
 		this.config = config;
 		this.gql = new GqlApi( this._getGqlConfig() );
@@ -70,11 +72,15 @@ export class ApiClient {
 		if( this.loginPromise ) return this.loginPromise;
 
 		let currentUser = this.getCurrentUser().user;
-		if( currentUser ) return Promise.resolve( {user:currentUser} );
+		if( currentUser ) {
+			this.initialized = true;
+			return Promise.resolve( {user:currentUser} );
+		}
 
 		this.loginPromise = this.auth.getCachedCredentials()
 			.then( credentials => {
 				delete this.loginPromise;
+				this.initialized = true;
 
 				if( !credentials ) return { error: 'NO_CACHED_USER' };
 

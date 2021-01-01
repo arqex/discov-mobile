@@ -17,6 +17,7 @@ import { Modal, Bg, ConnectionBadge } from './components'; // The Bg is just to 
 import BackButtonHandler from './utils/BackButtonHandler';
 import locationHandler from './location/location.handler';
 import connectionService from './services/connection.service';
+import ConnectionContext from './utils/ConnectionContext';
 
 globalThis.gql_debug = true;
 
@@ -32,8 +33,6 @@ class Root extends React.Component {
 		noConnection: false
 	}
 
-	api: any = false;
-	actions: any = false;
 	navigator: any = false;
 	interceptor: any = false;
 	federatedLoginLoading = false;
@@ -50,15 +49,17 @@ class Root extends React.Component {
 
 	render() {
 		return (
-			<View style={styles.container}>
-				<StatusBar animated barStyle={this.getStatusBarStyle()} />
-				<ConnectionBadge show={ !connectionService.isConnected() } />
-				{ this.renderLoadingLayer() }
-				{ this.renderNavigator() }
-				<Modal onOpen={this._onModalOpen}
-					onClose={this._onModalClose}
-					backHandler={ BackButtonHandler } />
-			</View>
+			<ConnectionContext.Provider value={ConnectionContext.getValue()}>
+				<View style={styles.container}>
+					<StatusBar animated barStyle={this.getStatusBarStyle()} />
+					<ConnectionBadge show={ !ConnectionContext.getValue().isConnected } />
+					{ this.renderLoadingLayer() }
+					{ this.renderNavigator() }
+					<Modal onOpen={this._onModalOpen}
+						onClose={this._onModalClose}
+						backHandler={ BackButtonHandler } />
+				</View>
+			</ConnectionContext.Provider>
 		);
 	}
 
@@ -72,6 +73,7 @@ class Root extends React.Component {
 		return (
 			<Navigator store={ dataService.getStore() }
 				actions={dataService.getActions()}
+				isConnected={ connectionService.isConnected() }
 				ref={this.navigator}
 				routes={routes}
 				interceptor={this.interceptor}
@@ -84,6 +86,7 @@ class Root extends React.Component {
 
 	canSeeDrawer() {
 		let can = (
+			this.isInitialized &&
 			this.isLoggedIn() &&
 			!storeService.needOnboarding() &&
 			!this.isOnboardingRoute()
@@ -110,10 +113,12 @@ class Root extends React.Component {
 		}
 	}
 	
+	isInitialized = false;
 	initialize(){
 		initErrorHandler(router);
 
 		dataService.init().then( () => {
+			this.isInitialized = true;
 			this.firstNavigation();
 			dataService.getActions().auth.addLoginListener( status => {
 				if( status === 'OUT' ){
@@ -136,7 +141,9 @@ class Root extends React.Component {
 		store.addChangeListener(update);
 
 		// Refresh on connection change
-		connectionService.addChangeListener(update);
+		connectionService.addChangeListener( () => {
+			this.checkApiInit();
+		});
 
 		if (Platform.OS === 'android') {
 			StatusBar.setBackgroundColor("rgba(0,0,0,0)")
@@ -234,6 +241,26 @@ class Root extends React.Component {
 	checkResetLoading( prevState ) {
 		if (!prevState.showingLoading && dataService.getLoginStatus() === 'LOADING') {
 			this.setState({showingLoading: true});
+		}
+	}
+
+	checkApiInit(){
+		let apiClient = dataService.getApiClient();
+		if( connectionService.isConnected() ){
+			if( !apiClient.initialized ){
+				apiClient.init().then( () => {
+					ConnectionContext.setValue({isConnected: true});
+					this.forceUpdate();
+				})
+			}
+			else {
+				ConnectionContext.setValue({isConnected: true});
+				this.forceUpdate();
+			}
+		}
+		else {
+			ConnectionContext.setValue({isConnected: false});
+			this.forceUpdate();
 		}
 	}
 

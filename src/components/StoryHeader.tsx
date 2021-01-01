@@ -10,6 +10,7 @@ import memoizeOne from 'memoize-one';
 import moment from 'moment';
 import AccountAvatar from '../screens/components/AccountAvatar';
 import LoadingText from './LoadingText';
+import ConnectionContext from '../utils/ConnectionContext';
 
 const DAY_DATE_TIME = 6 * 30 * 20 * 60 * 60000; // 6 months
 
@@ -24,9 +25,15 @@ interface StoryHeaderProps {
 }
 
 class StoryHeader extends React.Component<StoryHeaderProps> {
+	static contextType = ConnectionContext.Context
+
 	render() {
 		let account = this.props.account;
 		let story = this.props.story;
+
+		if( !account && !this.context.isConnected ){
+			return <View style={styles.container}></View>;
+		}
 
 		return (
 			<View style={styles.container}>

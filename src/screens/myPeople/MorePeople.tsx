@@ -18,7 +18,12 @@ export default class MorePeople extends Component<ScreenProps> {
 	}
 
 	render() {
+		if( this.needToLoad() && !this.props.isConnected ){
+			return this.renderNoConnection();
+		}
+
 		let data = this.getData();
+
 		if (data) {
 			this.lastIndex = data.length - 1;
 		}
@@ -81,6 +86,19 @@ export default class MorePeople extends Component<ScreenProps> {
 		);
 	}
 
+	renderNoConnection(){
+		return (
+			<Bg>
+				<ScrollScreen header={ this.renderHeader() }
+					topBar={ this.renderTopBar() }>
+					<View style={{padding: 20}}>
+						<Tooltip>Please connect to internet to load the followers.</Tooltip>
+					</View>
+				</ScrollScreen>
+			</Bg>
+		)
+	}
+
 	renderSearchSubtitle() {
 		let { searching, searchTerms, searchResults } = this.state;
 
@@ -133,11 +151,24 @@ export default class MorePeople extends Component<ScreenProps> {
 
 	EXPIRE_TIME = 24 * 60 * 60 * 1000; // One day
 	componentDidMount() {
-		let people = this.getPeople();
-		if ( !people || !people.valid || people.lastUpdatedAt + this.EXPIRE_TIME < Date.now() ) {
+		if ( this.props.isConnected && this.needToLoad() ) {
 			console.log('Loading!!');
 			this._loadAround();
 		}
+	}
+	componentDidUpdate( prevProps ) {
+		if( !prevProps.isConnected && this.props.isConnected && this.needToLoad() ){
+			this._loadAround();
+		}
+	}
+
+	needToLoad() {
+		let people = this.getPeople();
+
+		return !people ||
+			!people.valid ||
+			people.lastUpdatedAt + this.EXPIRE_TIME < Date.now() 
+		;
 	}
 
 	isLoading() {
@@ -163,7 +194,9 @@ export default class MorePeople extends Component<ScreenProps> {
 	}
 
 	_startSearch = () => {
-		this.setState({ searchMode: true });
+		if( this.props.isConnected ){
+			this.setState({ searchMode: true });
+		}
 	}
 
 	_endSearch = () => {

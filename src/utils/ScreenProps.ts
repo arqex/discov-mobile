@@ -9,5 +9,6 @@ export interface ScreenProps {
 		width: Number,
 		x: Number,
 		y: Number
-	}
+	},
+	isConnected: boolean
 }

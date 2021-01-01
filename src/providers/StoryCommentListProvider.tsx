@@ -8,7 +8,9 @@ export default function StoryCommentListProvider( WrappedComponent ){
     loadData: (props, id) => {
       return dataService.getActions().storyComment.loadStoryComments( id )
     },
-    needsLoad: function(props) { return !this.getData( props, this.getId(props) ) },
+    needsLoad: function(props) {
+      return !this.getData( props, this.getId(props) )
+    },
     renderLoading: WrappedComponent.renderLoading
   });
 }

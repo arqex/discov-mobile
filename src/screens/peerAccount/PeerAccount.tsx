@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { View, StyleSheet, Animated, Easing, Platform, StatusBar } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import AccountProvider from '../../providers/AccountProvider';
-import { Bg, ScrollScreen, Text, Avatar, TopBar, Touchable } from '../../components';
+import { Bg, ScrollScreen, Text, Avatar, TopBar, Touchable, Tooltip } from '../../components';
 import storeService from '../../state/store.service';
 import FollowingCard from './FollowingCard';
 import FollowerCard from './FollowerCard';
 import PeerAccountImageViewer from './PeerAccountImageViewer';
 import BackButtonHandler from '../../utils/BackButtonHandler';
+import ConnectionContext from '../../utils/ConnectionContext';
 
 interface PeerAccountProps extends ScreenProps {
 	account: any,
@@ -16,6 +17,8 @@ interface PeerAccountProps extends ScreenProps {
 }
 
 class PeerAccount extends Component<PeerAccountProps> {
+	static contextType = ConnectionContext.Context
+
 	loadingMeta = false
 	animatedScrollValue = new Animated.Value(0)
 	animatedImage = new Animated.Value(0)
@@ -35,7 +38,7 @@ class PeerAccount extends Component<PeerAccountProps> {
 				<ScrollScreen header={ this.renderHeader( account ) }
 					topBar={this.renderTopBar(account)}
 					animatedScrollValue={this.animatedScrollValue}
-					loading={!accountMeta}>
+					loading={this.context.isConnected && !accountMeta}>
 						{ this.renderCards( account, accountMeta ) }
 				</ScrollScreen>
 				{ this.renderImageViewer(account) }
@@ -116,6 +119,9 @@ class PeerAccount extends Component<PeerAccountProps> {
 	}
 	
 	renderCards( account, accountMeta ) {
+		if( !this.context.isConnected && !this.isValidMeta(accountMeta) ){
+			return this.renderNoConnection(account);
+		}
 		if( !this.isCurrentUserAccount() ){
 			return (
 				<View style={{ marginTop: 20 }}>
@@ -133,6 +139,14 @@ class PeerAccount extends Component<PeerAccountProps> {
 		}
 	}
 
+	renderNoConnection(account){
+		return (
+			<View style={{padding: 20}}>
+				<Tooltip>Connect to internet to load {account.displayName}'s info.</Tooltip>
+			</View>
+		);
+	}
+
 	isCurrentUserAccount(){
 		return this.props.accountId === storeService.getUserId();
 	}
@@ -142,9 +156,8 @@ class PeerAccount extends Component<PeerAccountProps> {
 	}
 
 	EXPIRE_TIME = 60 * 60 * 1000; // One hour
-
 	componentDidMount(){
-		if( !this.isValidMeta( this.getAccountMeta() ) ){
+		if( this.props.isConnected && !this.isValidMeta( this.getAccountMeta() ) ){
 			// Reload the data when is not valid or expired
 			this.loadMeta();
 		}
@@ -157,17 +170,21 @@ class PeerAccount extends Component<PeerAccountProps> {
 			}
 		}, 300);
 	}
-
 	isValidMeta( meta ){
 		if( meta && meta.current ) return true;
 		return meta && meta.valid && meta.lastUpdateAt + this.EXPIRE_TIME >= Date.now();
 	}
 
 	componentDidUpdate( prevProps ) {
-		let meta = this.getAccountMeta();
+		let isValidMeta = this.isValidMeta( this.getAccountMeta() );
 
-		if( prevProps.accountId !== this.props.accountId && !this.isValidMeta(meta) ){
+		if( !prevProps.isConnected && this.props.isConnected && !isValidMeta ){
 			this.loadMeta();
+		}
+		if( this.props.isConnected ){
+			if( prevProps.accountId !== this.props.accountId && !isValidMeta ){
+				this.loadMeta();
+			}
 		}
 	}
 

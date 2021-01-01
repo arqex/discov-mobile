@@ -9,7 +9,9 @@ export default function AccountProvider( WrappedComponent ){
 			return dataService.getStore().peerAccounts[id]
 		},
 		loadData: (props, id) => dataService.getActions().account.load(id),
-		needsLoad: function (props) { return !this.getData(props, this.getId(props)) },
+		needsLoad: function (props) { 
+			return !this.getData(props, this.getId(props))
+		},
 		renderLoading: WrappedComponent.renderLoading
 	})
 };

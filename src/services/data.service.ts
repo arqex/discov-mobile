@@ -9,7 +9,6 @@ import services from '.';
 import DeviceInfo from 'react-native-device-info'
 import connectionService from './connection.service';
 
-let statusChangeClbks = [];
 let apiClient: ApiClient;
 let actions: any = false;
 let lastLoginStatus;
@@ -69,17 +68,6 @@ export const dataService = {
 	isInitialized(){
 		return store.apiInitialized;
 	},
-	addStatusListener( clbk ) {
-		statusChangeClbks.push( clbk );
-	},
-	removeStatusListener( clbk ) {
-		let i = clbk.length;
-		while( i-- > 0 ){
-			if( clbk === statusChangeClbks[i] ){
-				statusChangeClbks.splice(i, 1);
-			}
-		}
-	},
 	getApiClient() {
 		return apiClient;
 	},
@@ -90,6 +78,12 @@ export const dataService = {
 		return actions;
 	},
 	getAuthStatus() {
+		// Check for offline mode
+		if( !connectionService.isConnected() ){
+			if( !store ) return 'LOADING';
+			return store.user ? 'IN' : (initPromise ? 'OUT' : 'LOADING');
+		}
+
 		if (!apiClient) return 'LOADING';
 		return apiClient.getAuthStatus();
 	},

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Bg from '../components/Bg';
 import Text from '../components/Text';
+import ConnectionContext from '../utils/ConnectionContext';
 
 export interface GenericProviderMethods {
   getId: (props: any) => string
@@ -13,13 +14,13 @@ export interface GenericProviderMethods {
 
 export function GenericProvider( WrappedComponent, methods: GenericProviderMethods ){
   return class Provider extends React.Component {
+    static contextType = ConnectionContext.Context
     getPropName = methods.getPropName || (() => 'data');
     render() {
       const data = methods.getData( this.props, methods.getId( this.props ) );
-      const needsLoad = methods.needsLoad( this.props );
+      const isConnected = this.context.isConnected;
 
-
-      if( needsLoad ){
+      if( isConnected && methods.needsLoad( this.props ) ){
         return methods.renderLoading ?
           methods.renderLoading( this.props, data ) :
           this.renderDefaultLoading()
@@ -27,7 +28,9 @@ export function GenericProvider( WrappedComponent, methods: GenericProviderMetho
       }
       else {
         return (
-          <WrappedComponent { ...this.props }
+          <WrappedComponent
+            { ...this.props }
+            isConnected={ this.context.isConnected }
             { ...{[this.getPropName()]: data} } />
         );
       }

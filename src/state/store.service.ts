@@ -226,6 +226,8 @@ export default {
 		store.storyComments = {};
 		store.comments = {};
 
+		store.accountsAround = {};
+
 		store.locationData = {};
 
 		delete store.user.stories;

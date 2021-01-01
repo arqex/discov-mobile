@@ -5,9 +5,11 @@ import { usersService } from './users.service';
 import serverMessageService from './serverMessage/serverMessage.service';
 import { alertService } from './alert.service';
 import LocationService from '../location/location.service';
+import connectionService from './connection.service';
 
 let services = {
 	alert: alertService,
+	connection: connectionService,
 	location: LocationService,
 	login: loginService,
 	serverMessage: serverMessageService,

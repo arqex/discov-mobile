@@ -1,6 +1,6 @@
 import NetInfo, {NetInfoState} from '@react-native-community/netinfo';
 
-let connection;
+let connection: NetInfoState;
 NetInfo.fetch().then( state => {
   connection = getUpdatedConnection( state );
 });
@@ -15,11 +15,11 @@ const connectionService = {
   },
 
   isConnected(): boolean {
-    if( connection ){
-      return connection.isInternetReachable === null ? connection.isConnected : connection.isInternetReachable;
-    }
-    // Optimistically thinks that we have connection
-    return true;
+    if( !connection ) return true;
+    return connection.isInternetReachable === null ?
+      connection.isConnected :
+      connection.isInternetReachable
+    ;
   },
 
   updateConnectionData(): Promise<NetInfoState>{

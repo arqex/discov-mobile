@@ -61,6 +61,7 @@ class StoryComments extends React.Component<StoryCommentsProps> {
 					<CommentList
 						ref={ this.scroll }
 						storyId={ story.id }
+						isConnected={ this.props.isConnected }
 						story={ story }
 						currentUserId={ currentUserId }
 						isStoryOwner={ story.ownerId === currentUserId }

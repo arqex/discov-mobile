@@ -1,9 +1,9 @@
 import { Alert } from "react-native";
-import connectionService from "../services/connection.service";
+import ConnectionContext from "./ConnectionContext";
 
 export default function connectionRequiredMethod( method, message ){
   return function() {
-    if( !connectionService.isConnected() ){
+    if( !ConnectionContext.getValue().isConnected ){
       return Alert.alert(
         'No internet connection',
         message || 'Need internet access to complete the action'

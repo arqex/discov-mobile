@@ -11,7 +11,8 @@ interface CommentListProps {
   storyId: string,
   story: any,
   data: any,
-  onLoadMore: () => any
+  onLoadMore: () => any,
+  isConnected: boolean
 }
 
 class CommentList extends React.Component<CommentListProps> {
@@ -19,6 +20,10 @@ class CommentList extends React.Component<CommentListProps> {
   
   render() {
     let comments = this.props.data;
+
+    if( !comments && !this.props.isConnected ){
+      return this.renderNoConnection();
+    }
 
     return (
       <FlatList
@@ -32,6 +37,14 @@ class CommentList extends React.Component<CommentListProps> {
         keyExtractor={ this._keyExtractor }
         ListFooterComponent={ this.renderHeader(comments) } />
     );
+  }
+
+  renderNoConnection() {
+    return (
+      <View style={{padding: 20}}>
+        <Tooltip>There is no internet connection.</Tooltip>
+      </View>
+    )
   }
 
   renderHeader( comments) {
@@ -89,6 +102,8 @@ class CommentList extends React.Component<CommentListProps> {
   }
 
   _checkLoadMore = () => {
+    if( !this.props.isConnected ) return;
+    
     if (this.initialized && this.props.data.hasMore && !this.props.isLoadingMore ){
       console.log('loadingMore');
 			this.props.onLoadMore();
@@ -97,9 +112,12 @@ class CommentList extends React.Component<CommentListProps> {
 
   firstId;
   componentDidMount() {
+    if( !this.props.isConnected ) return;
     this.firstId = this.props.data.items[ 0 ];
   }
   componentDidUpdate() {
+    if( !this.props.isConnected ) return;
+
     let nextId = this.props.data.items[0];
     if( this.firstId !== nextId ){
       this.firstId = nextId;

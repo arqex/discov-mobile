@@ -55,6 +55,8 @@ export const alertService = {
 }
 
 function getDerivedAlerts(){
+	if( !store || store.status === 'INIT' ) return {};
+	
 	return {
 		...getLocationPermissionAlerts( services.location.getStoredPermissions() )
 	};
