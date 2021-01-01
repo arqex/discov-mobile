@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
 import { TopBar, Button, Bg, ScrollScreen, Tooltip, Wrapper } from '../../components';
 import memoize from 'memoize-one';
 import storeService from '../../state/store.service';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
 import PeopleListItem from '../components/PeopleListItem';
+import { log } from '../../utils/logger';
+import { getStatusbarHeight } from '../../components/utils/getStatusbarHeight';
 
 interface ShareStoryState {
 	selectedFriends: any,
@@ -31,7 +33,7 @@ export default class ShareStory extends Component<ScreenProps, ShareStoryState> 
 
 	render() {
 		let users = this.getFollowers();
-		let extraPadding = { paddingBottom: getNavigationBarHeight() || 10 };
+		let extraPadding = { paddingBottom: getNavigationBarHeight() || 30 };
 
 		if( users ) {
 			// Not length - 1 because we are adding the all followers group
@@ -47,9 +49,6 @@ export default class ShareStory extends Component<ScreenProps, ShareStoryState> 
 					renderItem={this._renderUser}
 					keyExtractor={this._keyExtractor} />
 				<View style={[styles.bottomBar, extraPadding]}>
-					<View style={styles.bottomPre}>
-
-					</View>
 					<View style={styles.bottomPost}>
 						{this.renderCount()}
 						<Button size="s" onPress={this._onShareOk}>OK</Button>
@@ -148,6 +147,7 @@ export default class ShareStory extends Component<ScreenProps, ShareStoryState> 
 	}
 
 	_onShareOk = () => {
+		log('Share ok');
 		this.storeSelected();
 		this.props.router.navigate('/createStory/addContent/share/summary');
 	}
@@ -177,8 +177,9 @@ const styles = StyleSheet.create({
 		backgroundColor: '#fff',
 	},
 	bottomBar: {
+		zIndex: 20,
 		flexDirection: 'row',
-		justifyContent: 'space-between',
+		justifyContent: 'flex-end',
 		paddingTop: 10,
 		paddingBottom: 10,
 		paddingLeft: 20,

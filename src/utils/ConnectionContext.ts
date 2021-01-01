@@ -16,6 +16,7 @@ const ConnectionContext = {
   Provider: Context.Provider,
   Consumer: Context.Consumer,
   getValue: () => contextValue,
+  // Root set the value when there is connection and the api is initialized
   setValue: (value: ConnectionContextValue) => contextValue = value
 }
 

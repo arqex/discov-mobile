@@ -3,6 +3,7 @@ import PushNotification from "react-native-push-notification";
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import { Platform } from "react-native";
 import { log } from "../../utils/logger";
+import notificationStore from "./notification.store";
 
 interface ServerNotification {
   id: string
@@ -13,9 +14,7 @@ let tokenListener: (token:string) => any;
 let receivedListener: (notification: ServerNotification) => any;
 let pressedListener: (notification: ServerNotification) => any;
 
-let notifications = {};
 let alreadyRegistered = false;
-
 const notificationService = {
   init() {
     log('Initializing notification service');
@@ -37,16 +36,18 @@ const notificationService = {
         log("Push notification error", err.message, err);
       },
   
-      // (required) Called when a remote or local notification is opened or received
+      // Called when a remote or local notification is opened or received
       onNotification: function (message) {
         if( message.userInteraction ){
-          console.log("NOTIFICATION OPEN:", message);
-          let notif = message;
-          if( message.id && notifications[ message.id ] ){
-            notif = notifications[ message.id ];
-            delete notifications[ message.id ];
+          console.log("NOTIFICATION PRESSED:", message);
+
+          if( message.id ){
+            return notificationStore.popNotification( message.id ).then( notif => {
+              pressedListener && pressedListener( notif || message );
+              message.finish(PushNotificationIOS.FetchResult.NoData);
+            });
           }
-          return pressedListener && pressedListener( notif );
+          pressedListener && pressedListener( message );
         }
         else if ( message.data ) {
           console.log("NOTIFICATION RECEIVED:", message);
@@ -117,10 +118,11 @@ const notificationService = {
 		console.log( 'Opening notification', notif );
     PushNotification.localNotification( notif );
 
-    notifications[id] = {
+    notificationStore.storeNotification({
       ...message,
+      createdAt: Date.now(),
       id
-    };
+    });
 
 		return id;
   },

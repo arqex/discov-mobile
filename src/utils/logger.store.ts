@@ -1,5 +1,5 @@
 import ors from '@arqex/ors'
-import authStore from './authStore';
+import { MemoryStorage } from './StorageHelper';
 
 const store = ors({
 
@@ -14,8 +14,8 @@ let backupRestored = false;
 function restoreStore() {
 	if( backupRestored ) return;
 
-  authStore.storage.sync().then( () => {
-    const strBackup = authStore.storage.getItem( BACKUP_KEY );
+  MemoryStorage.sync().then( () => {
+    const strBackup = MemoryStorage.getItem( BACKUP_KEY );
     
     if( strBackup ){
       try {	
@@ -48,5 +48,5 @@ function backupStore(){
 }
 function backupStoreNow() {
 	backupTimer = false;
-	authStore.storage.setItem(BACKUP_KEY, JSON.stringify( store ) );
+	MemoryStorage.setItem(BACKUP_KEY, JSON.stringify( store ) );
 }
