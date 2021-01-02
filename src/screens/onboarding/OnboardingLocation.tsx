@@ -5,6 +5,7 @@ import { Bg, Text, Button, styleVars, Tooltip, Wrapper } from '../../components'
 import onboardingStyles from './onboarding.styles';
 import storeService from '../../state/store.service';
 import locationService from '../../location/location.service';
+import LocationService from '../../location/location.service';
 
 export default class OnboardingLocation extends React.Component<ScreenProps> {
 	state = {
@@ -95,11 +96,10 @@ You will be asked again when you start following friends or try to create your f
 
 	_askForLocation = () => {
 		this.setState({loading: true});
-		return locationService.requestPermissions()
+		return LocationService.requestPermission()
 			.then( permissions => {
-				storeService.setLocationPermissions( permissions );
-				if( permissions.granted ){
-					return this.goNext();
+				if( permissions.isGranted ){
+					return this._goNext();
 				}
 
 				this.setState({
@@ -120,9 +120,9 @@ You will be asked again when you start following friends or try to create your f
 	}
 
 	componentDidMount() {
-		locationService.getPermissions()
+		locationService.getPermission()
 			.then( permissions => {
-				if( permissions.granted ){
+				if( permissions.isGranted ){
 					this.setState({ loading: false });
 					return this._goNext();
 				}

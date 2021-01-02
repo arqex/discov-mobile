@@ -7,10 +7,12 @@ import relationshipActions from './actions/relationshipActions';
 import followerGroupActions from './actions/followerGroupActions';
 import mapActions from './actions/mapActions';
 import storyCommentActions from './actions/storyCommentActions';
+import activityActions from './actions/activityActions';
 
 let actionNames = {
   auth: authActions,
   account: accountActions,
+  accountActivity: activityActions,
   discovery: discoveryActions,
   followerGroup: followerGroupActions,
   map: mapActions,

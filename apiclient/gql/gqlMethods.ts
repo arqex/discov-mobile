@@ -22,6 +22,12 @@ query getAccount( $id: String! ) {
 }
 `)}
 
+  getAccountActivities( returnFields: string ){ return this.makeRunnable(`
+query getAccountActivities( $input: PaginatedAccountInput! ) {
+  getAccountActivities(input: $input) ${ returnFields }
+}
+`)}
+
   getMultiplePeerAccounts( returnFields: string ){ return this.makeRunnable(`
 query getMultiplePeerAccounts( $ids: [String!]! ) {
   getMultiplePeerAccounts(ids: $ids) ${ returnFields }

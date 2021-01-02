@@ -230,6 +230,7 @@ export default {
 
 		store.locationData = {};
 
+		delete store.user.activities;
 		delete store.user.stories;
 		delete store.user.discoveries;
 	}

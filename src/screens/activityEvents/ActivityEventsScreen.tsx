@@ -3,11 +3,15 @@ import { View, Animated } from 'react-native'
 import { Bg, ScrollScreen, Text, Tooltip, TopBar, Wrapper } from '../../components'
 import services, { ActivityAlert } from '../../services';
 import { ScreenProps } from '../../utils/ScreenProps';
+import toaster from '../../utils/toaster';
 import ActivityAlertItem from './ActivityAlertItem';
+import activityTypes from './activityTypes';
 
 export default class ActivityEventsScreen extends Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
-
+	state = {
+		loading: false
+	}
 	render() {
 		return (
 			<Bg>
@@ -17,6 +21,7 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 					header={this.renderHeader()}
 					data={ this.getItems() }
 					keyExtractor={ item => item.id }
+					onRefresh={ this._onRefresh }
 					renderItem={ this._renderItem } />
 			</Bg>
 		)
@@ -38,7 +43,7 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 	getItems(){
 		return [
 			...this.getAlerts(),
-			...this.getActivities()
+			...this.getActivityItems()
 		];
 	}
 
@@ -46,8 +51,8 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 		return Object.values( services.alert.getAlerts() );
 	}
 
-	getActivities(){
-		let activities = this.props.store.user.activities;
+	getActivityItems(){
+		let activities = this.getActivities();
 		if( !activities || !activities.length ){
 			return [ {
 				id: 'noactivity',
@@ -55,7 +60,11 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 			} ];
 		}
 
-		return activities.map( id => this.props.store.accountActivities[id] );
+		return activities;
+	}
+
+	getActivities(){
+		return this.props.actions.accountActivity.getStored();
 	}
 
 	_renderItem = ( {item} ) => {
@@ -91,8 +100,46 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 	}
 
 	renderActivity( activity ) {
+		let Component = activityTypes[ activity.type ];
 		return (
-			<View><Text>Activity render not implemented yet</Text></View>
-		)
+			<Component activity={ activity } />
+		);
 	}
+
+	EXPIRE_TIME = 60 * 60 * 1000; // One hour
+	needToLoad() {
+		return !this.getActivities().length;
+	}
+
+	loadActivities() {
+		this.setState({loading: true});
+		return this.props.actions.accountActivity.loadAccountActivities()
+			.then( () => this.setState({loading: false}))
+		;
+	}
+
+	_onRefresh = () => {
+		if( !this.props.isConnected ){
+			toaster.show('No internet connection');
+			return Promise.resolve();
+		}
+		else {
+			return this.loadActivities()
+		}
+	}
+
+	componentDidMount(){
+		if( this.needToLoad() ) {
+			this.loadActivities();
+		}
+	}
+	componentDidUpdate( prevProps ) {
+		if( !prevProps.isConnected && this.props.isConnected && this.needToLoad() ){
+			this.loadActivities();
+		}
+	}
+
+
+
+
 }
