@@ -15,6 +15,7 @@ export interface GenericProviderMethods {
 export function GenericProvider( WrappedComponent, methods: GenericProviderMethods ){
   return class Provider extends React.Component {
     static contextType = ConnectionContext.Context
+    static wrappedComponent = WrappedComponent
     getPropName = methods.getPropName || (() => 'data');
     render() {
       const data = methods.getData( this.props, methods.getId( this.props ) );
