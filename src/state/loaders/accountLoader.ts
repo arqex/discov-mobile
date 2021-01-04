@@ -1,4 +1,5 @@
 import store from "../store"
+import DataLoader from "./DataLoader";
 
 let actions;
 let config = {

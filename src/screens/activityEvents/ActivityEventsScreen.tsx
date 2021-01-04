@@ -67,7 +67,7 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 		return this.props.actions.accountActivity.getStored();
 	}
 
-	_renderItem = ( {item} ) => {
+	_renderItem = ( {item, index} ) => {
 		if( item.tooltip ){
 			return this.renderTooltip( item.tooltip );
 		}
@@ -101,8 +101,16 @@ export default class ActivityEventsScreen extends Component<ScreenProps> {
 
 	renderActivity( activity ) {
 		let Component = activityTypes[ activity.type ];
+		if( !Component ){
+			console.warn(`Unknown activity type ${activity.type}`);
+			return;
+		}
+		let activities = this.getActivities();
 		return (
-			<Component activity={ activity } />
+			<Component activity={ activity }
+				isFirst={ activity === activities[0] }
+				isLast={ activity === activities[ activities.length - 1 ] }
+				router={ this.props.router } />
 		);
 	}
 

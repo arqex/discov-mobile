@@ -17,7 +17,7 @@ export default class Wrapper extends React.Component<WrapperProps> {
 		let styles = [
 			this.getMargin(),
 			this.getPadding(),
-			this.props.textWidth && {width: styleVars.textWidth, alignSelf: 'center'},
+			this.props.textWidth && {width: styleVars.textWidth, alignSelf: 'center', justifyContent: 'flex-start'},
 			this.props.style
 		];
 
