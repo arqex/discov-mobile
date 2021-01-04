@@ -8,6 +8,7 @@ import { Platform, Alert } from 'react-native';
 import services from '.';
 import DeviceInfo from 'react-native-device-info'
 import connectionService from './connection.service';
+import dataLoaders from '../state/dataLoaders';
 
 let apiClient: ApiClient;
 let actions: any = false;
@@ -43,6 +44,7 @@ export const dataService = {
 			})
 			.then( initResult => {
 				actions = initActions( apiClient );
+				dataLoaders.init( actions );
 				services.init( actions, store );
 
 				if ( initResult.user ) {

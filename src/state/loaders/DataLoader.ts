@@ -18,7 +18,7 @@ export default class DataLoader {
   instances = new WeakMap()
   originalUnmount: any
   onUnmount: any
-  promises: Promise<any>[]
+  promises: {[key:string]: Promise<any>} = {}
   values: {[key:string]: DataLoaderResult} = {}
 
   constructor( config: DataLoaderConfig ){
@@ -34,13 +34,20 @@ export default class DataLoader {
 
     let cachedData = this.getFromCache( id );
     if( !cachedData || !this.isValid( cachedData ) ){
+      let value = this.values[id];
+      if (value && value.error) {
+        return value;
+      }
+      
       if( !this.promises[id] ){
         this.promises[id] = this.loadData( id ).then( res => {
           delete this.promises[id];
           if( res.error ){
             this.setValue( id, { error: res.error, isLoading: false, data: cachedData });
           }
-          this.setValue( id, {error: false, isLoading: false, data: res.data });
+          else {
+            this.setValue(id, { error: false, isLoading: false, data: res.data });
+          }
           instance.forceUpdate();
         });
       }
@@ -48,6 +55,7 @@ export default class DataLoader {
       this.setValue( id, { error: false, isLoading: true, data: cachedData });
       return this.values[id];
     }
+
     this.setValue( id, { error: false, isLoading: false, data: cachedData });
     return this.values[id];
   }
@@ -58,6 +66,10 @@ export default class DataLoader {
       this.values[id] = value;
     }
     return this.values[id];
+  }
+
+  clearValue( id: string ){
+    delete this.values[id];
   }
 
   isBound( instance, id ){
@@ -75,6 +87,7 @@ export default class DataLoader {
         data.removeChangeListener( boundInstance.listener );
       }
 
+      delete this.values[boundInstance.id];
       this.instances.delete( instance );
     }
 
@@ -95,6 +108,7 @@ export default class DataLoader {
         if( fromCache ){
           fromCache.removeChangeListener( binding.listener );
         }
+        delete this.values[binding.id];
         this.instances.delete( instance );
         originalUnmount.call( instance );
       }
