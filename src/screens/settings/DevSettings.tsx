@@ -1,16 +1,18 @@
 import * as React from 'react'
-import { ScrollView, StyleSheet } from 'react-native'
-import { Bg, TopBar, SettingItem, Panel, ModalContent, Modal } from '../../components'
+import { Platform, ScrollView, StyleSheet } from 'react-native'
+import { Bg, TopBar, SettingItem, Panel, ModalContent, Modal, Toggle } from '../../components'
 import { ScreenProps } from '../../utils/ScreenProps'
 import ImagePicker from 'react-native-image-crop-picker'
 import storeService from '../../state/store.service';
 import { uploadImage } from '../../utils/image.service';
 import codePush from 'react-native-code-push';
+import LocationService from '../../location/location.service'
 
 export default class DevSettings extends React.Component<ScreenProps> {
 
 	state={
-		version: ''
+		version: '',
+		toggle: false
   }
   
   render() {
@@ -32,6 +34,7 @@ export default class DevSettings extends React.Component<ScreenProps> {
 						<SettingItem title="See BG report"
 							onPress={() => this.props.router.navigate('/bgReport')}
 							border />
+						{this.renderDebugAndroid()}
 						<SettingItem title="Open notification"
 							onPress={this._openNotification}
 							border />
@@ -124,8 +127,24 @@ export default class DevSettings extends React.Component<ScreenProps> {
 			if (result.cancelled) return;
 			console.log('Picker result', result);
 		});
-  }
+	}
 
+	renderDebugAndroid() {
+		if( Platform.OS !== 'android' ) return;
+		return (
+			<SettingItem title="Debug android location"
+				post={this.renderDebugToggle()}
+				border />
+		);
+	}
+	
+	renderDebugToggle() {
+		return (
+			<Toggle
+				value={ this.state.toggle }
+				onValueChange={ this._onToggleDebugMode } />
+		)
+	}
 
 	componentDidMount(){
 		codePush.getUpdateMetadata().then( meta => {
@@ -136,6 +155,16 @@ export default class DevSettings extends React.Component<ScreenProps> {
 			})
 			console.log( meta );
 		})
+
+		LocationService.getDebugMode().then( isActive => {
+			this.setState({toggle: isActive})
+		})
+	}
+
+	_onToggleDebugMode = () => {
+		let nextValue = !this.state.toggle;
+		LocationService.setDebugMode( nextValue );
+		this.setState({toggle: nextValue});
 	}
 
 }

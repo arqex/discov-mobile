@@ -25,5 +25,15 @@ export default {
         return JSON.parse( permisionStr );
       })
     ;
+  },
+  getDebugMode(){
+    return NativeModules.BgLocation.getDebugMode()
+      .then( response => {
+        return JSON.parse( response ).isActive;
+      })
+    ;
+  },
+  setDebugMode( value: boolean ){
+    return NativeModules.BgLocation.setDebugMode(value);
   }
 }

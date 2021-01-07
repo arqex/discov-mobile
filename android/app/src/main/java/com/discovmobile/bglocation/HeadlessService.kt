@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.discovmobile.bglocation.utils.BgLocation
 import com.discovmobile.bglocation.utils.Bglog
+import com.discovmobile.bglocation.utils.Storage
 import com.facebook.react.HeadlessJsTaskService
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.jstasks.HeadlessJsTaskConfig
@@ -37,8 +38,13 @@ class HeadlessService: HeadlessJsTaskService() {
 
         @JvmStatic
         fun sendSignal( context: Context?, signal: String ){
-            Bglog.i("Sending signal: $signal")
-            send( context, hashMapOf("signal" to signal) )
+            if( context != null ){
+                val isDebugMode = Storage.getDebugMode( context );
+                if( isDebugMode ){
+                    Bglog.i("Sending signal: $signal")
+                    send( context, hashMapOf("signal" to signal) )
+                }
+            }
         }
 
         @JvmStatic

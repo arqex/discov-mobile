@@ -45,7 +45,9 @@ const LocationService = {
 	stopTracking(){},
 	isTracking(): boolean {},
 	updateLocation(force = false){},
-	notifyLocationHandled( distanceToDiscovery ){}
+	notifyLocationHandled( distanceToDiscovery ){},
+	getDebugMode(): Promise<boolean> {},
+	setDebugMode(value: boolean) {},
 }
 
 export default LocationService;

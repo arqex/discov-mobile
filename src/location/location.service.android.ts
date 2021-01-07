@@ -85,9 +85,15 @@ export default {
 		return trackingActive;
 	},
 	updateLocation(force = false){
-		BgLocation.updateLocation( force );
+		return BgLocation.updateLocation( force );
 	},
 	notifyLocationHandled( distanceToDiscovery ){
-		BgLocation.setDistanceToDiscovery( distanceToDiscovery );
+		return BgLocation.setDistanceToDiscovery( distanceToDiscovery );
+	},
+	getDebugMode(){
+		return BgLocation.getDebugMode()
+	},
+	setDebugMode( value: boolean ){
+		return BgLocation.setDebugMode(value)
 	}
 }

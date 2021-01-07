@@ -108,6 +108,17 @@ public class BgLocationModule extends ReactContextBaseJavaModule implements JSEv
         }
     }
 
+    @ReactMethod
+    public void getDebugMode(Promise promise){
+        Boolean debugMode = Storage.getDebugMode(mContext);
+        promise.resolve( "{\"isActive\":" + debugMode.toString() + "}" );
+    }
+
+    @ReactMethod
+    public void setDebugMode( boolean value ){
+        Storage.setDebugMode( mContext, value );
+    }
+
     @Nonnull
     @Override
     public String getName() {

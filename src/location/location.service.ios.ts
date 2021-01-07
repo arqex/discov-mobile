@@ -94,5 +94,7 @@ export default {
 	},
 	notifyLocationHandled( distanceToDiscovery ){
 		BgLocationManagerIos.notifyLocationHandled( distanceToDiscovery );
-	}
+	},
+	getDebugMode() { /* android only */ },
+	setDebugMode() { /* android only */ }
 }

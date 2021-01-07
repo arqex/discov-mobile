@@ -173,5 +173,17 @@ class Storage {
                     .putLong("lalstBgLocationNotificationAt", lastnotificationAt)
                     .apply()
         }
+
+        @JvmStatic
+        fun getDebugMode( context: Context ): Boolean {
+            return getStore( context ).getBoolean("debugMode", false)
+        }
+        @JvmStatic
+        fun setDebugMode( context: Context, debugMode: Boolean ){
+            getStore( context )
+                    .edit()
+                    .putBoolean("debugMode", debugMode)
+                    .apply()
+        }
     }
 }

@@ -15,7 +15,9 @@ const SettingItem = (props: SettingItemProps) => {
 	];
 	
 	return (
-		<ListItem {...others} style={ itemStyles } titleColor={ styleVars.colors.text } />
+		<ListItem {...others}
+			style={ itemStyles }
+			titleColor={ styleVars.colors.text } />
 	);
 };
 
