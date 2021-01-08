@@ -14,7 +14,9 @@ class NotificationHelper {
     }
 }
 
-val REPEAT_BG_LOCATION_INTERVAL = 2 * 30 * 24 * 60 * 60 * 1000
+// One day after we detected the not granted permission
+const val REQUEST_MARGIN = 24 * 60 * 60 * 1000;
+const val REPEAT_BG_LOCATION_INTERVAL = 2 * 30 * 24 * 60 * 60 * 1000
 fun checkBgLocationNotification( context: Context ){
     val trackingMode = TrackHelper.getMode(context)
     if( trackingMode == TrackHelper.MODE_OFF || !LocationHelper.hasPermission(context) ) return
@@ -26,9 +28,8 @@ fun checkBgLocationNotification( context: Context ){
     val lastBgLocationNotificationAt = Storage.getLastBgLocationNotificationAt( context );
     if( lastBgLocationNotificationAt == null || lastBgLocationNotificationAt + REPEAT_BG_LOCATION_INTERVAL > Date().time ) return
 
-    // One day after we detected the not granted permission
-    val REQUEST_MARGIN = 24 * 60 * 60 * 1000;
-    if( bgLocation.updatedAt + REQUEST_MARGIN > Date().time ){
+    
+    if( bgLocation.updatedAt + REQUEST_MARGIN < Date().time ){
         HeadlessService.openNotification( context, "bgLocationPermission" );
         Storage.setLastBgLocationNotificationAt(context, Date().time )
     }

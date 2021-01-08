@@ -1,9 +1,8 @@
 import * as React from 'react';
 import { View, StyleSheet, Image, Linking } from 'react-native';
 import { ScreenProps } from '../../utils/ScreenProps';
-import { Bg, Text, Button, styleVars } from '../../components';
+import { Bg, Text, Button } from '../../components';
 import { getNavigationBarHeight } from '../../components/utils/getNavigationBarHeight';
-import locationService from '../../location/location.service';
 import LocationService from '../../location/location.service';
 
 interface FgLocationScreenProps extends ScreenProps {
@@ -85,19 +84,19 @@ class FgLocationScreen extends React.Component<FgLocationScreenProps>{
 
 	canAskForLocation() {
 		let perm = LocationService.getStoredPermissions().foreground;
-
-		console.log('Perm', perm );
-
 		return !perm || perm.canAskAgain;
 	}
 
 	_askForPermission = () => {
 		this.setState({loading: true});
 		
-		locationService.requestPermission()
+		LocationService.requestPermission()
 			.then( permission => {
 				this.setState({loading: false});
 				this.props.onFinish && this.props.onFinish(permission.isGranted);
+				if( permission.isGranted ){
+					LocationService.startBackgroundLocationUpdates();
+				}	
 			})
 		;
 	}

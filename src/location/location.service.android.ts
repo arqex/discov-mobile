@@ -68,6 +68,7 @@ export default {
 		locationStore.clearFence();
 	},
 	startBackgroundLocationUpdates(){
+		console.log('Starting background location tracking');
 		BgLocation.startBackgroundLocationUpdates();
 	},
 	stopBackgroundLocationUpdates(){

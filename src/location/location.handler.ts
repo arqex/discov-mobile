@@ -15,6 +15,7 @@ export default {
 
 			locationStore.init( dataService.getStore() );
 		});
+
 		appStateService.addChangeListener( status => {
 			status === 'active' ?
 				onGoingToForeground() :
@@ -161,7 +162,11 @@ function onGoingToBackground() {
 function onGoingToForeground() {
 	dataService.init().then( () => {
 		locationService.updateLocation(true);
-		locationService.getPermission();
 		locationService.getBackgroundPermission();
+		locationService.getPermission().then( permission => {
+			if( permission.isGranted && dataService.getAuthStatus() === 'IN' ){
+				locationService.startBackgroundLocationUpdates();
+			}
+		})
 	});
 }

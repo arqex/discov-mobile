@@ -16,10 +16,8 @@ export default class DataLoader {
   isValid: (id: any) => boolean
   loadData: (id: string) => Promise<any>
   instances = new WeakMap()
-  originalUnmount: any
   promises: {[key:string]: Promise<any>} = {}
   values: {[key:string]: DataLoaderResult} = {}
-  isUnmountOverriden: boolean
 
   constructor( config: DataLoaderConfig ){
     this.getFromCache = config.getFromCache;
@@ -100,8 +98,7 @@ export default class DataLoader {
       fromCache.addChangeListener( binding.listener )
     }
 
-    if (!this.isUnmountOverriden ){
-      this.isUnmountOverriden = true;
+    if (!boundInstance){
       let originalUnmount = instance.componentWillUnmount;
       instance.componentWillUnmount = () => {
         let binding = this.instances.get( instance );

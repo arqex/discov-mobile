@@ -18,6 +18,7 @@ import BackButtonHandler from './utils/BackButtonHandler';
 import locationHandler from './location/location.handler';
 import connectionService from './services/connection.service';
 import ConnectionContext from './utils/ConnectionContext';
+import LocationService from './location/location.service';
 
 globalThis.gql_debug = true;
 
@@ -121,10 +122,17 @@ class Root extends React.Component {
 			this.isInitialized = true;
 			this.firstNavigation();
 			dataService.getActions().auth.addLoginListener( status => {
-				if( status === 'OUT' ){
+				if (status === 'OUT') {
+					LocationService.stopBackgroundLocationUpdates();
 					setTimeout( () => {
 						router.navigate('/');
 					}, 300);
+				}
+				else if( status === 'IN' ){
+					let permissons = LocationService.getStoredPermissions();
+					if( permissons.foreground?.isGranted ){
+						LocationService.startBackgroundLocationUpdates();
+					}
 				}
 			}); 
 		});

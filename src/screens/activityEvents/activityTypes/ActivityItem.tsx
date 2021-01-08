@@ -33,18 +33,20 @@ const AVATAR_SIZE = 50
 export default class ActivityItem extends Component<ActivityItemProps> {
   render() {
     return (
-      <Touchable onPress={ () => this.props.router.navigate(this.props.action) }>
         <View style={styles.container}>
           { this.renderTopBorder() }
-          <View style={ styles.content }>
-            { this.renderImage() }
-            <Wrapper textWidth>
-              { this.renderText() }
-            </Wrapper>
-          </View>
+          <Touchable onPress={() => this.props.router.navigate(this.props.action)}>
+            <View style={ styles.body }>
+              <View style={ styles.content }>
+                { this.renderImage() }
+                <Wrapper style={{maxWidth: 260}}>
+                  { this.renderText() }
+                </Wrapper>
+              </View>
+            </View>
+          </Touchable>
           { this.renderBottomBorder() }
         </View>
-      </Touchable>
     )
   }
 
@@ -116,13 +118,18 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'stretch',
   },
-  content: {
+  body: {
     backgroundColor: '#fff',
+    padding: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
+    alignItems: 'center',
+  },
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 10,
-    paddingBottom: 10
+    maxWidth: 300
   },
   text: {
 
