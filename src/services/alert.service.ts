@@ -65,7 +65,7 @@ function getDerivedAlerts(){
 const fgPermissionAlert: ActivityAlert = {
 	id: 'FG_LOCATION',
 	title: 'Location access is not enabled',
-	description: 'Allow location access to start discovering stories from your friends',
+	description: 'Allow location access to start discovering stories from your friends.',
 	level: ActivityAlertLevel.ERROR,
 	action: '/fgLocationPermission',
 	dismissable: false
@@ -73,7 +73,7 @@ const fgPermissionAlert: ActivityAlert = {
 const bgPermissionAlert: ActivityAlert = {
 	id: 'BG_LOCATION',
 	title: 'Passive discovering not enabled',
-	description: 'Allow location access to discover stories while Discov is in the background',
+	description: 'Enable location in the background to discover stories while the phone has the screen off.',
 	level: ActivityAlertLevel.ERROR,
 	action: '/bgLocationPermission',
 	dismissable: false

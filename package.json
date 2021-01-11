@@ -18,7 +18,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "bumpMinor": "node ./scripts/bumpVersion.js minor",
-    "bumpMajor": "node ./scripts/bumpVersion.js major"
+    "bumpMajor": "node ./scripts/bumpVersion.js major",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@arqex/ors": "^0.9.0",
@@ -44,6 +45,7 @@
     "js-base64": "^2.5.2",
     "memoize-one": "^5.1.1",
     "moment": "^2.27.0",
+    "patch-package": "^6.2.2",
     "react": "16.13.1",
     "react-interactable": "^0.6.4",
     "react-native": "0.63.4",
@@ -56,6 +58,7 @@
     "react-native-gesture-handler": "~1.6.0",
     "react-native-image-crop-picker": "^0.32.2",
     "react-native-image-gallery": "^2.1.5",
+    "react-native-interactable": "^2.0.1",
     "react-native-localize": "^1.4.0",
     "react-native-maps": "0.27.1",
     "react-native-netinfo": "^1.1.0",

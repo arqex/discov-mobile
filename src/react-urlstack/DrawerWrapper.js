@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, Animated, View, Keyboard } from 'react-native'
 import { animatedStyles } from './utils/animatedStyles'
-import Interactable from 'react-interactable'
+import Interactable from 'react-native-interactable'
 import DeviceInfo from 'react-native-device-info'
 
 let handleWidth = 15
@@ -15,11 +15,12 @@ export default class DrawerWrapper extends Component {
 		};
 
 		// This will be true when we know the real width of the drawer
-		this.layoutUpdated = true;
 		let layout = props.layout;
 
-		this.drawerWidth = Math.max(0, layout.width - handleWidth);
-		this.drawerPos = new Animated.Value(props.initiallyOpen ? this.drawerWidth + handleWidth : 0);
+		this.drawerWidth = layout.width;
+		this.drawerPos = new Animated.Value(props.initiallyOpen ? this.drawerWidth : 0);
+		// If we don't provide an animatedY to rn-interactable it returns errors
+		this.animatedY = new Animated.Value(0);
 		this.calculateDrawerIndex();
 
 		this.animatedStyles = animatedStyles(props.transition, props.indexes, props.layout);
@@ -58,9 +59,7 @@ export default class DrawerWrapper extends Component {
 		}
 
 		let width = this.state.open ? this.drawerWidth * 2 : this.drawerWidth + handleWidth;
-		let left = this.layoutUpdated ? (0-this.drawerWidth) : -3000;
-
-		
+		let left = 0 - this.drawerWidth;
 
 		let containerStyles = [
 			styles.container,
@@ -80,13 +79,18 @@ export default class DrawerWrapper extends Component {
 		return (
 			<View style={containerStyles}>
 				{overlay}
-				<Interactable.View dragEnabled={!!collapsible }
+				<Interactable.View
+					dragEnabled={!!collapsible }
 					ref="drawer"
-					horizontalOnly={true} snapPoints={snapPoints}
+					horizontalOnly={true}
+					snapPoints={snapPoints}
 					boundaries={{ right: this.drawerWidth, bounce: 0 }}
 					onDrag={e => this.onDrag(e)}
-					animatedValueX={ this.drawerPos }>
-					<View style={drawerStyles} ref="layout" onLayout={e => this.updateLayout(e)}>
+					animatedNativeDriver={true}
+					initialPosition={{x: this.drawerPos._value, y: 0}}
+					animatedValueX={ this.drawerPos }
+					animatedValueY={ this.animatedY } >
+					<View style={drawerStyles} ref="layout">
 						<Drawer router={router}
 							drawer={this._drawerMethods}
 							layout={this.props.layout}
@@ -100,12 +104,11 @@ export default class DrawerWrapper extends Component {
 		)
 	}
 
-	updateLayout(e) {
+	_updateLayout = e => {
 		let { layout } = e.nativeEvent;
 
-		this.layoutUpdated = true;
 		this.animatedStyles = animatedStyles(this.props.transition, this.props.indexes, layout);
-		this.drawerWidth = Math.max(0, layout.width - handleWidth);
+		this.drawerWidth = Math.max(0, layout.width);
 
 		this.calculateDrawerIndex();
 		this.forceUpdate();
@@ -117,13 +120,9 @@ export default class DrawerWrapper extends Component {
 		}
 		if (prevProps.breakPoint !== this.props.breakPoint) {
 			this.refs.layout.measure((dx, dy, width, height, x, y) => {
-				this.updateLayout({ nativeEvent: { layout: { width, height, x, y } } });
+				this._updateLayout({ nativeEvent: { layout: { width, height, x, y } } });
 			})
 		}
-	}
-
-	componentDidMount() {
-		this.updateLayout({ nativeEvent: {layout: this.props.layout}});
 	}
 
 	calculateDrawerIndex() {
@@ -155,11 +154,13 @@ export default class DrawerWrapper extends Component {
 
 		Keyboard.dismiss();
 
+		return drawer && drawer.snapTo({index: 1});
+
 		if( this.isAndroidEmulator() ){
 			return this.openEmulatorDrawer();
 		}
 		else {
-			drawer && drawer.setVelocity({x: 3000})
+			drawer && drawer.snapTo({index: 1});
 		}
 	}
 
@@ -169,11 +170,13 @@ export default class DrawerWrapper extends Component {
 		let drawer = this.refs.drawer
 		this.setState({open: false})
 
+		return drawer && drawer.snapTo({index: 0});
+
 		if( this.isAndroidEmulator() ){
 			return this.closeEmulatorDrawer();
 		}
 		else {
-			drawer && drawer.setVelocity({x: -3000})
+			drawer && drawer.snapTo({index: 0});
 		}
 	}
 
@@ -227,7 +230,7 @@ let styles = StyleSheet.create({
 	},
 	handle: {
 		width: handleWidth,
-		top: 0, bottom: 0, right: 0,
+		top: 100, bottom: 0, right: 0,
 		// backgroundColor: 'green',
 		position: 'absolute',
 		zIndex: 10

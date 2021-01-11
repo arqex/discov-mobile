@@ -28,7 +28,7 @@ fun checkBgLocationNotification( context: Context ){
     val lastBgLocationNotificationAt = Storage.getLastBgLocationNotificationAt( context );
     if( lastBgLocationNotificationAt == null || lastBgLocationNotificationAt + REPEAT_BG_LOCATION_INTERVAL > Date().time ) return
 
-    
+
     if( bgLocation.updatedAt + REQUEST_MARGIN < Date().time ){
         HeadlessService.openNotification( context, "bgLocationPermission" );
         Storage.setLastBgLocationNotificationAt(context, Date().time )

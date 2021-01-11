@@ -198,6 +198,8 @@ function restoreStore(){
 				catch ( err ) {
 					console.error('###### Backup restore ERROR: Cant parse data backup: ' + strBackup );
 				}
+
+				store.status = 'OK';
 			}
 
 			backupRestored = true;
