@@ -216,6 +216,31 @@ export default {
 		store.discoveriesLastRequestedAt = time;
 	},
 
+	storeDistoryList( page, append ){
+		let items = [];
+		page.items.forEach( item => {
+			let toStore: any = {
+				id: item.id,
+				storyId: item.storyId,
+				discoveryId: item.discoveryId
+			}
+			if( item.story ){
+				toStore.storyId = item.story.id;
+				this.storeStory( item.story );
+			}
+			if( item.discovery ){
+				toStore.discoveryId = item.discovery.id;
+				this.storeDiscovery( item.discovery )
+			}
+			items.push( toStore );
+		});
+		
+		store.distories = {
+			...page,
+			items: append ? store.distories.items.concat(items) : items
+		};
+	},
+
 	resetStore() {
 		this.invalidateFollowers();
 		this.invalidateFollowing();

@@ -132,10 +132,15 @@ function createApiClient() {
 			onRequestError
 		});
 
+
 		apiClient.addResponseInterceptor( result => {
 			if( result && result.response && result.response.status === 401 ){
 				dataService.getApiClient().logout();
 				showAlert('Your session expired', 'Please log in again to use the app.');
+			}
+			
+			if( result instanceof Error ){
+				return Promise.reject(result)
 			}
 			return result;
 		});

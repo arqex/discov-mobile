@@ -17,7 +17,6 @@ import pushNotificationApi from './otherApis/pushNotificationApi';
 import axios, {AxiosRequestConfig} from 'axios';
 
 type RequestInterceptor = (AxiosRequestConfig) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
-
 interface ApiUser {
 	id: string
 	email: string
