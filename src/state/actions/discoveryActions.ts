@@ -53,8 +53,6 @@ export default function (store, api) {
 			return api.gql.discoverAround(`{ closestDiscoveryDistance discoveries ${actionService.userDiscoveryFieldsWithOwner} }`)
 				.run( location )
 				.then( res => {
-					store.user.closestDiscoveryDistance = res.closestDiscoveryDistance;
-
 					if( res && res.discoveries && res.discoveries.length ){
 						return this.loadUserDiscoveries()
 							.then( () => res )
