@@ -63,7 +63,7 @@ export default class Menu extends Component<ScreenProps> {
 								icon="explore"
 								color="secondary"
 								iconColor={ styleVars.colors.primary }
-								onPress={ this.props.drawer.close } link="/myStories">
+								onPress={ this.props.drawer.close } link="/stories">
 								{ __('menu.stories') }
 							</Button>
 						</View>

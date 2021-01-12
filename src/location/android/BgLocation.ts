@@ -35,5 +35,8 @@ export default {
   },
   setDebugMode( value: boolean ){
     return NativeModules.BgLocation.setDebugMode(value);
-  }
+  },
+  openSettings( type: String ){
+    return NativeModules.BgLocation.openSettings( type );
+  } 
 }

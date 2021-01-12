@@ -3,6 +3,7 @@ import accountActions from './actions/accountActions';
 import userActions from './actions/userActions';
 import storyActions from './actions/storyActions';
 import discoveryActions from './actions/discoveryActions';
+import distoryActions from './actions/distoryActions';
 import relationshipActions from './actions/relationshipActions';
 import followerGroupActions from './actions/followerGroupActions';
 import mapActions from './actions/mapActions';
@@ -14,6 +15,7 @@ let actionNames = {
   account: accountActions,
   accountActivity: activityActions,
   discovery: discoveryActions,
+  distory: distoryActions,
   followerGroup: followerGroupActions,
   map: mapActions,
   relationship: relationshipActions,

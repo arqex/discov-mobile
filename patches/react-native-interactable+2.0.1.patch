@@ -1,0 +1,31 @@
+diff --git a/node_modules/react-native-interactable/lib/android/src/androidTest/java/com/wix/interactable/ExampleInstrumentedTest.java b/node_modules/react-native-interactable/lib/android/src/androidTest/java/com/wix/interactable/ExampleInstrumentedTest.java
+index 0411aac..8180a57 100644
+--- a/node_modules/react-native-interactable/lib/android/src/androidTest/java/com/wix/interactable/ExampleInstrumentedTest.java
++++ b/node_modules/react-native-interactable/lib/android/src/androidTest/java/com/wix/interactable/ExampleInstrumentedTest.java
+@@ -1,8 +1,8 @@
+ package com.wix.interactable;
+ 
+ import android.content.Context;
+-import android.support.test.InstrumentationRegistry;
+-import android.support.test.runner.AndroidJUnit4;
++import androidx.test.InstrumentationRegistry;
++import androidx.test.runner.AndroidJUnit4;
+ 
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+diff --git a/node_modules/react-native-interactable/react-native.config b/node_modules/react-native-interactable/react-native.config
+new file mode 100644
+index 0000000..5814405
+--- /dev/null
++++ b/node_modules/react-native-interactable/react-native.config
+@@ -0,0 +1,9 @@
++module.exports = {
++	dependency: {
++		platforms: {
++			android: {
++				sourceDir: './lib/android',
++			},
++		},
++	},
++};
+\ No newline at end of file

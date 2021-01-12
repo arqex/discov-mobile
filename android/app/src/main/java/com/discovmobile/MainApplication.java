@@ -24,6 +24,8 @@ import com.microsoft.codepush.react.CodePush;
 
 import com.discovmobile.bglocation.BgLocationPackage;
 
+import com.wix.interactable.Interactable;
+
 public class MainApplication extends Application implements ReactApplication, Configuration.Provider {
   private final ReactModuleRegistryProvider mModuleRegistryProvider = new ReactModuleRegistryProvider(
     new BasePackageList().getPackageList(),
@@ -41,6 +43,7 @@ public class MainApplication extends Application implements ReactApplication, Co
       List<ReactPackage> packages = new PackageList(this).getPackages();
       packages.add(new ModuleRegistryAdapter(mModuleRegistryProvider));
       packages.add(new BgLocationPackage());
+      packages.add(new Interactable());
       return packages;
     }
 

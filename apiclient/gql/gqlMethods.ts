@@ -179,6 +179,14 @@ query getDiscoveryByStoryAndDiscoverer( $input: StoryDiscovererInput! ) {
 }
 `)}
 
+  getAccountDistories(returnFields: string) { return this.makeRunnable(`
+query getAccountDistories( $input: PaginatedAccountInput! ) {
+  getAccountDistories(input: $input) ${returnFields} 
+}
+`)}
+
+
+
 
 
 

@@ -41,6 +41,7 @@ import FgLocationModal from '../screens/locationPermissions/FgLocationModal';
 import DevSettings from '../screens/settings/DevSettings';
 import LocationReport from '../screens/locationReport/LocationReport';
 import ClosestDiscoveryScreen from '../screens/closestDiscovery/ClosestDiscoveryScreen';
+import StoriesScreen from '../screens/stories/StoriesScreen';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -85,6 +86,8 @@ export const routes = [
 			{ path: '/:id', cb: PeerAccountScreen },
 		] }
 	]},
+
+	{ path: '/stories', cb: StoriesScreen },
 
 	{ path: '/myStories', cb: MyStories, children: [
 		{ path: '/:id', cb: OwnStory, children: [
