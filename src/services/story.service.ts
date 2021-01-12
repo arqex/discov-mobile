@@ -32,8 +32,8 @@ export const storyService = {
 		;
 	},
 
-	getStory( storyId ){
-		return store.stories[ storyId ] || false;
+	getStory( storyId ): Story | undefined {
+		return store.stories[ storyId ];
 	},
 
 

@@ -11,7 +11,7 @@ let config = {
 	}
 }
 
-export default new DataLoader(config);
+export default new DataLoader<DataPage>(config);
 export function setActions(acs) {
 	actions = acs;
 }

@@ -1,25 +1,25 @@
 
-interface DataLoaderConfig {
-  getFromCache: (id: string) => any
-  isValid?: (data: any) => boolean
-  loadData: (id: string) => Promise<any>
+interface DataLoaderConfig<T> {
+  getFromCache: (id: string) => T
+  isValid?: (data?: T) => boolean
+  loadData: (id: string) => Promise<T>
 }
 
-interface DataLoaderResult {
+interface DataLoaderResult<T> {
   error: any
   isLoading: boolean
-  data: any
+  data?: T
 }
 
-export default class DataLoader {
-  getFromCache: (id: string) => any
-  isValid: (id: any) => boolean
+export default class DataLoader<T> {
+  getFromCache: (id: string) => T
+  isValid: (id: T) => boolean
   loadData: (id: string) => Promise<any>
   instances = new WeakMap()
   promises: {[key:string]: Promise<any>} = {}
-  values: {[key:string]: DataLoaderResult} = {}
+  values: {[key:string]: DataLoaderResult<T>} = {}
 
-  constructor( config: DataLoaderConfig ){
+  constructor( config: DataLoaderConfig<T> ){
     this.getFromCache = config.getFromCache;
     this.isValid = config.isValid || (() => true);
     this.loadData = config.loadData;
@@ -58,7 +58,7 @@ export default class DataLoader {
     return this.values[id];
   }
 
-  setValue( id: string, value: DataLoaderResult ){
+  setValue( id: string, value: DataLoaderResult<T> ){
     let stored = this.values[id];
     if( !stored || stored.error !== value.error || stored.isLoading !== value.isLoading || stored.data !== value.data ){
       this.values[id] = value;
@@ -82,7 +82,8 @@ export default class DataLoader {
     if( boundInstance ){
       let data = this.getFromCache( boundInstance.id );
       if( data ){
-        data.removeChangeListener( boundInstance.listener );
+        // @ts-ignore: ors nodes are not well typed
+        data.removeChangeListener( boundInstance.listener ); 
       }
 
       delete this.values[boundInstance.id];
@@ -94,7 +95,8 @@ export default class DataLoader {
       let binding = {
         id, listener: () => instance.forceUpdate()
       }
-      this.instances.set( instance, binding );
+      this.instances.set(instance, binding);
+      // @ts-ignore: ors nodes are not well typed
       fromCache.addChangeListener( binding.listener )
     }
 
@@ -103,7 +105,8 @@ export default class DataLoader {
       instance.componentWillUnmount = () => {
         let binding = this.instances.get( instance );
         let fromCache = this.getFromCache( binding.id );
-        if( fromCache ){
+        if (fromCache) {
+          // @ts-ignore: ors nodes are not well typed
           fromCache.removeChangeListener( binding.listener );
         }
         delete this.values[binding.id];

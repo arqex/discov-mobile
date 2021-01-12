@@ -29,5 +29,3 @@ export default {
 
 	...services
 }
-
-export { ActivityAlert, ActivityAlertsMeta, ActivityAlertLevel } from './alert.service';
