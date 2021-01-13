@@ -1,32 +1,37 @@
 import * as React from 'react';
 import { View } from 'react-native';
 import Avatar from '../../components/Avatar';
-import AccountProvider from '../../providers/AccountProvider';
+import accountLoader from '../../state/loaders/accountLoader';
 
 interface AccountAvatarProps {
-	accountId: string,
-	account: any,
+	accountId?: string,
 	size?: number,
 	border?: number,
 	borderColor?: 'white' | 'red' | 'blue' | 'light'
 }
 
-class AccountAvatar extends React.Component<AccountAvatarProps> {
+export default class AccountAvatar extends React.Component<AccountAvatarProps> {
 	render() {
-		const { account, size = 42} = this.props;
+		const account = accountLoader.getData( this, this.props.accountId );
+		const size = this.props.size || 42;
+
+		if( !account.data ){
+			return this.renderLoading( size );
+		}
+		
 		return (
-			<Avatar name={account.displayName}
-				pic={account.avatarPic}
-				size={size}
+			<Avatar name={account.data.displayName}
+				pic={account.data.avatarPic}
+				size={ size }
 				border={this.props.border}
 				borderColor={this.props.borderColor} />
 		);
 	}
 
-	static renderLoading(props) {
+	renderLoading(size) {
 		let styles = {
-			width: props.size, height: props.size,
-			borderRadius: props.size / 2,
+			width: size, height: size,
+			borderRadius: size / 2,
 			borderWidth: 2,
 			borderColor: '#fff',
 			backgroundColor: '#ddd'
@@ -35,5 +40,3 @@ class AccountAvatar extends React.Component<AccountAvatarProps> {
 		return <View style={styles}></View>;
 	}
 }
-
-export default AccountProvider(AccountAvatar);

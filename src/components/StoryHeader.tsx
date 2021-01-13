@@ -1,9 +1,6 @@
 import * as React from 'react';
 import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
-import Avatar from './Avatar';
 import Text from './Text'
-import AccountProvider from '../providers/AccountProvider';
-import storeService from '../state/store.service';
 import Marker from './Marker';
 import StoryImages from '../screens/components/StoryImages';
 import memoizeOne from 'memoize-one';
@@ -11,27 +8,36 @@ import moment from 'moment';
 import AccountAvatar from '../screens/components/AccountAvatar';
 import LoadingText from './LoadingText';
 import ConnectionContext from '../utils/ConnectionContext';
+import storyLoader from '../state/loaders/storyLoader';
+import accountLoader from '../state/loaders/accountLoader';
 
 const DAY_DATE_TIME = 6 * 30 * 20 * 60 * 60000; // 6 months
 
 interface StoryHeaderProps {
-	account: any,
-	accountId: string,
-	story: any
+	storyId: string,
 	router: any,
+	accountNavigable: boolean,
 	showDate?: boolean,
-	onAssetsPress?: () => any,
-	onAvatarPress?: () => any
+	onAssetsPress?: () => any
 }
 
-class StoryHeader extends React.Component<StoryHeaderProps> {
+export default class StoryHeader extends React.Component<StoryHeaderProps> {
 	static contextType = ConnectionContext.Context
 
-	render() {
-		let account = this.props.account;
-		let story = this.props.story;
+	getStoryData() {
+		return storyLoader.getData( this, this.props.storyId )
+	}
+	getAccountData() {
+		let story = this.getStoryData().data;
+		if( story ){
+			return accountLoader.getData( this, story.ownerId );
+		}
+	}
 
-		if( !account && !this.context.isConnected ){
+	render() {
+		let story = this.getStoryData();
+
+		if( !story.data && !this.context.isConnected ){
 			return <View style={styles.container}></View>;
 		}
 
@@ -39,8 +45,8 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 			<View style={styles.container}>
 				<View style={styles.avatar}>
 					<TouchableOpacity onPress={ this._goToAccount }>
-						<Avatar name={account.displayName}
-							pic={account.avatarPic}
+						<AccountAvatar
+							accountId={ story.data && story.data.ownerId }
 							size={60}
 							border={2}
 							borderColor="blue" />
@@ -48,11 +54,11 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 				</View>
 				<View style={styles.texts}>
 					<View style={styles.name}>
-						{ this.renderUserName( account ) }
-						{ this.renderPlace( story ) }
+						{ this.renderAccountName() }
+						{ this.renderPlace( story.data ) }
 					</View>
 					<View style={styles.right}>
-						{ this.renderRightContent( story ) }
+						{ this.renderRightContent( story.data ) }
 					</View>
 				</View>
 			</View>
@@ -81,6 +87,8 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 	}
 
 	renderDate( story ){
+		if( !story ) return;
+		
 		let createTime = story.createdAt ? new Date( story.createdAt ) : new Date();
 		let diff = Date.now() - createTime.getTime();
 		let m = moment( createTime );
@@ -94,12 +102,14 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 	}
 
 	renderPlace( story ){
+		if( !story ) return;
+
 		let place = story.place || story.aggregated.place;
 		if( !place || !place.name ) return;
 
 		return (
 			<View style={ styles.place }>
-				<View style={styles.placeIcon}>
+				<View style={ styles.placeIcon }>
 					<Marker size="xs" color="gray" />
 				</View>
 				<View style={styles.placeName}>
@@ -110,6 +120,7 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 	}
 
 	getImages( story ){
+		if( !story ) return;
 		if( story.images ) return story.images;
 
 		const {assets} = story.content || {};
@@ -134,17 +145,24 @@ class StoryHeader extends React.Component<StoryHeaderProps> {
 	});
 
 	_goToAccount = () => {
-		const {accountId} = this.props;
+		if( !this.props.accountNavigable ) return;
 
-		if( accountId !== storeService.getUserId() ){
-			this.props.router.navigate('/accountModal?accountId=' + accountId);
-		}
+		let account = this.getAccountData();
+		if( !account || !account.data ) return;
+
+		this.props.router.navigate('/accountModal?accountId=' + account.data.id);
 	}
 
-	renderUserName( account ){
+	renderAccountName(){
+		let account = this.getAccountData();
+
+		if( !account || !account.data ){
+			return <LoadingText type="title">Some name</LoadingText>;
+		}
+
 		return (
 			<Text type="title">
-				{ account.displayName || 'Loading...'}
+				{ account.data.displayName }
 			</Text>
 		);
 	}
@@ -209,5 +227,3 @@ const styles = StyleSheet.create({
 		transform: [{translateY: 0}]
 	}
 });
-
-export default AccountProvider( StoryHeader );

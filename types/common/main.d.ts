@@ -56,7 +56,9 @@ interface Discovery {
 	id: string
 	storyId: string
 	discovererId: string
-	seen: boolean
+	extra: {
+		seen: boolean
+	}
 	createdAt: Date
 }
 

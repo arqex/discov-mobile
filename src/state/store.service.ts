@@ -160,11 +160,7 @@ export default {
 
 		return count;
 	},
-
-	getRelationship( relationshipId ) {
-		return store.relationships
-	},
-
+	
 	getFollowerGroup( groupId ){
 		return store.followerGroups[ groupId ];
 	},

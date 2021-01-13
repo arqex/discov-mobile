@@ -7,7 +7,7 @@ import { lngToLocation } from '../utils/maps';
 
 interface DiscovMarkerProps {
 	elevated?: boolean,
-	size?: number,
+	size?: string,
 	location: any
 }
 
