@@ -235,7 +235,7 @@ export default {
 			items.push( toStore );
 		});
 		
-		store.distories = {
+		store.user.distories = {
 			...page,
 			items: append ? store.distories.items.concat(items) : items
 		};

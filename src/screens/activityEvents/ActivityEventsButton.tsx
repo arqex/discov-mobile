@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { Button, CounterBadge, styleVars } from '../../components'
+import { Button, styleVars } from '../../components'
 import { MaterialIcons } from '@expo/vector-icons';
-import { ActivityAlertLevel, ActivityAlertsMeta } from '../../services';
+import { ActivityAlertLevel } from '../../services/alert.service';
 
 interface ActivityEventsButtonProps {
 	drawer: any,

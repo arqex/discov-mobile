@@ -11,7 +11,6 @@ let store: DiscovStore = ors({
 	comments: {},
 	peerAccounts: {},
 	peerMeta: {},
-	relationships: {},
 	followerGroups: {},
 	placesByLocation: {},
 	addressByLocation: {},

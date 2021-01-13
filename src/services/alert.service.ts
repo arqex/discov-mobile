@@ -1,5 +1,12 @@
 let actions, store, services;
 
+export enum ActivityAlertLevel {
+	NONE = 0,
+	INFO = 3,
+	WARNING = 6,
+	ERROR = 10
+}
+
 export const alertService = {
 	init(ac, st, sr) {
 		actions = ac;

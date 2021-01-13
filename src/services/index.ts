@@ -1,7 +1,6 @@
 import { loginService } from './login.service';
 import { storyService } from './story.service';
 import { storyCommentService } from './storyComment.service';
-import { usersService } from './users.service';
 import serverMessageService from './serverMessage/serverMessage.service';
 import { alertService } from './alert.service';
 import LocationService from '../location/location.service';
@@ -14,8 +13,7 @@ let services = {
 	login: loginService,
 	serverMessage: serverMessageService,
 	story: storyService,
-	storyComment: storyCommentService,
-	user: usersService
+	storyComment: storyCommentService
 }
 
 export default {

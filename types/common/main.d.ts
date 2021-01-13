@@ -1,9 +1,4 @@
-enum ActivityAlertLevel {
-	NONE = 0,
-	INFO = 3,
-	WARNING = 6,
-	ERROR = 10
-}
+
 
 interface ActivityAlert {
 	id: string,
@@ -23,10 +18,12 @@ interface AuthenticatedUser {
 	id: string
 	email: string
 	account?: PeerAccount
-	discoveries?: DataPage
-	followers?: DataPage
-	following?: DataPage
-	stories?: DataPage
+	discoveries?: DataPage<string>
+	distories?: DataPage<Distory>
+	followerGroups?: DataPage<string>
+	followers?: DataPage<string>
+	following?: DataPage<string>
+	stories?: DataPage<string>
 }
 
 interface BgLocation {
@@ -47,12 +44,12 @@ interface BgPermission {
 	requestedAt: number
 }
 
-interface DataPage {
+interface DataPage<T> {
 	total: number
 	hasMore: boolean
 	lastItemAt?: string
 	lastUpdatedAt: number
-	items: string[]
+	items: T[]
 }
 
 interface Discovery {
@@ -73,6 +70,7 @@ interface DiscovStore {
 	comments: { [id: string]: StoryComment },
 	discoveries: { [id: string]: Discovery },
 	peerAccounts: { [id: string]: PeerAccount },
+	peerMeta: { [id: string]: PeerMeta },
 	stories: { [id: string]: Story },
 	user?: AuthenticatedUser
 }
@@ -80,7 +78,7 @@ interface DiscovStore {
 interface Distory {
 	id: string
 	storyId: string
-	discoveryId: string
+	discoveryId?: string
 	lat?: number
 	lng?: number
 }
@@ -89,6 +87,15 @@ interface FgPermission extends BgPermission {
 	canAskAgain: boolean
 }
 
+interface FollowerGroup {
+	id: string
+	ownerId: string
+	name: string
+	aggregated: any
+	createdAt: number
+	updatedAt: number
+	members: DataPage<string>
+}
 interface LocationFence {
 	location: BgLocation,
 	distanceToDiscovery: number
@@ -113,6 +120,11 @@ interface PeerAccount {
 	avatarPic?: string
 	isFollower?: boolean
 	isFollowing?: boolean
+}
+
+interface PeerAccount {
+	id: string
+	data: any
 }
 
 interface StoryContent {

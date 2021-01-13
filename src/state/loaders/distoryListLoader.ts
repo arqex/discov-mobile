@@ -7,7 +7,7 @@ let config = {
 		return actions.distory.loadUserDistories(false);
 	},
 	getFromCache: id => {
-		return store.distories;
+		return store.user.distories;
 	}
 }
 

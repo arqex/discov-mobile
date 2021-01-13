@@ -155,10 +155,12 @@ export default class DevSettings extends React.Component<ScreenProps> {
 			})
 			console.log( meta );
 		})
-
-		LocationService.getDebugMode().then( isActive => {
-			this.setState({toggle: isActive})
-		})
+		
+		if( Platform.OS === 'android' ){
+			LocationService.getDebugMode().then( isActive => {
+				this.setState({toggle: isActive})
+			})
+		}
 	}
 
 	_onToggleDebugMode = () => {

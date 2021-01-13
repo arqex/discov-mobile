@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { styleVars, Text, Wrapper, Touchable } from '../../components';
-import { ActivityAlert, ActivityAlertLevel } from '../../services'
 import { MaterialIcons } from '@expo/vector-icons';
+import { ActivityAlertLevel } from '../../services/alert.service';
 
 interface ActivityAlertProps {
   alert: ActivityAlert,
