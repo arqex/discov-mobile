@@ -1,25 +1,23 @@
 import * as React from 'react';
 import { ActivityIndicator, FlatList, View, StyleSheet } from 'react-native';
 import { Tooltip } from '../../../components';
-import StoryCommentListProvider from '../../../providers/StoryCommentListProvider';
 import Comment from './Comment';
 
 interface CommentListProps {
+  comments: DataPage<string>
   currentUserId: string,
   isStoryOwner: boolean,
   isLoadingMore: boolean,
-  storyId: string,
-  story: any,
   data: any,
   onLoadMore: () => any,
   isConnected: boolean
 }
 
-class CommentList extends React.Component<CommentListProps> {
+export class CommentList extends React.Component<CommentListProps> {
   scroll = React.createRef<FlatList<any>>();
   
   render() {
-    let comments = this.props.data;
+    let comments = this.props.comments;
 
     if( !comments && !this.props.isConnected ){
       return this.renderNoConnection();
@@ -132,6 +130,4 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignItems: 'center'
   }
-})
-
-export default StoryCommentListProvider( CommentList );
+});

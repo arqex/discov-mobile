@@ -5,14 +5,12 @@ import StoryCommentProvider from '../../../providers/StoryCommentProvider';
 import AccountAvatar from '../../components/AccountAvatar';
 import CommentOwner from './CommentOwner';
 import moment from 'moment';
+import storyCommentLoader from '../../../state/loaders/storyCommentLoader';
 
 interface CommentProps {
   commentId: string,
-  comment: StoryComment,
   currentUserId: string,
-  isStoryOwner: boolean,
-  storeService: any,
-  actions: any
+  isStoryOwner: boolean
 }
 
 const AVATAR_SIZE = 40;
@@ -44,13 +42,11 @@ class Comment extends React.Component<CommentProps> {
   }
 
   renderAvatar() {
-    const comment = this.props.comment;
-    
     return (
       <View style={styles.avatar}>
         <AccountAvatar
           size={ AVATAR_SIZE }
-          accountId={comment.commenterId}
+          accountId={this.getComment().commenterId}
           border={2}
           borderColor="blue" />
       </View>
@@ -79,11 +75,15 @@ class Comment extends React.Component<CommentProps> {
       return <Text type="bold">Me</Text>;
     }
 
-    return <CommentOwner accountId={ this.props.comment.commenterId } />;
+    return <CommentOwner accountId={ this.getComment().commenterId } />;
+  }
+
+  getComment(): StoryComment {
+    return storyCommentLoader.getData(this, this.props.commentId).data;
   }
 
   getDate(){
-    const { comment } = this.props;
+    const comment = this.getComment();
     const date = moment(comment.createdAt);
     const now = new Date();
     if( date.isSame( now, 'day') ){
@@ -102,7 +102,7 @@ class Comment extends React.Component<CommentProps> {
 
   renderBubble() {
     const isCurrentUser  = this.isCurrentUser();
-    const comment = this.props.comment;
+    const comment = this.getComment();
     const bubbleStyle = [
       styles.bubble,
       isCurrentUser && styles.currentUserBubble
@@ -116,7 +116,7 @@ class Comment extends React.Component<CommentProps> {
   }
 
   isCurrentUser() {
-    return this.props.comment.commenterId === this.props.currentUserId;
+    return this.getComment().commenterId === this.props.currentUserId;
   }
 };
 

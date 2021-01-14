@@ -95,7 +95,10 @@ export default function (store, api) {
 			return api.gql.getSingleDiscovery( actionService.userDiscoveryFields )
 				.run( id )
 				.then( discovery => {
-					storeService.storeDiscovery( discovery )
+					if (!discovery.error) {
+						storeService.storeDiscovery(discovery)
+					}
+					return discovery;
 				})
 			;
 		},
