@@ -10,6 +10,7 @@ interface StoryScreenProps {
 	layout: any,
 	router: any,
 	location: any,
+	avatarNavigable: boolean,
 	onBack?: Function,
 	currentPosition?: any
 }
@@ -52,10 +53,11 @@ export default class StoryScreen extends Component<StoryScreenProps> {
 	renderContent(story) {
 		return (
 			<View style={ styles.header }>
-				<StoryHeader accountId={story.ownerId}
+				<StoryHeader
+					storyId={ story.id }
 					router={ this.props.router }
-					onAssetsPress={ this._navigateToImages }
-					story={story} />
+					accountNavigable={ this.props.avatarNavigable }
+					onAssetsPress={ this._navigateToImages } />
 				<Wrapper textWidth>
 					<Text type="paragraph">
 						{story.content.text}

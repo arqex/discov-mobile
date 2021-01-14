@@ -118,6 +118,7 @@ export default function (store, api) {
 				if( account ){
 					storeService.storeAccount( account );
 				}
+				return account;
 			});
 		},
 		loadMultiple( ids ){

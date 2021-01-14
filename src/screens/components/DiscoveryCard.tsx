@@ -18,9 +18,9 @@ export default class DiscoveryCard extends React.PureComponent<DiscoveryCardProp
 		return discoveryLoader.getData(this, this.props.discoveryId);
 	}
 	getStoryData() {
-		let discovery = this.getStoryData();
-		if( discovery ){
-			return storyLoader.getData( this, discovery.storyId );
+		let discovery = this.getDiscoveryData();
+		if( discovery && discovery.data ){
+			return storyLoader.getData( this, discovery.data.storyId );
 		}
 	}
 

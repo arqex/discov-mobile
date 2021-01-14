@@ -41,7 +41,8 @@ import FgLocationModal from '../screens/locationPermissions/FgLocationModal';
 import DevSettings from '../screens/settings/DevSettings';
 import LocationReport from '../screens/locationReport/LocationReport';
 import ClosestDiscoveryScreen from '../screens/closestDiscovery/ClosestDiscoveryScreen';
-import StoriesScreen from '../screens/stories/StoriesScreen';
+import DistoriesScreen from '../screens/distories/DistoriesScreen';
+import SingleDistoryScreen from '../screens/singleDistory/SingleDistoryScreen';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -87,7 +88,12 @@ export const routes = [
 		] }
 	]},
 
-	{ path: '/stories', cb: StoriesScreen },
+	{ path: '/distories', cb: DistoriesScreen, children: [
+		{ path: '/:id', cb: SingleDistoryScreen, children: [
+			{ path: '/comments', cb: DiscoveryCommentsScreen },
+			{ path: '/assets', cb: AssetsViewer }
+		]}
+	]},
 
 	{ path: '/myStories', cb: MyStories, children: [
 		{ path: '/:id', cb: OwnStory, children: [

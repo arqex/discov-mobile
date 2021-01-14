@@ -6,7 +6,7 @@ import distoryListLoader from '../../state/loaders/distoryListLoader'
 import StoryCard from '../components/StoryCard'
 import DiscoveryCard from '../components/DiscoveryCard'
 
-export default class StoriesScreen extends Component<ScreenProps> {
+export default class DistoriesScreen extends Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
 
 	render() {
@@ -25,8 +25,6 @@ export default class StoriesScreen extends Component<ScreenProps> {
 			</Bg>
 		)
 	}
-
-
 
 	renderTopBar() {
 		return (
@@ -52,16 +50,15 @@ export default class StoriesScreen extends Component<ScreenProps> {
 					discoveryId={ item.discoveryId }
 					router={ this.props.router }
 					actions={ this.props.actions }
-					rootPath="/stories" />
-			)
+					rootPath="/distories" />
+			);
 		}
+
 		return (
 			<StoryCard
 				storyId={ item.storyId }
 				router={ this.props.router }
-				rootPath="/stories" />
-		)
-		console.log( item );
-		return null;
+				rootPath="/distories" />
+		);
 	}
 }

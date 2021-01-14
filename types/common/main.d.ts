@@ -44,6 +44,18 @@ interface BgPermission {
 	requestedAt: number
 }
 
+interface DataLoaderConfig<T> {
+	getFromCache: (id: string) => T
+	isValid?: (data?: T) => boolean
+	loadData: (id: string) => Promise<T>
+}
+
+interface DataLoaderResult<T> {
+	error: any
+	isLoading: boolean
+	data?: T
+}
+
 interface DataPage<T> {
 	total: number
 	hasMore: boolean
@@ -74,6 +86,7 @@ interface DiscovStore {
 	peerAccounts: { [id: string]: PeerAccount },
 	peerMeta: { [id: string]: PeerMeta },
 	stories: { [id: string]: Story },
+	storyComments: { [id: string]: DataPage<string> }
 	user?: AuthenticatedUser
 }
 
