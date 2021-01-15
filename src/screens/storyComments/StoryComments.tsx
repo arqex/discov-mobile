@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, StyleSheet, View, Keyboard, ActivityIndicator } from 'react-native';
-import { Bg, Tooltip } from '../../components';
+import { Bg } from '../../components';
 import { ScreenProps } from '../../utils/ScreenProps';
 import storeService from '../../state/store.service';
 import CommentsTopBar from './components/CommentsTopBar';
@@ -14,9 +14,6 @@ interface StoryCommentsProps extends ScreenProps {
 }
 
 class StoryComments extends React.Component<StoryCommentsProps> {
-
-	scroll = React.createRef<CommentList>()
-
 	state = {
 		text: '',
 		loadingMore: false,
@@ -59,7 +56,6 @@ class StoryComments extends React.Component<StoryCommentsProps> {
 			<View style={{ flex: 1 }}>
 				<View style={{ flex: 0, justifyContent: 'flex-end' }}>
 					<CommentList
-						ref={ this.scroll }
 						storyId={ story.id }
 						isConnected={ this.props.isConnected }
 						story={ story }

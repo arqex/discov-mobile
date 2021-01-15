@@ -1,16 +1,25 @@
 import * as React from 'react';
 import { Text, LoadingText } from '../../../components';
-import AccountProvider from '../../../providers/AccountProvider';
+import accountLoader from '../../../state/loaders/accountLoader';
 
-class CommentOwner extends React.Component {
+interface CommentOwnerProps {
+  accountId: string
+}
+export default class CommentOwner extends React.Component<CommentOwnerProps> {
   render() {
+    let account = accountLoader.getData( this, this.props.accountId );
+    if( account.isLoading ){
+      return this.renderLoading();
+    }
+
     return (
       <Text type="bold">
-        { this.props.account.displayName}
+        { account.data.displayName}
       </Text>
     );
   }
-  static renderLoading(props) {
+
+  renderLoading() {
     return (
       <LoadingText type="bold">
         Name Placeholder
@@ -18,5 +27,3 @@ class CommentOwner extends React.Component {
     );
   }
 }
-
-export default AccountProvider( CommentOwner );

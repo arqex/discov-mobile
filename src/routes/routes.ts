@@ -43,6 +43,7 @@ import LocationReport from '../screens/locationReport/LocationReport';
 import ClosestDiscoveryScreen from '../screens/closestDiscovery/ClosestDiscoveryScreen';
 import DistoriesScreen from '../screens/distories/DistoriesScreen';
 import SingleDistoryScreen from '../screens/singleDistory/SingleDistoryScreen';
+import DistoryCommentScreen from '../screens/distoryComments/DistoryCommentsScreen';
 
 export const routes = [
 	{ path: '/', cb: Auth },
@@ -90,7 +91,7 @@ export const routes = [
 
 	{ path: '/distories', cb: DistoriesScreen, children: [
 		{ path: '/:id', cb: SingleDistoryScreen, children: [
-			{ path: '/comments', cb: DiscoveryCommentsScreen },
+			{ path: '/comments', cb: DistoryCommentScreen },
 			{ path: '/assets', cb: AssetsViewer }
 		]}
 	]},

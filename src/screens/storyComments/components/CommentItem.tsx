@@ -1,14 +1,12 @@
 import * as React from 'react';
 import { View, StyleSheet} from 'react-native';
 import { styleVars, Text } from '../../../components';
-import StoryCommentProvider from '../../../providers/StoryCommentProvider';
 import AccountAvatar from '../../components/AccountAvatar';
 import CommentOwner from './CommentOwner';
 import moment from 'moment';
-import storyCommentLoader from '../../../state/loaders/storyCommentLoader';
 
 interface CommentProps {
-  commentId: string,
+  comment?: StoryComment,
   currentUserId: string,
   isStoryOwner: boolean
 }
@@ -16,9 +14,12 @@ interface CommentProps {
 const AVATAR_SIZE = 40;
 const MARGIN = 20;
 
-class Comment extends React.Component<CommentProps> {
+export default class CommentItem extends React.Component<CommentProps> {
   render() {
-    let isCurrentUser = this.isCurrentUser();
+    let { comment } = this.props;
+    if( !comment ) return null;
+
+    const isCurrentUser = this.isCurrentUser();
 
     let containerStyle = [
       styles.container,
@@ -79,7 +80,7 @@ class Comment extends React.Component<CommentProps> {
   }
 
   getComment(): StoryComment {
-    return storyCommentLoader.getData(this, this.props.commentId).data;
+    return this.props.comment;
   }
 
   getDate(){
@@ -119,8 +120,6 @@ class Comment extends React.Component<CommentProps> {
     return this.getComment().commenterId === this.props.currentUserId;
   }
 };
-
-export default StoryCommentProvider( Comment );
 
 const styles = StyleSheet.create({
   container: {

@@ -4,7 +4,6 @@ export default class DataLoader<T> {
   getFromCache: (id: string) => T
   isValid: (id: T) => boolean
   loadData: (id: string) => Promise<any>
-  instances = new WeakMap()
   promises: {[key:string]: Promise<any>} = {}
   values: {[key:string]: DataLoaderResult<T>} = {}
 
@@ -13,25 +12,22 @@ export default class DataLoader<T> {
     this.isValid = config.isValid || (() => true);
     this.loadData = config.loadData;
   }
-  
-  getData( instance: ReactInstance, id: string ){
-    if( !this.isBound(instance, id) ){
-      this.bindInstance(instance, id);
-    }
 
+  getData( instance: ReactInstance, id: string ) {
     let value = this.values[id];
-    if (value && value.error) {
+    if( value && value.error ){
       return value;
     }
 
-    let cachedData = this.getFromCache( id );
+    let cachedData = this.getFromCache(id);
     if( !cachedData || !this.isValid( cachedData ) ){
       this.handleDataLoading( id, instance );
       this.setValue(id, { error: false, isLoading: true, data: cachedData });
-      return this.values[id];
+    }
+    else {
+      this.setValue(id, { error: false, isLoading: false, data: cachedData });
     }
 
-    this.setValue( id, { error: false, isLoading: false, data: cachedData });
     return this.values[id];
   }
 
@@ -72,53 +68,5 @@ export default class DataLoader<T> {
 
   clearValue( id: string ){
     delete this.values[id];
-  }
-
-  isBound( instance, id ){
-    let boundInstance = this.instances.get(instance);
-    return boundInstance && boundInstance.id === id || false;
-  }
-
-  bindInstance( instance, id ){
-    let boundInstance = this.instances.get(instance);
-    if( boundInstance && boundInstance.id === id ) return;
-
-    if( boundInstance ){
-      let data = this.getFromCache( boundInstance.id );
-      if( data ){
-        // @ts-ignore: ors nodes are not well typed
-        data.removeChangeListener( boundInstance.listener ); 
-      }
-
-      delete this.values[boundInstance.id];
-      this.instances.delete( instance );
-    }
-    else {
-      let originalUnmount = instance.componentWillUnmount;
-      instance.componentWillUnmount = () => {
-        let binding = this.instances.get(instance);
-        let fromCache = this.getFromCache(binding.id);
-        if (fromCache) {
-          // @ts-ignore: ors nodes are not well typed
-          fromCache.removeChangeListener(binding.listener);
-        }
-        delete this.values[binding.id];
-        this.instances.delete(instance);
-        if (originalUnmount) {
-          originalUnmount.call(instance);
-        }
-      }
-    }
-
-    let fromCache = this.getFromCache( id );
-    if( fromCache ){
-      let binding = {
-        id, listener: () => instance.forceUpdate()
-      }
-      this.instances.set(instance, binding);
-      // @ts-ignore: ors nodes are not well typed
-      fromCache.addChangeListener( binding.listener )
-    }
-    
   }
 }

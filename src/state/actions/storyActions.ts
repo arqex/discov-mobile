@@ -22,6 +22,9 @@ export default function (store, api) {
 				if (story) {
 					storeService.storeStory(story);
 				}
+				else {
+					return {error: 'not_found'};
+				}
 				return story;
 			});
 		},

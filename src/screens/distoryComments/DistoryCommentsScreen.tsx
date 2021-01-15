@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { Text, View } from 'react-native'
-import { Bg, Tooltip } from '../../components'
+import { Text, View, Keyboard } from 'react-native'
+import { Bg } from '../../components'
 import storyCommentListLoader from '../../state/loaders/storyCommentListLoader';
+import storeService from '../../state/store.service';
 import distoryStoryLoader from '../../utils/distoryStoryLoader';
 import { ScreenProps } from '../../utils/ScreenProps';
+import CommentList from '../storyComments/components/CommentList';
+import CommentsInput from '../storyComments/components/CommentsInput';
+import CommentsTopBar from '../storyComments/components/CommentsTopBar';
 
 export default class DistoryCommentScreen extends Component<ScreenProps> {
 
@@ -29,7 +33,7 @@ export default class DistoryCommentScreen extends Component<ScreenProps> {
 		return (
 			<Bg>
 				{ this.renderTopBar(story.data)}
-				{ this.renderCommentList(story.data)}
+				{ this.renderCommentList( story, comments ) }
 				{ this.renderInput()}
 			</Bg>
 		)
@@ -44,7 +48,7 @@ export default class DistoryCommentScreen extends Component<ScreenProps> {
 	}
 
 	renderTopBar(story) {
-		if( !story ) return;
+		if( !story || !story.data ) return;
 		return (
 			<CommentsTopBar
 				story={story.data}
@@ -52,7 +56,7 @@ export default class DistoryCommentScreen extends Component<ScreenProps> {
 		);
 	}
 
-	renderCommentList(story) {
+	renderCommentList(story, comments) {
 		let currentUserId = storeService.getUserId();
 		// All these nested views make the comment list stick to
 		// the top when there are few messages
@@ -60,10 +64,10 @@ export default class DistoryCommentScreen extends Component<ScreenProps> {
 			<View style={{ flex: 1 }}>
 				<View style={{ flex: 0, justifyContent: 'flex-end' }}>
 					<CommentList
-						ref={this.scroll}
-						storyId={story.id}
+						story={ story.data }
+						commentsPage={ comments }
+						allComments={ this.props.store.comments }
 						isConnected={this.props.isConnected}
-						story={story}
 						currentUserId={currentUserId}
 						isStoryOwner={story.ownerId === currentUserId}
 						isLoadingMore={this.state.loadingMore}
@@ -88,11 +92,13 @@ export default class DistoryCommentScreen extends Component<ScreenProps> {
 	}
 
 	_sendComment = () => {
+		let story = distoryStoryLoader(this, this.getId() );
+
 		const text = this.state.text.trim();
 		if (!text) return;
 
 		const comment = {
-			storyId: this.props.storyId,
+			storyId: story.data.id,
 			commenterId: storeService.getUserId(),
 			content: {
 				type: 'text',
@@ -123,8 +129,10 @@ export default class DistoryCommentScreen extends Component<ScreenProps> {
 	_loadMoreComments = () => {
 		if (this.state.loadingMore) return;
 
+		let story = distoryStoryLoader(this, this.getId());
+
 		this.setState({ loadingMore: true });
-		return this.props.actions.storyComment.loadStoryComments(this.props.storyId, true)
+		return this.props.actions.storyComment.loadStoryComments(story.data.id, true)
 			.finally(() => {
 				setTimeout(() => this.setState({ loadingMore: false }), 200);
 			})

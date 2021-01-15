@@ -1,23 +1,24 @@
 import * as React from 'react';
 import { ActivityIndicator, FlatList, View, StyleSheet } from 'react-native';
 import { Tooltip } from '../../../components';
-import Comment from './Comment';
+import CommentItem from './CommentItem';
 
 interface CommentListProps {
-  comments: DataPage<string>
+  story: Story,
+  allComments: { [id: string]: StoryComment},
+  commentsPage: DataLoaderResult<DataPage<string>>
   currentUserId: string,
   isStoryOwner: boolean,
   isLoadingMore: boolean,
-  data: any,
   onLoadMore: () => any,
   isConnected: boolean
 }
 
-export class CommentList extends React.Component<CommentListProps> {
+export default class CommentList extends React.Component<CommentListProps> {
   scroll = React.createRef<FlatList<any>>();
   
   render() {
-    let comments = this.props.comments;
+    let comments = this.props.commentsPage?.data;
 
     if( !comments && !this.props.isConnected ){
       return this.renderNoConnection();
@@ -28,9 +29,7 @@ export class CommentList extends React.Component<CommentListProps> {
         inverted
         onEndReached={ this._checkLoadMore }
         onEndReachedThreshold={ .1 }
-        onLayout={ this._onLayout }
-        ref={ this.scroll }
-        data={ comments.items }
+        data={ comments && comments.items }
         renderItem={ this._renderItem }
         keyExtractor={ this._keyExtractor }
         ListFooterComponent={ this.renderHeader(comments) } />
@@ -45,7 +44,9 @@ export class CommentList extends React.Component<CommentListProps> {
     )
   }
 
-  renderHeader( comments) {
+  renderHeader( comments ) {
+    if( !comments ) return;
+
 		if( !comments.items.length ){
 			return (
 				<View style={styles.header}>
@@ -77,8 +78,8 @@ export class CommentList extends React.Component<CommentListProps> {
 
   _renderItem = ({item}) => {
 		return (
-			<Comment
-				commentId={ item }
+			<CommentItem
+        comment={ this.props.allComments[item] }
 				currentUserId={ this.props.currentUserId }
 				isStoryOwner={ this.props.isStoryOwner }
 			/>
@@ -87,10 +88,6 @@ export class CommentList extends React.Component<CommentListProps> {
   
   _keyExtractor = item => item;
 
-  scrollToEnd() {
-		console.log('Scrolling!');
-		this.scroll.current.scrollToOffset({offset: 0});
-  }
 
   initialized = false;
   _onLayout = () => {
@@ -106,21 +103,6 @@ export class CommentList extends React.Component<CommentListProps> {
       console.log('loadingMore');
 			this.props.onLoadMore();
 		}
-  }
-
-  firstId;
-  componentDidMount() {
-    if( !this.props.isConnected ) return;
-    this.firstId = this.props.data.items[ 0 ];
-  }
-  componentDidUpdate() {
-    if( !this.props.isConnected ) return;
-
-    let nextId = this.props.data.items[0];
-    if( this.firstId !== nextId ){
-      this.firstId = nextId;
-      setTimeout( () => this.scrollToEnd(), 100 );
-    }
   }
 }
 
