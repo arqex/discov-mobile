@@ -5,13 +5,17 @@ import { Bg, ScrollScreen, Text, TopBar } from '../../components'
 import distoryListLoader from '../../state/loaders/distoryListLoader'
 import StoryCard from '../components/StoryCard'
 import DiscoveryCard from '../components/DiscoveryCard'
+import NoDistories from './NoDistories'
 
 export default class DistoriesScreen extends Component<ScreenProps> {
 	animatedScrollValue = new Animated.Value(0)
 
 	render() {
-		let { isLoading, error, data} = distoryListLoader.getData( this, false );
-		console.log( isLoading, data );
+		let { isLoading, error, data} = distoryListLoader.getData( this, 'none' );
+
+		if (!isLoading && data && !data.items.length ){
+			return <NoDistories { ...this.props } />
+		}
 
 		return (
 			<Bg>

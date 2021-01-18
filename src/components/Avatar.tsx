@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { intToRGB, hashCode } from './utils/colors';
-import { Text, View, StyleSheet, Image } from 'react-native';
+import { Text, View, StyleSheet } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import styleVars from './styleVars';
 
 interface AvatarProps {
@@ -43,7 +44,7 @@ export default class Avatar extends React.Component<AvatarProps> {
 		let content;
 		if( this.props.pic ){
 			let imgStyle = { width: size, height: size };
-			content = <Image style={ imgStyle } source={ getUri(this.props.pic) } />
+			content = <FastImage style={ imgStyle } source={ getUri(this.props.pic) } />
 		}
 		else {
 			content = (

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Pressable, Animated, Easing } from 'react-native';
 import { Text } from '../../components';
 import AccountAvatar from './AccountAvatar';
 import Flash from '../createStory/Flash';
@@ -10,26 +10,35 @@ interface UnseenDiscoveryProps {
 }
 
 export default class StoryCard extends React.PureComponent<UnseenDiscoveryProps> {
+  scale = new Animated.Value(1)
+
   state = {
     flash: false
   }
   
 	render() {
-		let story = this.props.story;
+    let story = this.props.story;
+    
+    let cardStyles = [
+      styles.content,
+      {transform: [{scale: this.scale}]}
+    ];
 
 		return (
-			<TouchableOpacity style={ styles.container }
-				onPress={ this._reveal }>
-          { this.renderFlash() }
-          <View style={{marginBottom: 4}}>
-            <AccountAvatar accountId={ story.ownerId }
-              size={ 60 } />
+      <Pressable onPressIn={ this._onPressStart } onPressOut={ this._onPressEnd } style={styles.container}>
+        <Animated.View style={ cardStyles } >
+          {this.renderFlash()}
+          <View style={{ marginBottom: 4 }}>
+            <AccountAvatar
+              accountId={story && story.ownerId}
+              size={60} />
           </View>
           <View style={{ marginBottom: 2 }}>
-            <Text type="mainTitle">{ __('myDiscoveries.newStory') }</Text>
+            <Text type="mainTitle">{__('myDiscoveries.newStory')}</Text>
           </View>
-          <Text>{ __('myDiscoveries.tapme') }</Text>
-			</TouchableOpacity>
+          <Text>{__('myDiscoveries.tapme')}</Text>
+        </Animated.View>
+			</Pressable>
 		);
   }
 
@@ -45,6 +54,29 @@ export default class StoryCard extends React.PureComponent<UnseenDiscoveryProps>
     const { story } = this.props;
     this.props.onReveal( story.id );
   }
+
+  _onPressStart = () => {
+    Animated.timing( this.scale, {
+      toValue: 1.1,
+      useNativeDriver: true,
+      duration: 500,
+      easing: Easing.out( Easing.cubic )
+    }).start();
+  }
+
+  _onPressEnd = e => {
+    console.log( e );
+
+    Animated.timing( this.scale, {
+      toValue: 1,
+      useNativeDriver: true,
+      duration: 300,
+    }).start();
+
+    if( e?.dispatchConfig?.registrationName !== 'onResponderTerminate'){
+      this._reveal();
+    }
+  }
   
   componentDidMount() {
     setTimeout( () => {
@@ -55,18 +87,26 @@ export default class StoryCard extends React.PureComponent<UnseenDiscoveryProps>
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: '#fff',
-		marginBottom: 20,
-		borderRadius: 10,
-		alignItems: 'center',
-		borderWidth: 1,
+    overflow: 'hidden',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'stretch'
+  },
+
+  content: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    borderWidth: 1,
     borderColor: '#E6EAF2',
     padding: 20,
-    overflow: 'hidden'
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1
   },
   
   flash: {
     position: 'absolute',
-    top: 40, left: '50%'
+    marginLeft: 15,
+    top: '46%', left: '50%'
   }
 });

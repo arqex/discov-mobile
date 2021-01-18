@@ -32,7 +32,7 @@ export default class DistoryCommentScreen extends Component<ScreenProps> {
 		
 		return (
 			<Bg>
-				{ this.renderTopBar(story.data)}
+				{ this.renderTopBar(story)}
 				{ this.renderCommentList( story, comments ) }
 				{ this.renderInput()}
 			</Bg>
@@ -49,6 +49,7 @@ export default class DistoryCommentScreen extends Component<ScreenProps> {
 
 	renderTopBar(story) {
 		if( !story || !story.data ) return;
+
 		return (
 			<CommentsTopBar
 				story={story.data}

@@ -30,7 +30,7 @@ export default class Flash extends React.Component {
 
     Animated.timing( this.animatedOpacity, {
       toValue: 0,
-      duration: 1000,
+      duration: 1600,
       useNativeDriver: true
     }).start();
   }

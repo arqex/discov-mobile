@@ -133,7 +133,6 @@ export default class DistoryCard extends React.PureComponent<DistoryCardProps> {
 const styles = StyleSheet.create({
 	background: {
 		backgroundColor: '#fff',
-		marginBottom: 20,
 		borderRadius: 10,
 		overflow: 'hidden',
 		borderWidth: 1,
