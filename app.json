@@ -28,7 +28,7 @@
       "package": "me.discov.android.app",
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAyovAYNMAf9yxr1H9k5lbPGfEX_iqQ0dk"
+          "apiKey": "deactivated_key"
         }
       }
     },

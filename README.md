@@ -1,2 +1,3 @@
 # discov-mobile
-Mobile app for discov
+
+Mobile app for discov, made with React Native.
